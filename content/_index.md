@@ -112,8 +112,9 @@ sections:
     date_end: 2025-05-01
     summary: |2-
       Responsibilities include:
-      - Designed, developed, and maintained automation systems for bioprocess engineering. 
-      - Integrated and managed communication protocols like RS485 using Modbus, Serial, and others, ensuring seamless device communication. 
+        - Designed, developed, and maintained automation systems for bioprocess engineering. 
+        - Integrated and managed communication protocols like RS485 using Modbus, Serial, and others, ensuring seamless device communication. 
+
   - position: Undergraduate Research Assistant
     company_name: X
     company_url: ''
@@ -122,10 +123,11 @@ sections:
     date_end: 2024-09-01
     summary: |2-
       Responsibilities include:
-      - Led the development of bespoke software solutions tailored to the unique challenges of multiphasic fluid experiments. 
-      - Developed deep learning based particle tracking software to analyze fluid behavior efficiently.
-      - Engineered innovative hardware automation systems to streamline experimental procedures and enhance data acquisition accuracy. 
-      - Collaborated closely with interdisciplinary teams of researchers and engineers to understand the project requirements, identify technological gaps, and devise effective solutions that advance research objectives.
+        - Led the development of bespoke software solutions tailored to the unique challenges of multiphasic fluid experiments. 
+        - Developed deep learning based particle tracking software to analyze fluid behavior efficiently.
+        - Engineered innovative hardware automation systems to streamline experimental procedures and enhance data acquisition accuracy. 
+        - Collaborated closely with interdisciplinary teams of researchers and engineers to understand the project requirements, identify technological gaps, and devise effective solutions that advance research objectives.
+
   - block: cta-card
     demo: true # Only display this section in the Hugo Blox Builder demo site
     content:
