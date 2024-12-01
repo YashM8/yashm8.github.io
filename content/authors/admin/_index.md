@@ -21,8 +21,7 @@ highlight_name: true
 
 # Role/position/tagline
 role: |
-  Student
-  Interned as RA, ML Engineer, SWE
+  Student - Interned as RA, ML Engineer, SWE
   
 # Organizations/Affiliations to display in Biography blox
 organizations:
