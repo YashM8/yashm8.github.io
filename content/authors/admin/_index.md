@@ -1,6 +1,6 @@
 ---
 # Display name
-title: Yash Mali
+title: Yash Mali 
 
 # Name pronunciation (optional)
 # name_pronunciation: ''
