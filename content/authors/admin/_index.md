@@ -20,8 +20,10 @@ superuser: true
 highlight_name: true
 
 # Role/position/tagline
-role: Student (RA, ML Engineer, SWE)
-
+role: |
+  Student
+  Interned as RA, ML Engineer, SWE
+  
 # Organizations/Affiliations to display in Biography blox
 organizations:
   - name: UBC
