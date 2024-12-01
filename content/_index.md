@@ -102,28 +102,6 @@ sections:
   #     # Reduce spacing
   #     spacing:
   #       padding: [0, 0, 0, 0]
-
-  - block: collection
-    content:
-      title: '🔧 Automation Software Engineer at Lux Bio'
-      subtitle: ''
-      text: |-
-        Responsibilities include:
-        - Designed, developed, and maintained automation systems for bioprocess engineering.
-        - Integrated and managed communication protocols like RS485 using Modbus, Serial, and others, ensuring seamless device communication.
-
-  - block: collection
-    content:
-      title: '🎓 Undergraduate Research Assistant at X'
-      subtitle: ''
-      text: |-
-        Responsibilities include:
-        - Led the development of bespoke software solutions tailored to the unique challenges of multiphasic fluid experiments.
-        - Developed deep learning-based particle tracking software to analyze fluid behavior efficiently.
-        - Engineered innovative hardware automation systems to streamline experimental procedures and enhance data acquisition accuracy.
-        - Collaborated closely with interdisciplinary teams of researchers and engineers to understand the project requirements, identify technological gaps, and devise effective solutions that advance research objectives.
-
-
   - block: cta-card
     demo: true # Only display this section in the Hugo Blox Builder demo site
     content:

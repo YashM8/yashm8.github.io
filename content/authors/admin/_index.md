@@ -90,8 +90,8 @@ work:
       - Designed, developed, and maintained automation systems for bioprocess engineering. 
       - Integrated and managed communication protocols like RS485 using Modbus, Serial, and others, ensuring seamless device communication. 
   - position: Undergraduate Research Assistant
-    company_name: X
-    company_url: ''
+    company_name: UBC Engineering at Frostad Research Group
+    company_url: 'https://food.chbe.ubc.ca/'
     company_logo: ''
     date_start: 2024-05-01
     date_end: 2024-09-01
