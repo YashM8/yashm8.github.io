@@ -104,7 +104,7 @@ sections:
   #     spacing:
   #       padding: [0, 0, 0, 0]
 
-  experience:
+  block: experience
   - position: Automation Software Engineer
     company_name: Lux Bio
     company_url: ''
