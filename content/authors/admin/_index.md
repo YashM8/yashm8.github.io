@@ -1,9 +1,9 @@
 ---
 # Display name
-title: 吳健雄
+title: Yash Mali
 
 # Name pronunciation (optional)
-name_pronunciation: ''
+# name_pronunciation: ''
 
 # Full name (for SEO)
 first_name: Yash
@@ -20,7 +20,7 @@ superuser: true
 highlight_name: true
 
 # Role/position/tagline
-role: Chief Scientist
+role: Student (RA, ML Engineer, SWE)
 
 # Organizations/Affiliations to display in Biography blox
 organizations:
@@ -47,8 +47,8 @@ interests:
 education:
   - area: BSc Computer Science
     institution: University of British Columbia
-    date_start: 2021
-    date_end: 2026
+    date_start: 2021-09-10
+    date_end: 2026-05-01
     # summary: |
     #   Thesis on _Why LLMs are awesome_. Supervised by [Prof Joe Smith](https://example.com). Presented papers at 5 IEEE conferences with the contributions being published in 2 Springer journals.
     # button:
