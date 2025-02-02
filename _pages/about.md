@@ -31,18 +31,26 @@ Led the development of bespoke software solutions for multiphasic fluid experime
 
 As an IT Helpdesk Support member, I provided technical assistance to faculty, staff, and students for audiovisual equipment and systems across campus. My responsibilities included troubleshooting hardware and software issues, responding to service requests, and ensuring the smooth operation of audiovisual resources in learning spaces and events. I worked with technologies such as Crestron Systems, JavaScript, HTML/CSS, and React to maintain and enhance audiovisual systems.
 
-Volunteering  
+Other Experience  
 ------
 
-### [UBC Uncrewed Aircraft Systems](https://ubcuas.com/) ✈️
-*September 2024 – Present*  
+# Other Experience  
 
-As the leader of the Machine Learning (ML) sub-team, I am contributing to an international university-level autonomous drone competition. My work involves utilizing deep learning based technologies develop and refine autonomous drone systems.
+## [UBC Uncrewed Aircraft Systems](https://ubcuas.com/) ✈️  
+**September 2024 – Present**  
+As the leader of the Machine Learning (ML) sub-team, I contribute to an international university-level autonomous drone competition. My work involves utilizing deep learning-based technologies to develop and refine autonomous drone systems, specifically focusing on object detection and tracking.
 
-### [UBC AI Club](https://www.instagram.com/ubcaiclub/) 🦾
-*September 2024 – Present*  
+## [UBC AI Club](https://www.instagram.com/ubcaiclub/) 🦾  
+**January 2025 – Present**  
+As the Director of Machine Learning, I lead initiatives to advance AI knowledge and guide members in developing impactful projects. Currently, I am supervising a team to develop a system that facilitates free generation of headshots from photos through on-device generative models.
 
-I am leading two teams on ML/AI-related projects, focusing on innovative applications of machine learning techniques. This role involves project management, mentoring team members, and delivering impactful solutions using state-of-the-art AI technologies.
+## [UBC Department of Computer Science and Medicine](https://www.cs.ubc.ca/) 🏥  
+**January 2024 – Present**  
+As a Research Assistant under Dr. Raymond Ng and Dr. John Jose Nunez, I am developing an LLM-based question-answering tool to assist in the treatment of bipolar disorder and depression. This project leverages advanced information retrieval strategies like retrieval-augmented generation (RAG) and explores multiple large language models (LLMs) with fine-tuning approaches.
+
+## [Beaty Biodiversity Museum](https://beatymuseum.ubc.ca/) 🌿  
+**September 2024 – Present**  
+As part of the Machine Learning team, I utilize computer vision techniques to digitize the Beaty Museum’s botanical sample dataset. My work involves extracting traits and insights using deep learning-based computer vision methodologies.
 
 Selected Projects
 ------
