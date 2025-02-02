@@ -33,9 +33,6 @@ As an IT Helpdesk Support member, I provided technical assistance to faculty, st
 
 Other Experience  
 ------
-
-# Other Experience  
-
 ## [UBC Uncrewed Aircraft Systems](https://ubcuas.com/) ✈️  
 **September 2024 – Present**  
 As the leader of the Machine Learning (ML) sub-team, I contribute to an international university-level autonomous drone competition. My work involves utilizing deep learning-based technologies to develop and refine autonomous drone systems, specifically focusing on object detection and tracking.
