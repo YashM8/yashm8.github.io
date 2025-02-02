@@ -33,19 +33,19 @@ As an IT Helpdesk Support member, I provided technical assistance to faculty, st
 
 Other Experience  
 ------
-## [UBC Uncrewed Aircraft Systems](https://ubcuas.com/) ✈️  
+### [UBC Uncrewed Aircraft Systems](https://ubcuas.com/) ✈️  
 **September 2024 – Present**  
 As the leader of the Machine Learning (ML) sub-team, I contribute to an international university-level autonomous drone competition. My work involves utilizing deep learning-based technologies to develop and refine autonomous drone systems, specifically focusing on object detection and tracking.
 
-## [UBC AI Club](https://www.instagram.com/ubcaiclub/) 🦾  
+### [UBC AI Club](https://www.instagram.com/ubcaiclub/) 🦾  
 **January 2025 – Present**  
-As the Director of Machine Learning, I lead initiatives to advance AI knowledge and guide members in developing impactful projects. Currently, I am supervising a team to develop a system that facilitates free generation of headshots from photos through on-device generative models.
+As the Director of Machine Learning, I lead initiatives to advance AI knowledge and guide members in developing impactful projects. Currently, I am supervising a team to develop a system that facilitates the free generation of headshots from photos potentially, through on-device generative models.
 
-## [UBC Department of Computer Science and Medicine](https://www.cs.ubc.ca/) 🏥  
+### [UBC Department of Computer Science](https://www.cs.ubc.ca/) 🏥  
 **January 2024 – Present**  
-As a Research Assistant under Dr. Raymond Ng and Dr. John Jose Nunez, I am developing an LLM-based question-answering tool to assist in the treatment of bipolar disorder and depression. This project leverages advanced information retrieval strategies like retrieval-augmented generation (RAG) and explores multiple large language models (LLMs) with fine-tuning approaches.
+As part of a directed research course supervised by Dr. Raymond Ng and Dr. John Jose Nunez, we are developing an LLM-based question-answering tool to help treat bipolar disorder and depression that facilitates information retrieval from a vast corpus of medical guidelines. We are exploring multiple LLM's, fine-tuning approaches, and information retrieval strategies like retrieval augmented generation (RAG).
 
-## [Beaty Biodiversity Museum](https://beatymuseum.ubc.ca/) 🌿  
+### [Beaty Biodiversity Museum](https://beatymuseum.ubc.ca/) 🌿  
 **September 2024 – Present**  
 As part of the Machine Learning team, I utilize computer vision techniques to digitize the Beaty Museum’s botanical sample dataset. My work involves extracting traits and insights using deep learning-based computer vision methodologies.
 
