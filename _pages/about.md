@@ -13,17 +13,25 @@ I am the ML Lead for UBC [Uncrewed Aerial Systems](https://ubcuas.com/) (UAS) an
 
 Experience
 ------
-### Automation Software Engineer 🧪
+### Bioinformatics and Control Developer 🧪
 **[Lux Bio](https://www.luxbio.ca/)**  
 *September 2024 - May 2025*  
 
-Revamped automation systems for bioprocess engineering, eliminating control loop errors and improving system reliability by 100%. Engineered robust communication systems to interface with sensors, pumps, motors, and valves while designing an intuitive user interface and implementing cloud-based data backup solutions. Additionally, contributed to SEO efforts using Wix to enhance the company's online presence.
+Applied AI-based drug discovery tools like AlphaFold and ProteinMPNN to predict sequences and 3D structures of proteins and enzymes. These tools are used to help the company optimize its sequence for desired characteristics.
+
+Revamped automation systems for bioprocess engineering, eliminating control loop errors and enhancing system reliability by 100%. Engineered robust communication systems for sensors, pumps, motors, and valves. Developed an intuitive user interface and implemented cloud-based data backup solutions.}
+
+Contributed to SEO efforts using Wix to enhance the company's online presence.
 
 ### Undergraduate Research Assistant 🥼 
 **[UBC Engineering at Frostad Research Group](https://food.chbe.ubc.ca/)**  
 *May 2024 - September 2024*  
 
-Led the development of bespoke software solutions for multiphasic fluid experiments. I engineered deep learning-based particle tracking software to efficiently analyze fluid behavior and engineered hardware automation systems to enhance data acquisition accuracy. By collaborating with interdisciplinary teams of researchers and engineers, I addressed unique project requirements, identified technological gaps, and delivered effective solutions that advanced the group’s research objectives.
+Led the development of bespoke software solutions tailored to the unique challenges of multiphasic fluid experiments. Developed efficient (storage and compute) deep learning based particle tracking software to analyze particles in fluid behavior efficiently with single particle precision. Built around an easy-to-use UI.
+
+Automated and developed data collection software for new instruments invented at the research group.
+
+Collaborated closely with interdisciplinary teams of researchers and engineers to understand the project requirements, identify technological gaps, and devise effective solutions that advance research objectives.
 
 ### Information Technology Helpdesk Support 👨‍💻  
 **[UBC Information Technology](https://it.ubc.ca/services/audio-visual-creative-services/events)**  
@@ -35,7 +43,9 @@ Other Experience
 ------
 ### [UBC Uncrewed Aircraft Systems](https://ubcuas.com/) ✈️  
 **September 2024 – Present**  
-As the leader of the Machine Learning (ML) sub-team, I contribute to an international university-level autonomous drone competition. My work involves utilizing deep learning-based technologies to develop and refine autonomous drone systems, specifically focusing on object detection and tracking.
+Leading the ML sub-team to explore and tune open-sourced models for object detection and tracking. This is a
+small piece of the puzzle on our drones that compete in two university-level autonomous drone competitions every
+year.
 
 ### [UBC AI Club](https://www.instagram.com/ubcaiclub/) 🦾  
 **January 2025 – Present**  
