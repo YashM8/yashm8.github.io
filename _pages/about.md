@@ -43,6 +43,22 @@ Collaborated closely with interdisciplinary teams of researchers and engineers t
 
 As an IT Helpdesk Support member, I provided technical assistance to faculty, staff, and students for audiovisual equipment and systems across campus. My responsibilities included troubleshooting hardware and software issues, responding to service requests, and ensuring the smooth operation of audiovisual resources in learning spaces and events. I worked with technologies such as Crestron Systems, JavaScript, HTML/CSS, and React to maintain and enhance audiovisual systems.
 
+Awards
+------
+
+### [Advanced Machine Learning Network: AML-TN] (https://amltn.cs.ubc.ca/) (April 2025)
+Issued by - Department of Computer Science, UBC | Funded by - UBC, CIFAR, NSERC
+
+- "AML-TN sponsored internships highlight the value of developing young researchers as the next generation of machine learning specialists."
+
+---
+
+### [2X Undergraduate Research Award: WLIURA] (https://students.ubc.ca/career/ubc-experiences/work-learn-international-undergraduate-research-awards/) (May 2024, 2025)
+Issued and funded by - University of British Columbia
+
+- "These awards subsidize professors to hire international undergraduate students to work full-time on their research projects in the Summer Session (May to August)."
+
+
 Other Experience  
 ------
 ### [UBC Uncrewed Aircraft Systems](https://ubcuas.com/) ✈️  
@@ -68,21 +84,6 @@ As part of a directed research course supervised by Dr. Raymond Ng and Dr. John 
 ### [Beaty Biodiversity Museum](https://beatymuseum.ubc.ca/) 🌿  
 **September 2024 – Present**  
 As part of the Machine Learning team, I utilize computer vision techniques to digitize the Beaty Museum’s botanical sample dataset. My work involves extracting traits and insights using deep learning-based computer vision methodologies.
-
-Awards
-------
-
-### [Advanced Machine Learning Network: AML-TN] (https://amltn.cs.ubc.ca/) (April 2025)
-Issued by - Department of Computer Science, UBC | Funded by - UBC, CIFAR, NSERC
-
-- "AML-TN sponsored internships highlight the value of developing young researchers as the next generation of machine learning specialists."
-
----
-
-### [2X Undergraduate Research Award: WLIURA](https://students.ubc.ca/career/ubc-experiences/work-learn-international-undergraduate-research-awards/) (May 2024, 2025)
-Issued and funded by - University of British Columbia
-
-- "These awards subsidize professors to hire international undergraduate students to work full-time on their research projects in the Summer Session (May to August)."
 
 
 Selected Projects
