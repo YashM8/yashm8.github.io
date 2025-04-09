@@ -72,14 +72,14 @@ As part of the Machine Learning team, I utilize computer vision techniques to di
 Awards
 ------
 
-### Advanced Machine Learning Network: AML-TN (April 2025)
+### [Advanced Machine Learning Network: AML-TN] (https://amltn.cs.ubc.ca/) (April 2025)
 Issued by - Department of Computer Science, UBC | Funded by - UBC, CIFAR, NSERC
 
 - "AML-TN sponsored internships highlight the value of developing young researchers as the next generation of machine learning specialists."
 
 ---
 
-### 2X Undergraduate Research Award: WLIURA (May 2024, 2025)
+### [2X Undergraduate Research Award: WLIURA](https://students.ubc.ca/career/ubc-experiences/work-learn-international-undergraduate-research-awards/) (May 2024, 2025)
 Issued and funded by - University of British Columbia
 
 - "These awards subsidize professors to hire international undergraduate students to work full-time on their research projects in the Summer Session (May to August)."
