@@ -13,7 +13,7 @@ I am the ML Lead for UBC [Uncrewed Aerial Systems](https://ubcuas.com/) (UAS) an
 
 Experience
 ------
-### Bioinformatics and Control Developer 🧪
+### AI and Automation Developer 🧪
 **[Lux Bio](https://www.luxbio.ca/)**  
 *September 2024 - May 2025*  
 
