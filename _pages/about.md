@@ -47,13 +47,15 @@ Awards
 ------
 
 ### [Advanced Machine Learning Network: AML-TN](https://amltn.cs.ubc.ca/) (April 2025)
+*April 2024*  
 Issued by - Department of Computer Science, UBC | Funded by - UBC, CIFAR, NSERC
 
 - "AML-TN sponsored internships highlight the value of developing young researchers as the next generation of machine learning specialists."
 
 ---
 
-### [2X Undergraduate Research Award: WLIURA](https://students.ubc.ca/career/ubc-experiences/work-learn-international-undergraduate-research-awards/) (May 2024, 2025)
+### [2X Undergraduate Research Award: WLIURA](https://students.ubc.ca/career/ubc-experiences/work-learn-international-undergraduate-research-awards/) 
+*May 2024, 2025*
 Issued and funded by - University of British Columbia
 
 - "These awards subsidize professors to hire international undergraduate students to work full-time on their research projects in the Summer Session (May to August)."
@@ -62,7 +64,7 @@ Issued and funded by - University of British Columbia
 Other Experience  
 ------
 ### [UBC Uncrewed Aircraft Systems](https://ubcuas.com/) ✈️  
-**September 2024 – Present**  
+*September 2024 – Present*
 Leading the ML sub-team to explore and tune open-sourced models for object detection and tracking. This is a
 small piece of the puzzle on our drones that compete in two university-level autonomous drone competitions every
 year.
@@ -70,19 +72,19 @@ year.
 ---
 
 ### [UBC AI Club](https://www.instagram.com/ubcaiclub/) 🦾  
-**January 2025 – Present**  
+*January 2025 – Present*
 As the Director of Machine Learning, I lead initiatives to advance AI knowledge and guide members in developing impactful projects. Currently, I am supervising a team to develop a system that facilitates the free generation of headshots from photos potentially, through on-device generative models.
 
 ---
 
 ### [UBC Department of Computer Science](https://www.cs.ubc.ca/) 🏥  
-**January 2024 – Present**  
+*January 2024 – Present*
 As part of a directed research course supervised by Dr. Raymond Ng and Dr. John Jose Nunez, I am contributing to a research project at UBC’s Psychiatry and Computer Science Departments. My work involves developing a Retrieval-Augmented Generation (RAG) and program-aided LLM pipeline using open-source tools to extract and process clinical text from medical guidelines. The goal is to provide physicians with the latest evidence-based data through a natural interface while minimizing hallucinations.
 
 ---
 
 ### [Beaty Biodiversity Museum](https://beatymuseum.ubc.ca/) 🌿  
-**September 2024 – Present**  
+*September 2024 – Present*  
 As part of the Machine Learning team, I utilize computer vision techniques to digitize the Beaty Museum’s botanical sample dataset. My work involves extracting traits and insights using deep learning-based computer vision methodologies.
 
 
