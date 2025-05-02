@@ -7,6 +7,8 @@
 # server process.
 
 # Basic Site Settings
+remote_theme: "mmistakes/minimal-mistakes"
+
 locale                   : "en-US"
 title                    : "Yash Mali"
 title_separator          : "-"
