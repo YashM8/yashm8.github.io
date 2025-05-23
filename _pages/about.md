@@ -46,17 +46,15 @@ As an IT Helpdesk Support member, I provided technical assistance to faculty, st
 Awards
 ------
 
-### [Advanced Machine Learning Network: AML-TN](https://amltn.cs.ubc.ca/) (April 2025)
-*April 2024*  
-Issued by - Department of Computer Science, UBC | Funded by - UBC, CIFAR, NSERC
+### [Advanced Machine Learning Network: AML-TN](https://amltn.cs.ubc.ca/people/undergraduate-research-awards/) 
+*April 2025* | Issued by - Department of Computer Science, UBC | Funded by - UBC, CIFAR, NSERC
 
 - "AML-TN sponsored internships highlight the value of developing young researchers as the next generation of machine learning specialists."
 
 ---
 
 ### [2X Undergraduate Research Award: WLIURA](https://students.ubc.ca/career/ubc-experiences/work-learn-international-undergraduate-research-awards/) 
-*May 2024, 2025*
-Issued and funded by - University of British Columbia
+*May 2024, 2025* | Issued and funded by - University of British Columbia
 
 - "These awards subsidize professors to hire international undergraduate students to work full-time on their research projects in the Summer Session (May to August)."
 
