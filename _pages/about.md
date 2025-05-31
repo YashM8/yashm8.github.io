@@ -9,7 +9,7 @@ redirect_from:
 
 👋🏼 I am an undergraduate student at the University of British Columbia ([UBC](https://www.ubc.ca/)) interested in Machine Learning/Artificial Intelligence and Optimization. I have worked as a Research Assistant (RA) applying AI to many fields and as a software engineer. I am passionate about understanding how large neural networks work to develop safe and interpretable AI. 
 
-I am the ML Lead for UBC [Uncrewed Aerial Systems](https://ubcuas.com/) (UAS) and the director of ML at the UBC AI club. 
+I am the ML Lead for UBC [Uncrewed Aerial Systems](https://ubcuas.com/) (UAS) and the co-president of the UBC AI club. 
 
 Experience
 ------
@@ -19,7 +19,7 @@ Experience
 
 Applied AI-based drug discovery tools like AlphaFold and ProteinMPNN to optimize sequences and 3D structures of proteins and enzymes. These tools are used to help the company optimize its sequence for desired characteristics.
 
-Revamped automation systems for bioprocess engineering, eliminating control loop errors and enhancing system reliability by 100%. Engineered robust communication systems for sensors, pumps, motors, and valves. Developed an intuitive user interface and implemented cloud-based data backup solutions.}
+Revamped automation systems for bioprocess engineering, eliminating control loop errors and enhancing system reliability by 100%. Engineered robust communication systems for sensors, pumps, motors, and valves. Developed an intuitive user interface and implemented cloud-based data backup solutions.
 
 Contributed to SEO efforts using Wix to enhance the company's online presence.
 
