@@ -13,6 +13,16 @@ I am the ML Lead for UBC [Uncrewed Aerial Systems](https://ubcuas.com/) (UAS) an
 
 Experience
 ------
+
+### Undergraduate Research Assistant 🥼 
+**[UBC Computer Science](https://www.cs.ubc.ca/)** & **[UBC Psychiatry](https://psychiatry.ubc.ca/)**
+
+*May 2024 - September 2024*  
+
+Bringing safe and interpretable AI into medicine. Developing software to ingest medical guidelines and provide medical recommendations using recent advances in Natural Language Processing (NLP) like Large Language Models (LLMs) and contextual embeddings. Collaborating with computer scientists, physicians and clinical researchers. 
+
+Developing a Retrieval-Augmented Generation (RAG) and program-aided agentic pipeline using open-source tools to extract and process clinical text from medical guidelines. The goal is to provide physicians with the latest evidence-based data through a natural interface while minimizing hallucinations.
+
 ### AI and Automation Developer 🧪
 **[Lux Bio](https://www.luxbio.ca/)**  
 *September 2024 - May 2025*  
@@ -75,16 +85,9 @@ As the Director of Machine Learning, I lead initiatives to advance AI knowledge 
 
 ---
 
-### [UBC Department of Computer Science](https://www.cs.ubc.ca/) 🏥  
-*January 2024 – Present*
-As part of a directed research course supervised by Dr. Raymond Ng and Dr. John Jose Nunez, I am contributing to a research project at UBC’s Psychiatry and Computer Science Departments. My work involves developing a Retrieval-Augmented Generation (RAG) and program-aided LLM pipeline using open-source tools to extract and process clinical text from medical guidelines. The goal is to provide physicians with the latest evidence-based data through a natural interface while minimizing hallucinations.
-
----
-
 ### [Beaty Biodiversity Museum](https://beatymuseum.ubc.ca/) 🌿  
 *September 2024 – Present*  
 As part of the Machine Learning team, I utilize computer vision techniques to digitize the Beaty Museum’s botanical sample dataset. My work involves extracting traits and insights using deep learning-based computer vision methodologies.
-
 
 Selected Projects
 ------
