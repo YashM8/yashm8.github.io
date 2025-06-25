@@ -72,7 +72,9 @@ Awards
 Other Experience  
 ------
 ### [UBC Uncrewed Aircraft Systems](https://ubcuas.com/) ✈️  
+
 *September 2024 – Present*
+
 Leading the ML sub-team to explore and tune open-sourced models for object detection and tracking. This is a
 small piece of the puzzle on our drones that compete in two university-level autonomous drone competitions every
 year.
@@ -80,13 +82,17 @@ year.
 ---
 
 ### [UBC AI Club](https://www.instagram.com/ubcaiclub/) 🦾  
+
 *January 2025 – Present*
+
 As the Director of Machine Learning, I lead initiatives to advance AI knowledge and guide members in developing impactful projects. Currently, I am supervising a team to develop a system that facilitates the free generation of headshots from photos potentially, through on-device generative models.
 
 ---
 
 ### [Beaty Biodiversity Museum](https://beatymuseum.ubc.ca/) 🌿  
+
 *September 2024 – Present*  
+
 As part of the Machine Learning team, I utilize computer vision techniques to digitize the Beaty Museum’s botanical sample dataset. My work involves extracting traits and insights using deep learning-based computer vision methodologies.
 
 Selected Projects
