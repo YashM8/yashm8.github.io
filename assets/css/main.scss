@@ -39,3 +39,30 @@
 @import "vendor/font-awesome/brands";
 @import "vendor/magnific-popup/magnific-popup";
 @import "print";
+
+
+/* ────────────────────────────────────────
+   CUSTOM OVERRIDES
+─────────────────────────────────────────*/
+
+/* 1) Widen the main wrapper on large screens */
+.wrapper {
+  max-width: 90vw !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 2) Shrink the base font size */
+html {
+  font-size: 14px !important;
+}
+
+/* 3) Two‑column layout for content on desktop */
+@media (min-width: 900px) {
+  .page__content,               /* about page, blog posts, etc. */
+  .collection__body {           /* archive pages, etc. */
+    column-count: 2;
+    column-gap: 2rem;
+  }
+}
+
