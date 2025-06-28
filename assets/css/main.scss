@@ -1,68 +1,39 @@
 ---
 ---
 
-/*
- *    Minimal Mistakes Jekyll Theme
- *
- *  - Michael Rose
- *  - mademistakes.com
- *  - https://twitter.com/mmistakes
- *
-*/
+// ────────────────────────────────────────────────────
+// 1) (Optional) Tweak theme Sass variables here:
+// ────────────────────────────────────────────────────
 
-@import "vendor/breakpoint/breakpoint"; // media query mixins
-@import "variables";
-@import "mixins";
-@import "vendor/susy/susy";
+// e.g. narrower wrapper, smaller type, multi‑cols
+$site-max-width:    90%;
+$base-font-size:    14px;
+$body-columns:      2;
+$body-column-gap:   2rem;
 
-@import "reset";
-@import "base";
+// ────────────────────────────────────────────────────
+// 2) Pull in the entire Minimal Mistakes theme
+// ────────────────────────────────────────────────────
 
-@import "utilities";
-@import "animations";
-@import "tables";
-@import "buttons";
-@import "notices";
-@import "masthead";
-@import "navigation";
-@import "footer";
-@import "syntax";
+@import "minimal-mistakes";
 
-@import "forms";
+// ────────────────────────────────────────────────────
+// 3) Your extra CSS overrides
+// ────────────────────────────────────────────────────
 
-@import "page";
-@import "archive";
-@import "sidebar";
-
-@import "vendor/font-awesome/fontawesome";
-@import "vendor/font-awesome/solid";
-@import "vendor/font-awesome/brands";
-@import "vendor/magnific-popup/magnific-popup";
-@import "print";
-
-
-/* ────────────────────────────────────────
-   CUSTOM OVERRIDES
-─────────────────────────────────────────*/
-
-/* 1) Widen the main wrapper on large screens */
 .wrapper {
   max-width: 90vw !important;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
 }
 
-/* 2) Shrink the base font size */
 html {
   font-size: 14px !important;
 }
 
-/* 3) Two‑column layout for content on desktop */
 @media (min-width: 900px) {
-  .page__content,               /* about page, blog posts, etc. */
-  .collection__body {           /* archive pages, etc. */
+  .page__content,
+  .collection__body {
     column-count: 2;
     column-gap: 2rem;
   }
 }
-
