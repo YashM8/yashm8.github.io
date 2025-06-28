@@ -1,39 +1,41 @@
 ---
 ---
 
-// ────────────────────────────────────────────────────
-// 1) (Optional) Tweak theme Sass variables here:
-// ────────────────────────────────────────────────────
-$site-max-width:    100%;
+/*
+ *    Minimal Mistakes Jekyll Theme
+ *
+ *  - Michael Rose
+ *  - mademistakes.com
+ *  - https://twitter.com/mmistakes
+ *
+*/
 
-// e.g. narrower wrapper, smaller type, multi‑cols
-$base-font-size:    14px;
-$body-columns:      2;
-$body-column-gap:   2rem;
+@import "vendor/breakpoint/breakpoint"; // media query mixins
+@import "variables";
+@import "mixins";
+@import "vendor/susy/susy";
 
-// ────────────────────────────────────────────────────
-// 2) Pull in the entire Minimal Mistakes theme
-// ────────────────────────────────────────────────────
+@import "reset";
+@import "base";
 
-@import "minimal-mistakes";
+@import "utilities";
+@import "animations";
+@import "tables";
+@import "buttons";
+@import "notices";
+@import "masthead";
+@import "navigation";
+@import "footer";
+@import "syntax";
 
-// ────────────────────────────────────────────────────
-// 3) Your extra CSS overrides
-// ────────────────────────────────────────────────────
+@import "forms";
 
-.wrapper {
-  max-width: 90vw !important;
-  margin: 0 auto;
-}
+@import "page";
+@import "archive";
+@import "sidebar";
 
-html {
-  font-size: 14px !important;
-}
-
-@media (min-width: 900px) {
-  .page__content,
-  .collection__body {
-    column-count: 2;
-    column-gap: 2rem;
-  }
-}
+@import "vendor/font-awesome/fontawesome";
+@import "vendor/font-awesome/solid";
+@import "vendor/font-awesome/brands";
+@import "vendor/magnific-popup/magnific-popup";
+@import "print";
