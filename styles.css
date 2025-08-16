@@ -1,0 +1,237 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: #212529;
+    background-color: #f8f9fa;
+    font-size: 14px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+}
+
+.header h1 {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #212529;
+}
+
+.header a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-weight: 500;
+}
+
+.header a:hover {
+    color: #0056b3;
+}
+
+/* Main Content Grid */
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+/* Sections */
+.section {
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.section h2 {
+    font-size: 22px;
+    font-weight: 600;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    color: #212529;
+}
+
+.section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #343a40;
+}
+
+.section p, .section li {
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.section ul {
+    list-style-position: inside;
+    padding-left: 0;
+}
+
+/* Experience & Awards */
+.experience-item, .awards-item {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.experience-item:last-child, .awards-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.job-title, .award-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #212529;
+}
+
+.award-title a {
+    color: #212529;
+}
+
+.award-quote {
+    font-size: 12px;
+    font-style: italic;
+    color: #6c757d;
+    margin-top: 10px;
+    padding-left: 10px;
+    border-left: 2px solid #dee2e6;
+}
+
+.company {
+    font-style: italic;
+    color: #6c757d;
+    margin-bottom: 5px;
+}
+
+.dates {
+    font-size: 12px;
+    color: #6c757d;
+    float: right;
+}
+
+/* Bio and Photo */
+.bio-contact {
+    padding-bottom: 15px;
+}
+
+.bio-photo-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.photo-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #dee2e6;
+    flex-shrink: 0;
+}
+
+.bio p {
+    font-size: 14px;
+    color: #495057;
+}
+
+/* Projects */
+.projects h3 {
+    color: #007bff;
+    font-size: 16px;
+}
+
+.projects h3:hover {
+    color: #0056b3;
+}
+
+/* General Link Styles */
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.emoji {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+/* Conference Contributions Section */
+.conference-contributions {
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+.conference-contributions .experience-item {
+    border-bottom: 1px solid #dee2e6;
+}
+.conference-contributions .experience-item:last-child {
+    border-bottom: none;
+}
+
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .main-content {
+        grid-template-columns: 1fr 1.5fr;
+    }
+    .right-column {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .container {
+        padding: 20px 15px;
+    }
+
+    .header h1 {
+        font-size: 36px;
+    }
+
+    .section h2 {
+        font-size: 20px;
+    }
+
+    .bio-photo-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .dates {
+        float: none;
+        display: block;
+        margin-top: 5px;
+    }
+}
