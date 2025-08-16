@@ -1,0 +1,194 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: serif;
+    line-height: 1.3;
+    color: #333;
+    background: #FAF9F5;
+    font-size: 13px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+.header {
+    text-align: center;
+    border-bottom: 3px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.header h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+.header .subtitle {
+    font-size: 16px;
+    font-style: italic;
+    margin-bottom: 8px;
+}
+a {
+  color: #036302; /* A dark grey color for example */
+  text-decoration: none; /* Optional: Removes the underline */
+}
+
+.header .location {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.section {
+    margin-bottom: 15px;
+}
+
+.section h2 {
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding-bottom: 2px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.section h3 {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 3px;
+    color: #000;
+}
+
+.section p, .section li {
+    margin-bottom: 5px;
+    text-align: justify;
+}
+
+.section ul {
+    margin-left: 15px;
+    margin-bottom: 8px;
+}
+
+.experience-item {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.experience-item:last-child {
+    border-bottom: none;
+}
+
+.job-title {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.company {
+    font-style: italic;
+    color: #666;
+}
+
+.dates {
+    font-size: 12px;
+    color: #888;
+    float: right;
+}
+
+.contact-info {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.contact-info a {
+    color: #000;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+.awards-item {
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.award-title {
+    font-weight: bold;
+}
+
+.award-date {
+    color: #666;
+    font-size: 11px;
+}
+
+.projects {
+    font-size: 12px;
+}
+
+.emoji {
+    font-size: 14px;
+}
+
+.bio {
+    text-align: justify;
+    line-height: 1.4;
+}
+.photo-placeholder {
+    text-align: center; /* Add this to center its content */
+    /* If you have any width or display properties on photo-placeholder, ensure they don't prevent centering. */
+}
+
+.photo-circle {
+    width: 150px;            /* Adjust size as needed */
+    height: 150px;
+/*             border-radius: 50%;      /* Makes it a circle */
+    object-fit: cover;       /* Ensures image doesn't stretch */ */
+    display: block;
+    margin: 0 auto; /* This centers the image horizontally */
+}
+
+
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .left-column {
+        order: 2;
+    }
+
+    .center-column {
+        order: 1;
+    }
+
+    .right-column {
+        order: 3;
+    }
+
+    body {
+        font-size: 12px;
+    }
+
+    .header h1 {
+        font-size: 24px;
+    }
+}
