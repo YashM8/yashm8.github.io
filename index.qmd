@@ -1,0 +1,148 @@
+---
+title: "Yash Mali"
+format:
+  html:
+    page-layout: full
+    mainfont: "et-book, Palatino, Palatino Linotype, Palatino LT STD, Book Antiqua, Georgia, serif"
+    fontsize: 0.75em
+    linkcolor: "#008000"
+---
+
+
+**Email:** [ymali@student.ubc.ca](mailto:ymali@student.ubc.ca) |
+[LinkedIn](https://www.linkedin.com/in/yash-mali-ubc) |
+[GitHub](https://github.com/yashm8)
+
+
+::: {.columns}
+
+::: {.column width="25%"}
+### About
+
+<div style="text-align: center;">
+  ![](images/bio-photo.png){.photo-circle width=150px}
+</div>
+
+👋🏼 I am an undergraduate student at the University of British Columbia (UBC) interested in Machine Learning/Artificial Intelligence and Optimization. I have worked as a Research Assistant (RA) applying AI to many fields and as a software engineer. I am passionate about understanding how large neural networks work to develop safe and interpretable AI.
+
+### Awards
+[**Advanced Machine Learning Network: AML-TN**](https://amltn.cs.ubc.ca/people/undergraduate-research-awards)
+
+  *April 2025*
+
+  *"AML-TN sponsored internships highlight the value of developing young researchers as the next generation of machine learning specialists."*
+
+[**2X Undergraduate Research Award: WLIURA**](https://students.ubc.ca/career/ubc-experiences/work-learn-international-undergraduate-research-awards/)
+
+  *May 2024, 2025*
+
+  *"These awards subsidize professors to hire international undergraduate students to work full-time on their research projects in the Summer Session (May to August)."*
+
+<!--
+### Selected Projects
+- [**Visualizing Neural Network Feature Transformations ✖️➕**](https://yashm8.github.io/neural-vis.html)
+  Takes some time to load. Made with TensorFlow JS.
+-->
+:::
+
+::: {.column width="50%"}
+### Experience
+
+- **Healthcare AI – Undergraduate Research 🩺** | **UBC Medicine** (full-time, co-op) | *May 2025 – Sep 2025*
+
+    Bringing safe and interpretable AI into medicine. We build software that ingests medical guidelines and delivers evidence-based recommendations through natural language interfaces, with privacy preserved. Our work combines computer science, medical, and clinical research in collaboration with UBC’s [Cloud Innovation Centre](https://cic.ubc.ca/). Current projects include agentic NLP pipelines with UIs hosted on AWS chatbots for Bipolar Disorder and Depression. Supervised by [Dr. John Jose Nunez](https://www.google.com/search?q=john+jose+nunez).
+
+- **ML Engineer – Undergraduate Research 🏡** | **UBC SCARP & ECE** (part-time) | *May 2025 – Present*
+
+    Using latest developments in NLP and Computer Vision to analyze public records from Vancouver's housing development approval process. This work bridges AI and social science to address Canada's housing crisis. Supervised by [Dr. Julia Harten](https://scarp.ubc.ca/directory/julia-harten) and [Dr. Christos Thrampoulidis](https://ece.ubc.ca/christos-thrampoulidis/).
+
+- **Unpacking AI 🎨** | **UBC Arts** (part-time) | *May 2025 – Present*
+
+    Developing modules in existing faculty of arts courses that highlight how AI can be used in their field. For example, sequence modelling in economics or computer vision in archeology. Funded by UBC's Teaching and Learning Enhancement fund (TELF). Supervised by [Dr. Laura Nelson](https://sociology.ubc.ca/profile/laura-nelson/) and [Dr. Jonathan Graves](https://economics.ubc.ca/profile/jonathan-graves/). [More info](https://github.com/ubcecon/praxis-ubc).
+
+- **AI and Automation Developer 🧬** | [**Lux Bio**](https://www.luxbio.ca/) (full-time, co-op) | *Sep 2024 – May 2025*
+
+    Applied AI-based drug discovery tools like AlphaFold and ProteinMPNN to optimize sequences and 3D structures of enzymes. Revamped automation systems for bioprocess engineering, orchestrating sensors, pumps, motors, and valves.
+
+- **Computer Vision & Automation – Undergraduate Research 🔬** | **UBC Engineering** @ [**Frostad Research Group**](https://food.chbe.ubc.ca/) (full-time, co-op) | *May 2024 – Sep 2024*
+
+    Developed particle tracking software using an ensemble of open-source computer vision models along with a UI to correct mistakes. Automated and developed data collection software for new instruments invented by the research group. Helped with some day-to-day lab activities. Supervised by [Dr. John Frostad](https://chbe.ubc.ca/john-m-frostad/).
+
+:::
+
+::: {.column width="25%"}
+### Additional Experience
+
+- **[UBC AI Club](https://ubcaiclub.github.io/) 🦾** | *Jan 2025 – Present*
+
+    President: Leading initiatives to encourage student understanding and future pathways in AI and ML.
+
+- **[UBC Uncrewed Aircraft Systems](https://ubcuas.com/) ✈️** | *Sep 2024 – Present*
+
+    Leading the ML sub-team to explore and tune open-sourced models for object detection and tracking. This is a small piece of the puzzle on our drones that compete in two university-level autonomous drone competitions every year.
+
+- **[UBC Biological Internet of Things](https://ubcbiot.com/) 🧬** | *May 2025 – Present*
+
+    Automating brewing/fermentation equipment with IoT-controlled devices while also trying to make glow-in-the-dark beer using green fluorescent protein (GFP).
+
+- **[IT Helpdesk Support](https://it.ubc.ca/) 👨‍💻** | *May 2023 – May 2024*
+
+    Provided technical assistance to faculty, staff, and students for tech-related queries and equipment across campus.
+
+:::
+:::
+
+
+## Selected Work
+
+::: {.columns}
+
+::: {.column width="15%"}
+![](images/canmat_nlp.png){width=150px}
+:::
+
+::: {.column width="85%"}
+**Agentic NLP for Medical Guidelines**
+
+Poster: [CAIDA/TrustML ICML Visits 2025](https://caida.ubc.ca/event/poster-session-caidatrustml-2025-icml-visits) | *July 15, 2025*
+
+Poster: [UBC Psychiatry Research Day 2025](https://psychiatry.ubc.ca/2025-eposter-gallery/) | *June 5, 2025*
+
+Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://students.ubc.ca/career/events-workshops/multidisciplinary-undergraduate-research-conference/) | *Mar 21, 2025*
+:::
+
+:::
+
+---
+
+::: {.columns}
+
+::: {.column width="15%"}
+![](images/praxis.gif){width=150px}
+:::
+
+::: {.column width="85%"}
+**Praxis UBC: Developing AI education modules in Faculty of Arts Courses**
+
+Website: [here](https://ubcecon.github.io/praxis-ubc/)
+:::
+
+:::
+
+---
+
+::: {.columns}
+
+::: {.column width="15%"}
+![](images/starch.png){width=150px}
+:::
+
+::: {.column width="85%"}
+**Quantification of Starch Gelatinization Properties in Glucose and Sucrose Solutions using ParCS and Deep Learning**
+
+Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://students.ubc.ca/career/events-workshops/multidisciplinary-undergraduate-research-conference/) | *Mar 21, 2025*
+:::
+
+:::
+
+
