@@ -19,6 +19,113 @@ linkedin: "https://www.linkedin.com/in/yash-mali-ubc"
 github: "https://github.com/yashm8"
 ---
 
+<style>
+/* Mobile-first responsive design */
+@media (max-width: 768px) {
+  .columns {
+    display: block !important;
+  }
+
+  .column {
+    width: 100% !important;
+    margin-bottom: 2rem;
+  }
+
+  .photo-circle {
+    width: 120px !important;
+    max-width: 120px !important;
+  }
+
+  h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Adjust font sizes for mobile */
+  body {
+    font-size: 0.9em !important;
+    line-height: 1.4;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  /* Better spacing for mobile */
+  .quarto-container {
+    padding: 1rem;
+  }
+
+  /* Make links more touch-friendly */
+  a {
+    padding: 0.2rem;
+    margin: 0.1rem;
+  }
+
+  /* Improve readability */
+  p, li {
+    margin-bottom: 0.8rem;
+  }
+}
+
+/* Tablet adjustments */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .column[style*="width=\"25%\""] {
+    width: 30% !important;
+  }
+
+  .column[style*="width=\"50%\""] {
+    width: 70% !important;
+  }
+
+  body {
+    font-size: 0.8em !important;
+  }
+}
+
+/* General improvements */
+.photo-circle {
+  border-radius: 50%;
+  object-fit: cover;
+  height: auto;
+}
+
+/* Ensure images are responsive */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Better spacing for experience items */
+ul {
+  padding-left: 1.2rem;
+}
+
+li {
+  margin-bottom: 1rem;
+}
+
+/* Improve touch targets */
+@media (max-width: 768px) {
+  li {
+    padding: 0.5rem 0;
+  }
+
+  strong {
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+}
+</style>
+
 **Email:** [ymali@student.ubc.ca](mailto:ymali@student.ubc.ca) |
 [LinkedIn](https://www.linkedin.com/in/yash-mali-ubc) |
 [GitHub](https://github.com/yashm8)
@@ -107,11 +214,16 @@ github: "https://github.com/yashm8"
 
 ::: {.columns}
 
-::: {.column width="15%"}
+::: {.column width="65%"}
+### Selected Work
+
+::: {.columns}
+
+::: {.column width="23%"}
 ![](images/canmat_nlp.png){width=150px}
 :::
 
-::: {.column width="85%"}
+::: {.column width="77%"}
 **Agentic NLP for Medical Guidelines**
 
 Poster: [CAIDA/TrustML ICML Visits 2025](https://caida.ubc.ca/event/poster-session-caidatrustml-2025-icml-visits) | *July 15, 2025*
@@ -127,11 +239,11 @@ Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://student
 
 ::: {.columns}
 
-::: {.column width="15%"}
+::: {.column width="23%"}
 ![](images/praxis.gif){width=150px}
 :::
 
-::: {.column width="85%"}
+::: {.column width="77%"}
 **Praxis UBC: Developing AI education modules in Faculty of Arts Courses**
 
 Website: [here](https://ubcecon.github.io/praxis-ubc/)
@@ -143,11 +255,11 @@ Website: [here](https://ubcecon.github.io/praxis-ubc/)
 
 ::: {.columns}
 
-::: {.column width="15%"}
+::: {.column width="23%"}
 ![](images/starch.png){width=150px}
 :::
 
-::: {.column width="85%"}
+::: {.column width="77%"}
 **Quantification of Starch Gelatinization Properties in Glucose and Sucrose Solutions using ParCS and Deep Learning**
 
 Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://students.ubc.ca/career/events-workshops/multidisciplinary-undergraduate-research-conference/) | *Mar 21, 2025*
@@ -155,4 +267,17 @@ Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://student
 
 :::
 
+:::
 
+::: {.column width="35%"}
+### Small Projects & Blog
+
+- **[Visualizing DINO v3 Features](https://yashm8.github.io/dino3.html)**:
+  Visualize features from a large scale self-supervised vision transformer (DINO v3).
+
+- **[Visualize how Neural Network's move data ](https://yashm8.github.io/neural-vis.html)**:
+  Visualizing how a small neural network transforms toy data.
+
+:::
+
+:::
