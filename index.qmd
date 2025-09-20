@@ -48,7 +48,7 @@ format:
 ::: {.column width="50%"}
 ### Experience
 
-- **Healthcare AI – Undergraduate Research 🩺** | **UBC Medicine** (full-time, co-op) | *May 2025 – Sep 2025*
+- **Healthcare AI – Undergraduate Research 🩺** | **UBC Medicine** (co-op) | *May 2025 – Sep 2025 (Continuing part-time)*
 
     Bringing safe and interpretable AI into medicine. We build software that ingests medical guidelines and delivers evidence-based recommendations through natural language interfaces, with privacy preserved. Our work combines computer science, medical, and clinical research in collaboration with UBC’s [Cloud Innovation Centre](https://cic.ubc.ca/). Current projects include agentic NLP pipelines with UIs hosted on AWS chatbots for Bipolar Disorder and Depression. Supervised by [Dr. John Jose Nunez](https://www.google.com/search?q=john+jose+nunez).
 
@@ -60,11 +60,11 @@ format:
 
     Developing modules in existing faculty of arts courses that highlight how AI can be used in their field. For example, sequence modelling in economics or computer vision in archeology. Funded by UBC's Teaching and Learning Enhancement fund (TELF). Supervised by [Dr. Laura Nelson](https://sociology.ubc.ca/profile/laura-nelson/) and [Dr. Jonathan Graves](https://economics.ubc.ca/profile/jonathan-graves/). [More info](https://github.com/ubcecon/praxis-ubc).
 
-- **AI and Automation Developer 🧬** | [**Lux Bio**](https://www.luxbio.ca/) (full-time, co-op) | *Sep 2024 – May 2025*
+- **AI and Automation Developer 🧬** | [**Lux Bio**](https://www.luxbio.ca/) (co-op) | *Sep 2024 – May 2025*
 
     Applied AI-based drug discovery tools like AlphaFold and ProteinMPNN to optimize sequences and 3D structures of enzymes. Revamped automation systems for bioprocess engineering, orchestrating sensors, pumps, motors, and valves.
 
-- **Computer Vision & Automation – Undergraduate Research 🔬** | **UBC Engineering** @ [**Frostad Research Group**](https://food.chbe.ubc.ca/) (full-time, co-op) | *May 2024 – Sep 2024*
+- **Computer Vision & Automation – Undergraduate Research 🔬** | **UBC Engineering** @ [**Frostad Research Group**](https://food.chbe.ubc.ca/) (co-op) | *May 2024 – Sep 2024*
 
     Developed particle tracking software using an ensemble of open-source computer vision models along with a UI to correct mistakes. Automated and developed data collection software for new instruments invented by the research group. Helped with some day-to-day lab activities. Supervised by [Dr. John Frostad](https://chbe.ubc.ca/john-m-frostad/).
 
