@@ -6,115 +6,16 @@ format:
     mainfont: "et-book, Palatino, Palatino Linotype, Palatino LT STD, Book Antiqua, Georgia, serif"
     fontsize: 0.75em
     linkcolor: "#008000"
+
+orcid: "0009-0003-0274-1072"
+
+website:
+  site-url: "https://yashm8.github.io"
+
+email: "ymali@student.ubc.ca"
+linkedin: "https://www.linkedin.com/in/yash-mali-ubc"
+github: "https://github.com/yashm8"
 ---
-
-<style>
-/* Mobile-first responsive design */
-@media (max-width: 768px) {
-  .columns {
-    display: block !important;
-  }
-
-  .column {
-    width: 100% !important;
-    margin-bottom: 2rem;
-  }
-
-  .photo-circle {
-    width: 120px !important;
-    max-width: 120px !important;
-  }
-
-  h3 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-  }
-
-  /* Adjust font sizes for mobile */
-  body {
-    font-size: 0.9em !important;
-    line-height: 1.4;
-  }
-
-  h1 {
-    font-size: 1.8rem;
-  }
-
-  h2 {
-    font-size: 1.4rem;
-  }
-
-  h3 {
-    font-size: 1.2rem;
-  }
-
-  /* Better spacing for mobile */
-  .quarto-container {
-    padding: 1rem;
-  }
-
-  /* Make links more touch-friendly */
-  a {
-    padding: 0.2rem;
-    margin: 0.1rem;
-  }
-
-  /* Improve readability */
-  p, li {
-    margin-bottom: 0.8rem;
-  }
-}
-
-/* Tablet adjustments */
-@media (max-width: 1024px) and (min-width: 769px) {
-  .column[style*="width=\"25%\""] {
-    width: 30% !important;
-  }
-
-  .column[style*="width=\"50%\""] {
-    width: 70% !important;
-  }
-
-  body {
-    font-size: 0.8em !important;
-  }
-}
-
-/* General improvements */
-.photo-circle {
-  border-radius: 50%;
-  object-fit: cover;
-  height: auto;
-}
-
-/* Ensure images are responsive */
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Better spacing for experience items */
-ul {
-  padding-left: 1.2rem;
-}
-
-li {
-  margin-bottom: 1rem;
-}
-
-/* Improve touch targets */
-@media (max-width: 768px) {
-  li {
-    padding: 0.5rem 0;
-  }
-
-  strong {
-    display: block;
-    margin-bottom: 0.3rem;
-  }
-}
-</style>
-
 
 **Email:** [ymali@student.ubc.ca](mailto:ymali@student.ubc.ca) |
 [LinkedIn](https://www.linkedin.com/in/yash-mali-ubc) |
