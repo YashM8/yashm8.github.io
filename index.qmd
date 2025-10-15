@@ -8,12 +8,16 @@ format:
     linkcolor: "#c6613f"
     backgroundcolor: "#faf8f0"  # Light sepia
     fontcolor: "#141413"        # Dark font
-
+  pdf:
+    documentclass: article
+    mainfont: "Palatino"
+    fontsize: 11pt
+    geometry: margin=1in
+    colorlinks: true
+    linkcolor: "blue"
 orcid: "0009-0003-0274-1072"
-
 website:
   site-url: "https://yashm8.github.io"
-
 email: "ymali@student.ubc.ca"
 linkedin: "https://www.linkedin.com/in/yash-mali-ubc"
 github: "https://github.com/yashm8"
@@ -140,7 +144,7 @@ li {
   ![](images/bio-photo.png){.photo-circle width=150px}
 </div>
 
-👋🏼 I am an undergraduate student at the University of British Columbia (UBC) interested in Machine Learning/Artificial Intelligence and Optimization. I have worked as a Research Assistant (RA) applying AI to many fields and as a software engineer. I am passionate about understanding how large neural networks work to develop safe and interpretable AI.
+👋🏼 I am an undergraduate student at the University of British Columbia (UBC) interested in Machine Learning/Artificial Intelligence and Optimization. I have worked as a Undergraduate Researcher applying AI to many fields and as a ML engineer. I am driven by fundamental questions about what deep learning learns and how optimization shapes intelligent behavior in AI systems.
 
 ### Awards
 [**Advanced Machine Learning Network: AML-TN**](https://amltn.cs.ubc.ca/people/undergraduate-research-awards)
