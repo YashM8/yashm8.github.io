@@ -2,6 +2,7 @@
 title: "Yash Mali"
 format:
   html:
+    self-contained: true
     page-layout: full
     mainfont: "et-book, Palatino, Palatino Linotype, Palatino LT STD, Book Antiqua, Georgia, serif"
     fontsize: 0.75em
