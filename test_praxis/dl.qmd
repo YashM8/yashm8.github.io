@@ -11,6 +11,7 @@ categories:
   - neural networks
 format:
   html: 
+    self-contained: true
     code-fold: true
     code-summary: "Show the code"
 
