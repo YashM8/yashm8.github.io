@@ -2,20 +2,13 @@
 title: "Yash Mali"
 format:
   html:
-    self-contained: true
     page-layout: full
     mainfont: "et-book, Palatino, Palatino Linotype, Palatino LT STD, Book Antiqua, Georgia, serif"
     fontsize: 0.75em
     linkcolor: "#c6613f"
     backgroundcolor: "#faf8f0"  # Light sepia
     fontcolor: "#141413"        # Dark font
-  pdf:
-    documentclass: article
-    mainfont: "Palatino"
-    fontsize: 11pt
-    geometry: margin=1in
-    colorlinks: true
-    linkcolor: "blue"
+
 orcid: "0009-0003-0274-1072"
 website:
   site-url: "https://yashm8.github.io"
