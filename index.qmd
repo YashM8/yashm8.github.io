@@ -8,13 +8,7 @@ format:
     linkcolor: "#c6613f"
     backgroundcolor: "#faf8f0"  # Light sepia
     fontcolor: "#141413"        # Dark font
-  pdf:
-    documentclass: article
-    mainfont: "Palatino"
-    fontsize: 11pt
-    geometry: margin=1in
-    colorlinks: true
-    linkcolor: "blue"
+
 orcid: "0009-0003-0274-1072"
 website:
   site-url: "https://yashm8.github.io"
@@ -224,7 +218,22 @@ li {
 ::: {.columns}
 
 ::: {.column width="65%"}
-### Selected Work
+
+::: {.columns}
+
+::: {.column width="23%"}
+![](images/bc_cancer.png){width=150px}
+:::
+
+::: {.column width="77%"}
+**BC Cancer Summit: AI for Cancer Care** | *November 20, 2025*
+
+Initial demonstration of a conversational agent that helps patients find cancer support resources and collecting attendee feedback to guide improvements. Agenda: [here](https://bccancersummit.ca/wp-content/uploads/2025/10/Summit-Full-Schedule-22Oct2025.pdf) | Page 8
+:::
+
+:::
+
+---
 
 ::: {.columns}
 
