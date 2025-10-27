@@ -194,6 +194,11 @@ li {
 ::: {.column width="25%"}
 ### Additional Experience
 
+
+- **Undergrad Thesis 💾** | *Sep 2025 – Present*
+
+    Researching how data affects that autoregressive models learn and the kinds of solutions they find through a controlled synthetic data setting. Supervised by [Dr.Christos Thrampoulidis](https://ece.ubc.ca/christos-thrampoulidis/).
+
 - **[UBC AI Club](https://ubcaiclub.github.io/) 🦾** | *Jan 2025 – Present*
 
     President: Leading initiatives to encourage student understanding and future pathways in AI and ML.
