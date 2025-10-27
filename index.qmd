@@ -280,7 +280,7 @@ Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://student
 :::
 
 ::: {.column width="35%"}
-### Small Projects & Blog
+### Small Projects
 
 - **[Visualizing DINO v3 Features](https://yashm8.github.io/dino3.html)**:
   Visualize features from a large scale self-supervised vision transformer (DINO v3).
