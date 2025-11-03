@@ -228,7 +228,7 @@ li {
 ::: {.column width="77%"}
 **BC Cancer Summit: AI for Cancer Care** | *November 20, 2025*
 
-Initial demonstration of a conversational agent that helps patients find cancer support resources and collecting attendee feedback to guide improvements. Agenda: [here](https://bccancersummit.ca/wp-content/uploads/2025/10/Summit-Full-Schedule-31Oct2025.pdf) | Page 8
+Initial demonstration of a conversational agent that helps patients find cancer support resources and collecting attendee feedback to guide improvements. Agenda: [here](https://bccancersummit.ca/wp-content/uploads/2025/10/Summit-Full-Schedule-31Oct2025.pdf) | Page 9
 :::
 
 :::
