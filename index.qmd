@@ -191,7 +191,7 @@ li {
 
 - **Undergrad Thesis 💾** | *Sep 2025 – Present*
 
-    Researching how data affects that autoregressive models learn and the kinds of solutions they find through a controlled synthetic data setting. Supervised by [Dr.Christos Thrampoulidis](https://ece.ubc.ca/christos-thrampoulidis/).
+    Researching how data diversity and noise affects autoregressive models learn and the kinds of solutions they find through a controlled synthetic data setting. Supervised by [Dr.Christos Thrampoulidis](https://ece.ubc.ca/christos-thrampoulidis/).
 
 - **[UBC AI Club](https://ubcaiclub.github.io/) 🦾** | *Jan 2025 – Present*
 
