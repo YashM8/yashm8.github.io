@@ -1,0 +1,353 @@
+---
+title: "AttenDence: Maximizing Attention Confidence for Test Time Adaptation"
+author:
+  - name: "Yash Mali"
+    affiliation: "University of British Columbia"
+    email: "ymali@mail.ubc.ca"
+format:
+  html:
+    page-layout: full
+    mainfont: "et-book, Palatino, Palatino Linotype, Palatino LT STD, Book Antiqua, Georgia, serif"
+    fontsize: 0.75em
+    linkcolor: "#c6613f"
+    backgroundcolor: "#faf8f0"
+    fontcolor: "#141413"
+    toc: true
+    number-sections: true
+    smooth-scroll: true
+# bibliography: references.bib
+site-url: "https://yashm8.github.io/attendence"
+---
+
+<style>
+/* Mobile-first responsive design (from your CV theme, simplified) */
+@media (max-width: 768px) {
+  .columns {
+    display: block !important;
+  }
+
+  .column {
+    width: 100% !important;
+    margin-bottom: 2rem;
+  }
+
+  .photo-circle {
+    width: 120px !important;
+    max-width: 120px !important;
+  }
+
+  body {
+    font-size: 0.9em !important;
+    line-height: 1.4;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  .quarto-container {
+    padding: 1rem;
+  }
+
+  a {
+    padding: 0.2rem;
+    margin: 0.1rem;
+  }
+
+  p, li {
+    margin-bottom: 0.8rem;
+  }
+}
+
+/* Tablet adjustments */
+@media (max-width: 1024px) and (min-width: 769px) {
+  body {
+    font-size: 0.8em !important;
+  }
+}
+
+/* General improvements */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.photo-circle {
+  border-radius: 50%;
+  object-fit: cover;
+  height: auto;
+}
+
+ul {
+  padding-left: 1.2rem;
+}
+
+li {
+  margin-bottom: 1rem;
+}
+</style>
+
+**Author:** *Yash Mali*  
+**Affiliation:** University of British Columbia  
+**Contact:** [ymali@mail.ubc.ca](mailto:ymali@mail.ubc.ca)
+
+---
+
+## Abstract
+
+Test-time adaptation (TTA) enables models to adapt to distribution shifts at inference time. While entropy minimization over the output distribution has proven effective for TTA, transformers offer an additional unsupervised learning signal through their attention mechanisms. We propose minimizing the entropy of attention distributions from the CLS token to image patches as a novel TTA objective. This approach encourages the model to attend more confidently to relevant image regions under distribution shift and is effective even when only a single test image is available. We demonstrate that attention entropy minimization substantially improves robustness across diverse corruption types while not hurting performance on clean data.
+
+---
+
+## 1 Introduction
+
+Deep neural networks achieve impressive performance on in-distribution data but often fail catastrophically when deployed on data from shifted distributions [@hendrycks2019robustness]. This brittleness poses significant challenges for real-world deployment where models encounter diverse corruptions and covariate shifts. TTA addresses this challenge by adapting models to new distributions.
+
+Recent TTA methods have primarily focused on entropy minimization over the output distribution, which encourages the model to make confident predictions at test time. While effective, this approach treats the feature extractor as a black box and ignores rich internal representations that could guide adaptation. Vision transformers [@dosovitskiy2021an], which have become the dominant architecture for visual recognition, offer a particularly promising internal signal: attention mechanisms that explicitly capture spatial relationships and feature importance.
+
+In this work, we introduce a novel TTA objective based on minimizing the entropy of attention distributions in vision transformers. Specifically, we minimize the entropy of the distribution defined by the attention scores of the CLS token attending to the image patch tokens. This encourages the model to focus more confidently on relevant image regions under distribution shift. Our approach is motivated by two key observations:
+
+First, entropy minimization on output predictions works because confident predictions tend to be correct predictions. We hypothesize that this principle extends to attention mechanisms: confident attention patterns (low entropy) should correspond to better feature representations.
+
+Second, modern vision transformers like DINOv3 [@simeoni2025dinov3] learn rich, interpretable attention maps through internet-scale self-supervised training.
+
+---
+
+## 2 Method
+
+### 2.1 Problem Setting
+
+We consider the standard test-time adaptation setting. Given a model \(f_\theta\) trained on a source distribution \(\mathcal{D}_{\text{source}}\), we encounter a sample \(x_i\) from a shifted distribution \(\mathcal{D}_{\text{shift}}\) at test time.
+
+For each test sample \(x_i \in \mathcal{D}_{\text{shift}}\), we aim to:
+
+1. Adapt the model parameters \(\theta\) using an unsupervised objective \(\mathcal{L}(x_i; \theta)\).
+2. Generate prediction \(\hat{y}_i = f_\theta(x_i)\) using the adapted model.
+3. Reset the model parameters to the original pretrained state.
+
+We focus on the fully test-time setting where no source data, validation data, or labels are available during adaptation. This is the most challenging and practical setting for TTA.
+
+### 2.2 TTA Objective: Attention Entropy Minimization
+
+Our method makes use of the attention mechanism in vision transformers to guide test-time adaptation. Vision transformers process images as sequences of patches, with a CLS token that aggregates global information for downstream tasks like classification. The self-attention mechanism computes pairwise relationships between all tokens, producing attention weights that indicate the importance of each token.
+
+We focus on the attention from the CLS token to image patch tokens in the final transformer layer. These attention weights can be interpreted as indicating which image regions are most relevant for the classification decision. Under distribution shift, we hypothesize that attention patterns may become more diffuse or uncertain, indicating that the model is unsure where to focus.
+
+#### 2.2.1 Mathematical Formulation
+
+Let the final-layer attention tensor be
+
+$$
+\mathbf{A} \in \mathbb{R}^{B \times H \times T \times T},
+$$
+
+where:
+
+- \(B\) is the batch size (here \(B = 1\)),
+- \(H\) is the number of attention heads,
+- \(T\) is the sequence length (CLS token + register tokens + patch tokens).
+
+Let \(t_{\text{cls}}\) denote the index of the CLS token, and let \(t_r\) be the number of register or special tokens (including the CLS token itself). Patch tokens correspond to indices
+
+$$
+j = t_r + 1, \dots, T.
+$$
+
+We extract the CLS-to-patch attention scores as
+
+$$
+A_{\text{cls}}(h, j)
+=
+\mathbf{A}_{1,\,h,\,t_{\text{cls}},\,j},
+\qquad
+h = 1,\dots,H,\;\;
+j = t_r + 1,\dots,T,
+$$
+
+giving a matrix
+
+$$
+A_{\text{cls}} \in \mathbb{R}^{H \times (T - t_r)}.
+$$
+
+We then average across attention heads:
+
+$$
+\bar{a}_j
+=
+\frac{1}{H}
+\sum_{h=1}^{H}
+A_{\text{cls}}(h, j),
+\qquad
+j = t_r + 1,\dots,T.
+$$
+
+Next, we normalize to form a probability distribution over patch tokens (since we exclude register tokens):
+
+$$
+\tilde{a}_j
+=
+\frac{\bar{a}_j}{\sum_{k = t_r + 1}^{T} \bar{a}_k},
+\qquad
+j = t_r + 1,\dots,T.
+$$
+
+The attention entropy loss is then defined as:
+
+$$
+\mathcal{L}_{\text{attn}}
+=
+- \sum_{j = t_r + 1}^{T}
+\tilde{a}_j \log(\tilde{a}_j).
+$$
+
+Minimizing this loss encourages the attention from the CLS token to be focused (i.e., low-entropy) over patch tokens.
+
+#### 2.2.2 Intuition and Design Choices
+
+Several design choices are worth noting:
+
+**CLS token attention.** We focus on attention from the CLS token because it directly influences the features used for classification. Other tokens (patch tokens or register tokens) have different semantic roles and may not be as informative for adaptation.
+
+**Final layer.** We use the final transformer layer because it contains the highest-level semantic information. Earlier layers may capture low-level features that are less relevant for classification.
+
+**Excluding register tokens.** DINOv3 uses register tokens that serve as additional global memory. These are not part of the image content and should be excluded from our attention distribution.
+
+**L1 vs softmax normalization.** We use L1 normalization rather than softmax because attention weights are already normalized within the transformer. Re-applying softmax would unnecessarily rescale the distribution.
+
+### 2.3 Optimization and Adaptation Protocol
+
+For each test sample, we perform a single gradient descent step on the attention entropy loss and then reset the model parameters.
+
+We explore Adam and SGD to perform the single update. We also experiment with whether to reset the optimizer state (e.g., first and second moments in Adam) between samples or allow it to accumulate over multiple test samples, while still resetting model parameters. We observe that not resetting Adam's optimizer state between samples can sometimes improve performance, even though we reset the model parameters themselves.
+
+---
+
+## 3 Figures
+
+### 3.1 Attention Overview
+
+![](images/summ1.png)
+
+The image patches are fed into the model, and the attention scores from the last attention block are taken. The CLS-to-image-patch scores define the distribution whose entropy is minimized.
+
+### 3.2 Optimization Experiments
+
+::: {.columns}
+
+::: {.column width="50%"}
+![](images/adam_test_moments.png)
+
+**Optimization with Adam and different moment-reset strategies.**
+:::
+
+::: {.column width="50%"}
+![](images/sgd_test_reset.png)
+
+**Optimization with SGD and full parameter resets.**
+:::
+
+:::
+
+---
+
+## 4 Related Work
+
+### 4.1 Test-Time Adaptation
+
+Test-time adaptation has emerged as a practical approach to handling distribution shift without requiring labeled target data or source data access.
+
+**Tent.** Tent [@wang2021tent] introduced entropy minimization for TTA, updating only batch normalization statistics to adapt to new distributions. This approach balances adaptation capability with stability by limiting the number of adapted parameters.
+
+**TTT.** TTT [@sun19ttt] proposes learning a self-supervised auxiliary task (like rotation) during training that can also be used for test-time optimization.
+
+**MEMO.** MEMO [@memo] uses test-time augmentation to turn a single image into a batch and minimizes the output entropy distribution.
+
+---
+
+## 5 Experiments
+
+### 5.1 Experimental Setup
+
+**Dataset.** We evaluate on CIFAR-10-C [@hendrycks2019robustness], which augments the standard CIFAR-10 test set with 19 different corruption types at 5 severity levels. The corruptions span diverse categories.
+
+We evaluate on severity level 5 (the most severe) for all corruption types. This provides a challenging test of robustness, as the corruptions are strong enough to significantly degrade performance.
+
+**Model.** We use DINOv3-base pretrained on a large-scale image dataset. We add a classification head and fine-tune the entire model on clean CIFAR-10 training data using standard cross-entropy loss.
+
+**Evaluation Protocol.** For each corruption type, we use 1,000 samples for hyperparameter search and then evaluate on 9,000 test samples. We report per-corruption accuracy and mean corruption accuracy (mCA) across all corruption types. Each sample (batch size 1) is adapted independently with a single gradient step.
+
+**Baselines.** We evaluate without any test-time updates, providing a measure of the model's inherent robustness, and perform TTA on clean data to check if it hurts accuracy.
+
+### 5.2 Main Results
+
+We can see from the figures that using attention confidence can be a useful self-supervised learning signal. We performed a hyperparameter sweep (e.g., learning rate, optimizer choice, number of adapted layers) and observe consistent improvements in robustness on corrupted data, without degrading performance on clean data.
+
+<!--
+You can add a results table here, e.g.:
+
+Method | mCA (%)
+------ | -------
+No Adaptation | XX.X
+Tent (BN only) | XX.X
+Output Entropy Min | XX.X
+Attention Entropy Min (Ours) | **XX.X**
+-->
+
+---
+
+## 6 Limitations
+
+While our method shows consistent improvements, we identify several limitations:
+
+### 6.1 Architecture Dependence
+
+Our approach is specifically designed for vision transformers with attention mechanisms. CNNs and other architectures without explicit attention would require different adaptation strategies. This limits the generality of our method compared to architecture-agnostic approaches like output entropy minimization.
+
+### 6.2 Attention Quality Dependency
+
+The effectiveness of attention entropy minimization depends on the quality of pretrained attention maps. We chose DINOv3 specifically because its self-supervised pretraining produces rich, interpretable attention patterns. Transformers with less interpretable attention (e.g., those trained purely on supervised ImageNet classification without registers) may benefit less from attention-based adaptation.
+
+### 6.3 Computational Overhead
+
+We have to use a forward pass to capture attention scores, a backward pass to update the weights, and then another forward pass. This adds a significant computational overhead that may be warranted if TTA is needed.
+
+### 6.4 Potential for Overconfidence
+
+Like output entropy minimization, attention entropy minimization encourages confident model behavior. On samples where the model is fundamentally uncertain (e.g., due to severe corruption or out-of-distribution inputs), forcing confident attention may lead to overconfident wrong predictions. Methods for detecting and handling high-uncertainty samples could improve robustness.
+
+---
+
+## 7 Future Research Directions
+
+Our work opens several promising directions for future research:
+
+### 7.1 Multi-Level Attention
+
+We focused on CLS-to-patch attention in the final layer. Future work could explore hierarchical attention patterns across multiple layers, potentially capturing both low-level and high-level adaptation signals. Different layers may be optimal for different types of distribution shift.
+
+### 7.2 Optimizer Memory
+
+As an additional finding, we observed interesting interactions between optimizer state management and adaptation performance. Allowing moments to accumulate across samples (while still resetting model parameters) can improve performance, suggesting that temporal alignment via optimizer state may be an underexplored factor in TTA algorithm design.
+
+---
+
+## 8 Conclusion
+
+We introduced attention entropy minimization as a novel objective for test-time adaptation with vision transformers. By encouraging confident attention patterns from CLS tokens to image patches, our method helps models focus on semantic content despite distribution shifts, improving robustness across diverse corruption types.
+
+Our work demonstrates that vision transformers' attention mechanisms provide valuable signals for test-time adaptation, complementing existing approaches based on output predictions. As transformers become increasingly prevalent, attention-based adaptation offers a promising direction for building more robust vision systems that can handle the distribution shifts encountered in real-world deployment.
+
+---
+
+## Acknowledgements
+
+We thank Evan Shelhamer for helpful discussions.

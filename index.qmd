@@ -238,6 +238,25 @@ Initial demonstration of a conversational agent that helps patients find cancer 
 ::: {.columns}
 
 ::: {.column width="23%"}
+![](images/adam_test_moments.png){width=150px}
+:::
+
+::: {.column width="77%"}
+**AttenDence: Maximizing Attention Confidence for Test-Time Adaptation** | *Graduate course project*
+
+CPSC 532: Adaptation and Adaptive Computation | *Fall 2025*
+
+Developed a test-time adaptation method for attention based models that minimizes the entropy of CLS-to-patch attention distributions so the model attends more confidently to relevant image regions under distribution shift. This attention-entropy minimization improves robustness to diverse corruptions on single-image test streams while preserving performance on clean data. Code and preprint coming soon!
+:::
+
+:::
+
+---
+
+
+::: {.columns}
+
+::: {.column width="23%"}
 ![](images/canmat_nlp.png){width=150px}
 :::
 
