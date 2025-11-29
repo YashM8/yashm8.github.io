@@ -126,7 +126,8 @@ li {
 
 **Email:** [ymali@student.ubc.ca](mailto:ymali@student.ubc.ca) |
 [LinkedIn](https://www.linkedin.com/in/yash-mali-ubc) |
-[GitHub](https://github.com/yashm8)
+[GitHub](https://github.com/yashm8) | 📄 [CV](cv/yash_mali_cv.pdf)
+
 
 
 ::: {.columns}
