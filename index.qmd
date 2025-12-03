@@ -175,6 +175,7 @@ li {
 - **Unpacking AI 🎨** | **UBC Arts** (part-time) | *May 2025 – Present*
 
     Developing modules in existing faculty of arts courses that highlight how AI can be used in their field. For example, sequence modelling in economics or computer vision in archeology. Funded by UBC's Teaching and Learning Enhancement fund (TELF). Supervised by [Dr. Laura Nelson](https://sociology.ubc.ca/profile/laura-nelson/) and [Dr. Jonathan Graves](https://economics.ubc.ca/profile/jonathan-graves/). [More info](https://github.com/ubcecon/praxis-ubc).
+    Tangentially, working on benchmarking LLMs for historical faithfulness. 
 
 - **AI and Automation Developer 🧬** | [**Lux Bio**](https://www.luxbio.ca/) (co-op) | *Sep 2024 – May 2025*
 
@@ -269,6 +270,8 @@ Poster: [CAIDA/TrustML ICML Visits 2025](https://caida.ubc.ca/event/poster-sessi
 Poster: [UBC Psychiatry Research Day 2025](https://psychiatry.ubc.ca/2025-eposter-gallery/) | *June 5, 2025*
 
 Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://students.ubc.ca/career/events-workshops/multidisciplinary-undergraduate-research-conference/) | *Mar 21, 2025*
+
+Preprint on medarxiv: Link coming soon!
 :::
 
 :::
@@ -285,6 +288,8 @@ Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://student
 **Praxis UBC: Developing AI education modules in Faculty of Arts Courses**
 
 Website: [here](https://ubcecon.github.io/praxis-ubc/)
+
+Under review at Conference on Teaching and Research in Economic Education!
 :::
 
 :::
@@ -301,6 +306,8 @@ Website: [here](https://ubcecon.github.io/praxis-ubc/)
 **Quantification of Starch Gelatinization Properties in Glucose and Sucrose Solutions using ParCS and Deep Learning**
 
 Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://students.ubc.ca/career/events-workshops/multidisciplinary-undergraduate-research-conference/) | *Mar 21, 2025*
+
+Under review at Food Hydrocolloids!
 :::
 
 :::
