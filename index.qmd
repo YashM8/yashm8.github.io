@@ -15,6 +15,7 @@ website:
 email: "ymali@student.ubc.ca"
 linkedin: "https://www.linkedin.com/in/yash-mali-ubc"
 github: "https://github.com/yashm8"
+google-scholar: "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ"
 ---
 
 <style>
@@ -125,9 +126,10 @@ li {
 </style>
 
 **Email:** [ymali@student.ubc.ca](mailto:ymali@student.ubc.ca) |
+[Google Scholar](https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ) |
 [LinkedIn](https://www.linkedin.com/in/yash-mali-ubc) |
-[GitHub](https://github.com/yashm8) | 📄 [CV](cv/yash_mali_cv_copy.pdf)
-
+[GitHub](https://github.com/yashm8) |
+[CV](cv/yash_mali_cv_1.pdf)
 
 
 ::: {.columns}
@@ -240,7 +242,7 @@ Initial demonstration of a conversational agent that helps patients find cancer 
 ::: {.columns}
 
 ::: {.column width="23%"}
-![](images/adam_test_moments.png){width=150px}
+![](images/adam_impovement.png){width=150px}
 :::
 
 ::: {.column width="77%"}
@@ -248,7 +250,7 @@ Initial demonstration of a conversational agent that helps patients find cancer 
 
 CPSC 532: Adaptation and Adaptive Computation | *Fall 2025*
 
-Developed a test-time adaptation method for attention based models that minimizes the entropy of CLS-to-patch attention distributions so the model attends more confidently to relevant image regions under distribution shift. This attention-entropy minimization improves robustness to diverse corruptions on single-image test streams while preserving performance on clean data. Code and preprint coming soon!
+We propose minimizing the entropy of the distribution defined by the attention scores from the CLS token to image patches as a novel TTA objective. This approach encourages the model to attend more confidently to relevant image regions under distribution shift and is effective in a streaming setting. We demonstrate that attention entropy minimization improves robustness across diverse corruption types while slightly improving performance on clean data. Preprint [here](https://arxiv.org/abs/2511.18925) and code coming soon!
 :::
 
 :::
@@ -271,7 +273,7 @@ Poster: [UBC Psychiatry Research Day 2025](https://psychiatry.ubc.ca/2025-eposte
 
 Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://students.ubc.ca/career/events-workshops/multidisciplinary-undergraduate-research-conference/) | *Mar 21, 2025*
 
-Preprint on medarxiv: Link coming soon!
+Preprint [here](https://www.medrxiv.org/content/10.64898/2025.11.30.25341311v1) on  medRxiv.
 :::
 
 :::
