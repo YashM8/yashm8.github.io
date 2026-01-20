@@ -141,7 +141,7 @@ li {
   ![](images/bio-photo.png){.photo-circle width=150px}
 </div>
 
-👋🏼 I am an undergraduate student at the University of British Columbia (UBC) broadly interested in Machine Learning/Artificial Intelligence and Optimization. Specifically, I am interested in interpretability and generalization and uncovering interesting details about how small and large models work under the hood. In the past, I have worked on applying AI across a wide range of scientific and social domains. 
+👋🏼 I am an undergraduate student at the University of British Columbia (UBC) broadly interested in Machine Learning/Artificial Intelligence and Optimization. Specifically, I am interested in interpretability, understanding generalization, and uncovering interesting mechanisms about how small and large models work under the hood. In the past, I have worked on applying AI across a wide range of scientific and social domains. 
 
 ### Awards
 [**Advanced Machine Learning Network: AML-TN**](https://amltn.cs.ubc.ca/people/undergraduate-research-awards)
@@ -190,7 +190,7 @@ li {
 
 - **Computer Vision & Automation – Undergraduate Research 🔬** | **UBC Engineering** @ [**Frostad Research Group**](https://food.chbe.ubc.ca/) (**co-op**) | *May 2024 – Sep 2024*
 
-    Developed particle tracking software using an ensemble of open-source computer vision models along with a UI to correct mistakes. Automated and developed data collection software for new instruments invented by the research group. Helped with some day-to-day lab activities. Advised by [Dr. John Frostad](https://chbe.ubc.ca/john-m-frostad/).
+    Developed particle tracking software using an ensemble of open-source computer vision models along with a UI to correct mistakes. Automated and developed data collection software for new instruments invented by the research group. Advised by [Dr. John Frostad](https://chbe.ubc.ca/john-m-frostad/).
 
 - **Instrumentation** | **[UBC Biological Internet of Things](https://ubcbiot.com/) 🧬** | *May 2025 – Present*
 
@@ -239,7 +239,7 @@ li {
 :::
 
 ::: {.column width="77%"}
-**BC Cancer Summit: AI for Cancer Care** | *November 20, 2025*
+**BC Cancer Summit: AI for Cancer Care** | *November 20, 25'*
 
 Initial demonstration of a conversational agent that helps patients find cancer support resources and collecting attendee feedback to guide improvements. Agenda: [here](https://bccancersummit.ca/wp-content/uploads/2025/10/Summit-Full-Schedule-31Oct2025.pdf) | Page 9
 :::
@@ -257,7 +257,7 @@ Initial demonstration of a conversational agent that helps patients find cancer 
 ::: {.column width="77%"}
 **AttenDence: Maximizing Attention Confidence for Test-Time Adaptation** | *Graduate course project*
 
-CPSC 532: Adaptation and Adaptive Computation | *Fall 2025*
+CPSC 532: Adaptation and Adaptive Computation | *Fall 25'*
 
 We propose minimizing the entropy of the distribution defined by the attention scores from the CLS token to image patches as a novel TTA objective. This approach encourages the model to attend more confidently to relevant image regions under distribution shift and is effective in a streaming setting. We demonstrate that attention entropy minimization improves robustness across diverse corruption types while slightly improving performance on clean data. Preprint [here](https://arxiv.org/abs/2511.18925) and code coming soon!
 :::
@@ -276,13 +276,11 @@ We propose minimizing the entropy of the distribution defined by the attention s
 ::: {.column width="77%"}
 **Agentic NLP for Medical Guidelines**
 
-Poster: [CAIDA/TrustML ICML Visits 2025](https://caida.ubc.ca/event/poster-session-caidatrustml-2025-icml-visits) | *July 15, 2025*
+Posters: [CAIDA/TrustML ICML Visits 2025](https://caida.ubc.ca/event/poster-session-caidatrustml-2025-icml-visits) (*July 15, 25'*), [UBC Psychiatry Research Day 2025](https://psychiatry.ubc.ca/2025-eposter-gallery/) (*June 5 25'*)
 
-Poster: [UBC Psychiatry Research Day 2025](https://psychiatry.ubc.ca/2025-eposter-gallery/) | *June 5, 2025*
+Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://students.ubc.ca/career/events-workshops/multidisciplinary-undergraduate-research-conference/) | *Mar 21, 25'*
 
-Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://students.ubc.ca/career/events-workshops/multidisciplinary-undergraduate-research-conference/) | *Mar 21, 2025*
-
-Preprint [here](https://www.medrxiv.org/content/10.64898/2025.11.30.25341311v1) on  medRxiv. Under review at The Canadian Journal of Psychiatry.
+Preprint [here](https://www.medrxiv.org/content/10.64898/2025.11.30.25341311v1) on  medRxiv. Under review at The Canadian Journal of Psychiatry!
 :::
 
 :::
@@ -298,9 +296,7 @@ Preprint [here](https://www.medrxiv.org/content/10.64898/2025.11.30.25341311v1) 
 ::: {.column width="77%"}
 **Praxis UBC: Developing AI education modules in Faculty of Arts Courses**
 
-Website: [here](https://ubcecon.github.io/praxis-ubc/)
-
-Under review at Conference on Teaching and Research in Economic Education!
+Website: [here](https://ubcecon.github.io/praxis-ubc/). Under review at Conference on Teaching and Research in Economic Education!
 :::
 
 :::
@@ -316,9 +312,9 @@ Under review at Conference on Teaching and Research in Economic Education!
 ::: {.column width="77%"}
 **Quantification of Starch Gelatinization Properties in Glucose and Sucrose Solutions using ParCS**
 
-Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://students.ubc.ca/career/events-workshops/multidisciplinary-undergraduate-research-conference/) | *Mar 21, 2025*
+Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://students.ubc.ca/career/events-workshops/multidisciplinary-undergraduate-research-conference/) | *Mar 21, 25'*
 
-Published at Food Hydrocolloids! 🎉
+*Jan 14, 25'*: Accepted at Food Hydrocolloids! 🎉
 :::
 
 :::
