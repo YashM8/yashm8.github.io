@@ -183,7 +183,7 @@ li {
 
 - **Healthcare AI – Undergraduate Research 🩺** | **UBC Medicine** (**co-op**) | *May 2025 – Sep 2025 (Continuing part-time)*
 
-    NLP tools for patients and doctors. We collaborate with UBC’s [Cloud Innovation Centre](https://cic.ubc.ca/) for certain projects. Current projects include agentic NLP pipelines with UIs hosted on AWS for Bipolar Disorder, Depression and Cancer Care. Advised by [Dr. John Jose Nunez](https://www.google.com/search?q=john+jose+nunez).
+    NLP tools for patients and doctors. We collaborate with UBC’s [Cloud Innovation Centre](https://cic.ubc.ca/) for certain projects. Current projects include agentic NLP pipelines with UIs hosted on AWS for Bipolar Disorder, Depression and Cancer Care. Advised by [Dr. John Jose Nunez](https://nunez-comp-mental-health-cancer-care.github.io/).
 
 - **AI and Automation Developer 🧬** | [**Lux Bio**](https://www.luxbio.ca/) (**co-op**) | *Sep 2024 – May 2025*
 
