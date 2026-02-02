@@ -141,7 +141,7 @@ li {
   ![](images/bio-photo.png){.photo-circle width=150px}
 </div>
 
-👋🏼 I am an undergraduate student at the University of British Columbia (UBC) broadly interested in Machine Learning/Artificial Intelligence and Optimization. Specifically, I am interested in interpretability, understanding generalization, and uncovering interesting mechanisms about how small and large models work under the hood. In the past, I have worked on applying AI across a wide range of scientific and social domains. 
+👋 I am an undergraduate student at the University of British Columbia (UBC) broadly interested in Machine Learning/Artificial Intelligence and Optimization. Specifically, I am interested in interpretability, understanding generalization, and uncovering interesting mechanisms about how small and large models work under the hood. In the past, I have worked on applying AI across a wide range of scientific and social domains. 
 
 ### Awards
 [**Advanced Machine Learning Network: AML-TN**](https://amltn.cs.ubc.ca/people/undergraduate-research-awards)
