@@ -182,7 +182,7 @@ li {
 
 - **Quantum ML – Undergraduate Research 🩺** | **UBC Chemistry** | *Jan 2026 – Present*
 
-    Quantum and regular ML for organic chemistry. Advised by [Dr. Jolene Reid](https://www.thereidlab.com/jolenereid).
+    Comparing how quantum variational circuits and MLPs encode information differently for organic chemistry applications. Advised by [Dr. Jolene Reid](https://www.thereidlab.com/jolenereid).
 
 - **AI and Automation Developer 🧬** | [**Lux Bio**](https://www.luxbio.ca/) (**co-op**) | *Sep 2024 – May 2025*
 
