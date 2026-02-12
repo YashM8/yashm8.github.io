@@ -227,7 +227,7 @@ li {
 :::
 :::
 
-## Selected Papers and Talks
+## Papers and Talks
 ::: {.columns}
 
 ::: {.column width="65%"}
@@ -332,17 +332,26 @@ Initial demonstration of a conversational agent that helps patients find cancer 
 
 ---
 
-:::
+[//]: # ()
+[//]: # (:::)
 
-::: {.column width="35%"}
-### Small Projects
+[//]: # ()
+[//]: # (::: {.column width="35%"})
 
-- **[Visualizing DINO v3 Features](https://yashm8.github.io/dino3.html)**:
-  Visualize features from a large scale self-supervised vision transformer (DINO v3).
+[//]: # (### Small Projects)
 
-- **[Visualize how Neural Networks move data ](https://yashm8.github.io/neural-vis.html)**:
-  Visualizing how a small neural network transforms toy data.
+[//]: # ()
+[//]: # (- **[Visualizing DINO v3 Features]&#40;https://yashm8.github.io/dino3.html&#41;**:)
 
-:::
+[//]: # (  Visualize features from a large scale self-supervised vision transformer &#40;DINO v3&#41;.)
 
-:::
+[//]: # ()
+[//]: # (- **[Visualize how Neural Networks move data ]&#40;https://yashm8.github.io/neural-vis.html&#41;**:)
+
+[//]: # (  Visualizing how a small neural network transforms toy data.)
+
+[//]: # ()
+[//]: # (:::)
+
+[//]: # ()
+[//]: # (:::)
