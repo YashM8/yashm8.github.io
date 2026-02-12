@@ -325,7 +325,7 @@ Preprint [here](files/Starch_Sugar_Paper.pdf), Paper [here](https://www.scienced
 
 John-Jose Nunez, Alen Bates, **Yash Mali**, Olivia Cook
 
-Initial demonstration of a conversational agent that helps patients find cancer support resources and collecting attendee feedback to guide improvements. Agenda: [here](https://bccancersummit.ca/wp-content/uploads/2025/10/Summit-Full-Schedule-31Oct2025.pdf) | Page 9
+Initial demonstration of a conversational agent that helps patients find cancer support resources and collecting attendee feedback to guide improvements. [Talk agenda here](https://bccancersummit.ca/wp-content/uploads/2025/10/Summit-Full-Schedule-31Oct2025.pdf) | Page 9
 :::
 
 :::
