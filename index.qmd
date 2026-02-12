@@ -129,7 +129,7 @@ li {
 [Google Scholar](https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ) |
 [LinkedIn](https://www.linkedin.com/in/yash-mali-ubc) |
 [GitHub](https://github.com/yashm8) |
-[CV](cv/yash_mali_cv_1.pdf)
+[CV](cv/YashMaliCV_3p.pdf)
 
 
 ::: {.columns}
@@ -228,45 +228,30 @@ li {
 :::
 
 ## Selected Papers and Talks
-
 ::: {.columns}
 
 ::: {.column width="65%"}
 
+
+
 ::: {.columns}
 
 ::: {.column width="23%"}
-![](images/bc_cancer.png){width=150px}
+![](images/corr_imagenet.png){width=150px}
 :::
 
 ::: {.column width="77%"}
-**BC Cancer Summit: AI for Cancer Care** | *November 20, 25'*
+**LookSharp: Attention Entropy Minimization for Test-Time Adaptation** 
 
-Initial demonstration of a conversational agent that helps patients find cancer support resources and collecting attendee feedback to guide improvements. Agenda: [here](https://bccancersummit.ca/wp-content/uploads/2025/10/Summit-Full-Schedule-31Oct2025.pdf) | Page 9
+**Yash Mali**, Evan Shelhamer
+
+We minimize the entropy of CLS-to-patch attention in the final layer as a novel TTA loss, encouraging the model to maintain focused attention on shifted data. We demonstrate that attention entropy minimization improves robustness on ImageNet-C. We also show that it is complementary to output entropy minimization and maintains performance on clean data. 
+Preprint [here](https://arxiv.org/abs/2511.18925) and code coming soon!
 :::
 
 :::
 
 ---
-
-::: {.columns}
-
-::: {.column width="23%"}
-![](images/corr_heads2.png){width=150px}
-:::
-
-::: {.column width="77%"}
-**AttenDence: Maximizing Attention Confidence for Test-Time Adaptation** | *Graduate course project*
-
-CPSC 532: Adaptation and Adaptive Computation | *Fall 25'*
-
-We propose minimizing the entropy of the distribution defined by the attention scores from the CLS token to image patches as a novel TTA objective. This approach encourages the model to attend more confidently to relevant image regions under distribution shift and is effective in a streaming setting. We demonstrate that attention entropy minimization improves robustness across diverse corruption types while slightly improving performance on clean data. Preprint [here](https://arxiv.org/abs/2511.18925) and code coming soon!
-:::
-
-:::
-
----
-
 
 ::: {.columns}
 
@@ -275,7 +260,9 @@ We propose minimizing the entropy of the distribution defined by the attention s
 :::
 
 ::: {.column width="77%"}
-**Agentic NLP for Medical Guidelines**
+**A Chatbot for the Management of Bipolar Disorder**
+
+**Yash Mali**, Zejiao Zeng, Kayoung Heo, Grace Zhang, Jincheng Chen, Kamyar Keramatian, Gayatri Saraf, Marco Solmi, Edwin Tam, Sagar V. Parikh, Ayal Schaffer, Serge Beaulieu, Raymond Ng, Lakshmi N. Yatham, John-Jose Nunez
 
 Posters: [CAIDA/TrustML ICML Visits 2025](https://caida.ubc.ca/event/poster-session-caidatrustml-2025-icml-visits) (*July 15, 25'*), [UBC Psychiatry Research Day 2025](https://psychiatry.ubc.ca/2025-eposter-gallery/) (*June 5 25'*)
 
@@ -295,9 +282,11 @@ Preprint [here](https://www.medrxiv.org/content/10.64898/2025.11.30.25341311v1) 
 :::
 
 ::: {.column width="77%"}
-**Praxis UBC: Developing AI education modules in Faculty of Arts Courses**
+**Praxis UBC: Developing AI education modules in Faculty of Arts Courses** Website: [here](https://ubcecon.github.io/praxis-ubc/)
+ 
+Jonathan Graves, Laura Nelson, and and prAxIs Contributors (including **Yash Mali**)
 
-Website: [here](https://ubcecon.github.io/praxis-ubc/). Under review at Conference on Teaching and Research in Economic Education!
+*Feb 10, 26'*: Accepted at Conference on Teaching and Research in Economic Education workshop 🎉
 :::
 
 :::
@@ -313,12 +302,35 @@ Website: [here](https://ubcecon.github.io/praxis-ubc/). Under review at Conferen
 ::: {.column width="77%"}
 **Quantification of Starch Gelatinization Properties in Glucose and Sucrose Solutions using ParCS**
 
+Lily Santos O' Keefe, **Yash Mali**, John Frostad
+
 Talk: [Multidisciplinary Undergraduate Research Conference 2025](https://students.ubc.ca/career/events-workshops/multidisciplinary-undergraduate-research-conference/) | *Mar 21, 25'*
 
-*Jan 14, 25'*: Accepted at Food Hydrocolloids! 🎉
+*Jan 14, 26'*: Accepted at Food Hydrocolloids! 🎉 |
+Preprint [here](files/Starch_Sugar_Paper.pdf), Paper [here](https://www.sciencedirect.com/science/article/pii/S0268005X2600041X)
 :::
 
 :::
+
+---
+
+::: {.columns}
+
+::: {.column width="23%"}
+![](images/bc_cancer.png){width=150px}
+:::
+
+::: {.column width="77%"}
+**BC Cancer Summit: AI for Cancer Care** | *November 20, 25'*
+
+John-Jose Nunez, Alen Bates, **Yash Mali**, Olivia Cook
+
+Initial demonstration of a conversational agent that helps patients find cancer support resources and collecting attendee feedback to guide improvements. Agenda: [here](https://bccancersummit.ca/wp-content/uploads/2025/10/Summit-Full-Schedule-31Oct2025.pdf) | Page 9
+:::
+
+:::
+
+---
 
 :::
 
