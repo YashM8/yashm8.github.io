@@ -172,7 +172,7 @@ li {
 
 - **Undergrad Thesis 💾** | *Sep 2025 – Present*
 
-    Researching how data diversity and noise affect what autoregressive models learn and the kinds of solutions they find through a controlled synthetic data setting. Advised by [Dr.Christos Thrampoulidis](https://sites.google.com/view/cthrampo/home).
+    Researching how data diversity and noise affect what autoregressive models learn and the kinds of solutions they find through a controlled synthetic data setting. Advised by [Dr. Christos Thrampoulidis](https://sites.google.com/view/cthrampo/home).
 
 ### AI for Science
 
@@ -247,6 +247,8 @@ li {
 
 We minimize the entropy of CLS-to-patch attention in the final layer as a novel TTA loss, encouraging the model to maintain focused attention on shifted data. We demonstrate that attention entropy minimization improves robustness on ImageNet-C. We also show that it is complementary to output entropy minimization and maintains performance on clean data. 
 Preprint [here](https://arxiv.org/abs/2511.18925) and code coming soon!
+
+🎉 Accepted to ICLR workshop [CAO](https://sites.google.com/view/iclr-2026-workshop-cao/home?authuser=1#h.up62hnelvbik). 
 :::
 
 :::
