@@ -1,20 +1,55 @@
 ---
 title: "Yash Mali"
+canonical-url: "https://yashm8.github.io"
+
 format:
   html:
     page-layout: full
+    css: styles/site-theme.css
     mainfont: "et-book, Palatino, Palatino Linotype, Palatino LT STD, Book Antiqua, Georgia, serif"
     fontsize: 0.75em
     linkcolor: "#c6613f"
-    backgroundcolor: "#faf8f0"  # Light sepia
-    fontcolor: "#141413"        # Dark font
+    backgroundcolor: "#faf8f0"
+    fontcolor: "#141413"
+    toc: false
+    smooth-scroll: true
+    open-graph: true
+    twitter-card: true
+    favicon: images/favicon.ico
+    include-in-header:
+      text: |
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": "Yash Mali",
+          "url": "https://yashm8.github.io",
+          "image": "https://yashm8.github.io/images/bio-photo.png",
+          "jobTitle": "Machine Learning Researcher",
+          "affiliation": {
+            "@type": "Organization",
+            "name": "University of British Columbia"
+          },
+          "sameAs": [
+            "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ",
+            "https://github.com/yashm8",
+            "https://www.linkedin.com/in/yash-mali-ubc",
+            "https://orcid.org/0009-0003-0274-1072"
+          ]
+        }
+        </script>
 
 orcid: "0009-0003-0274-1072"
+
 website:
   site-url: "https://yashm8.github.io"
+
 email: "ymali@student.ubc.ca"
+
 linkedin: "https://www.linkedin.com/in/yash-mali-ubc"
+
 github: "https://github.com/yashm8"
+
 google-scholar: "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ"
 ---
 
@@ -248,7 +283,7 @@ li {
 We minimize the entropy of CLS-to-patch attention in the final layer as a novel TTA loss, encouraging the model to maintain focused attention on shifted data. We demonstrate that attention entropy minimization improves robustness on ImageNet-C. We also show that it is complementary to output entropy minimization and maintains performance on clean data. 
 Preprint [here](https://arxiv.org/abs/2511.18925) and code coming soon!
 
-🎉 Accepted to ICLR workshop [CAO](https://sites.google.com/view/iclr-2026-workshop-cao/home?authuser=1#h.up62hnelvbik). 
+🎉 Accepted to ICLR workshop [CAO](https://sites.google.com/view/iclr-2026-workshop-cao/home?authuser=1#h.up62hnelvbik) and [TTU](https://ttu-iclr2026.github.io/papers.html). 
 :::
 
 :::
@@ -302,7 +337,7 @@ Jonathan Graves, Laura Nelson, and and prAxIs Contributors (including **Yash Mal
 :::
 
 ::: {.column width="77%"}
-**Quantification of Starch Gelatinization Properties in Glucose and Sucrose Solutions using ParCS**
+**A particle cohort study (ParCS) of the impact of glucose and sucrose solutions on the kinetics of starch gelatinization**
 
 Lily Santos O' Keefe, **Yash Mali**, John Frostad
 

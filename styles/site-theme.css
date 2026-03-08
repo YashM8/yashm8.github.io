@@ -1,0 +1,35 @@
+:root {
+  --site-bg: #faf8f0;
+  --site-fg: #141413;
+  --site-link: #c6613f;
+}
+
+html,
+body {
+  background-color: var(--site-bg);
+  color: var(--site-fg);
+  font-family: "et-book", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+}
+
+.ltx_page_content {
+  max-width: 70rem;
+  margin: 0 auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .ltx_page_content {
+    padding-left: 0.9rem;
+    padding-right: 0.9rem;
+  }
+}
+
+a {
+  color: var(--site-link);
+}
+
+a:hover,
+a:focus {
+  color: #a55234;
+}
