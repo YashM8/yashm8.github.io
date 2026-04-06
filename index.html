@@ -33,8 +33,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="index_files/libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="index_files/libs/bootstrap/bootstrap-837b9f7832c7cdb21bb0ea321b3f88e2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<style>html{ scroll-behavior: smooth; }</style>
+<link href="index_files/libs/bootstrap/bootstrap-08c559d9595903813e54b2845933e70c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -65,7 +64,7 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-full">
 
-<main class="content column-page" id="quarto-document-content">
+<main class="content page-columns page-full column-page" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -87,236 +86,113 @@ ul.task-list li input[type="checkbox"] {
 
 
 <style>
-/* Mobile-first responsive design */
-@media (max-width: 768px) {
+  .content {
+    max-width: 70rem;
+    margin: 0 auto;
+    padding-top: 5rem;
+  }
   .columns {
-    display: block !important;
+    display: flex !important;
+    gap: 2rem !important;
+    margin-bottom: 1.5rem;
+    align-items: center;
+  }
+  .column-main { flex: 3; }
+  .column-side { flex: 1; }
+
+  hr {
+    margin: 1rem 0 !important;
+    opacity: 0.2;
   }
 
-  .column {
-    width: 100% !important;
-    margin-bottom: 2rem;
+  @media (max-width: 48rem) {
+    .columns { display: block !important; }
+    .column-main, .column-side { width: 100% !important; margin-bottom: 2rem; }
   }
-
-  .photo-circle {
-    width: 120px !important;
-    max-width: 120px !important;
-  }
-
-  h3 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-  }
-
-  /* Adjust font sizes for mobile */
-  body {
-    font-size: 0.9em !important;
-    line-height: 1.4;
-  }
-
-  h1 {
-    font-size: 1.8rem;
-  }
-
-  h2 {
-    font-size: 1.4rem;
-  }
-
-  h3 {
-    font-size: 1.2rem;
-  }
-
-  /* Better spacing for mobile */
-  .quarto-container {
-    padding: 1rem;
-  }
-
-  /* Make links more touch-friendly */
-  a {
-    padding: 0.2rem;
-    margin: 0.1rem;
-  }
-
-  /* Improve readability */
-  p, li {
-    margin-bottom: 0.8rem;
-  }
-}
-
-/* Tablet adjustments */
-@media (max-width: 1024px) and (min-width: 769px) {
-  .column[style*="width=\"25%\""] {
-    width: 30% !important;
-  }
-
-  .column[style*="width=\"50%\""] {
-    width: 70% !important;
-  }
-
-  body {
-    font-size: 0.8em !important;
-  }
-}
-
-/* General improvements */
-.photo-circle {
-  border-radius: 50%;
-  object-fit: cover;
-  height: auto;
-}
-
-/* Ensure images are responsive */
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Better spacing for experience items */
-ul {
-  padding-left: 1.2rem;
-}
-
-li {
-  margin-bottom: 1rem;
-}
-
-/* Improve touch targets */
-@media (max-width: 768px) {
-  li {
-    padding: 0.5rem 0;
-  }
-
-  strong {
-    display: block;
-    margin-bottom: 0.3rem;
-  }
-}
 </style>
-<p><strong>Email:</strong> <a href="mailto:ymali@student.ubc.ca">ymali@student.ubc.ca</a> | <a href="https://scholar.google.com/citations?hl=en&amp;user=NOvveC4AAAAJ">Google Scholar</a> | <a href="https://www.linkedin.com/in/yash-mali-ubc">LinkedIn</a> | <a href="https://github.com/yashm8">GitHub</a> | <a href="cv/YashMaliCV_3p.pdf">CV</a></p>
+<div class="columns page-columns page-full">
+<div class="column-main">
+<p>👋 I am an undergraduate student at the University of British Columbia. I am broadly interested in understanding what models learn and studying their robustness under distribution shift. I am also interested in the applications of AI in science and society.</p>
+<ul>
+<li>Advised by <a href="https://sites.google.com/view/cthrampo/home">Dr.&nbsp;Christos Thrampoulidis</a>.<br>
+</li>
+<li>Collaborators:
+<ul>
+<li><a href="https://imaginarynumber.net/research/">Dr.&nbsp;Evan Shelhammer</a> on domain adaptation.</li>
+<li><a href="https://www.thereidlab.com/jolenereid">Dr.&nbsp;Jolene Reid</a>, <a href="https://nunez-comp-mental-health-cancer-care.github.io/">Dr.&nbsp;John Jose Nunez</a>, and <a href="https://chbe.ubc.ca/john-m-frostad/">Dr.&nbsp;John Frostad</a> on AI for science.</li>
+<li><a href="https://sociology.ubc.ca/profile/laura-nelson/">Dr.&nbsp;Laura Nelson</a>, <a href="https://economics.ubc.ca/profile/jonathan-graves/">Dr.&nbsp;Jonathan Graves</a>, and <a href="https://scarp.ubc.ca/directory/julia-harten/">Dr.&nbsp;Julia Harten</a> on social and educational applications of AI.</li>
+</ul></li>
+</ul>
+<p><strong>Email:</strong> <a href="mailto:ymali@student.ubc.ca">ymali@student.ubc.ca</a> / <a href="https://scholar.google.com/citations?hl=en&amp;user=NOvveC4AAAAJ">Google Scholar</a> / <a href="https://www.linkedin.com/in/yash-mali-ubc">LinkedIn</a> / <a href="https://github.com/yashm8">GitHub</a> / <a href="cv/YashMaliCV_3p.pdf">CV</a></p>
+</div><div class="column-side">
+<p><img src="images/bio-photo.png" class="img-fluid" style="width:100.0%"></p>
+</div>
+</div>
+<section id="selected-research" class="level4">
+<h4 class="anchored" data-anchor-id="selected-research"><strong>Selected Research</strong></h4>
 <div class="columns">
 <div class="column" style="width:25%;">
-<section id="about" class="level3">
-<h3 class="anchored" data-anchor-id="about">About</h3>
-<div style="text-align: center;">
-<p><img src="images/bio-photo.png" class="photo-circle img-fluid" width="150"></p>
-</div>
-<p>👋 I am an undergraduate student at the University of British Columbia (UBC) broadly interested in Machine Learning/Artificial Intelligence and Optimization. Specifically, I am interested in interpretability, understanding generalization, and uncovering interesting mechanisms about how small and large models work under the hood. In the past, I have worked on applying AI across a wide range of scientific and social domains.</p>
-</section>
-<section id="awards" class="level3">
-<h3 class="anchored" data-anchor-id="awards">Awards</h3>
-<p><a href="https://amltn.cs.ubc.ca/people/undergraduate-research-awards"><strong>Advanced Machine Learning Network: AML-TN</strong></a></p>
-<p><em>April 2025</em></p>
-<p><em>“AML-TN sponsored internships highlight the value of developing young researchers as the next generation of machine learning specialists.”</em></p>
-<p><a href="https://students.ubc.ca/career/ubc-experiences/work-learn-international-undergraduate-research-awards/"><strong>2X Undergraduate Research Award: WLIURA</strong></a></p>
-<p><em>May 2024, 2025</em></p>
-<p><em>“These awards subsidize professors to hire international undergraduate students to work full-time on their research projects in the Summer Session (May to August).”</em></p>
-<!--
-### Selected Projects
-- [**Visualizing Neural Network Feature Transformations ✖️➕**](https://yashm8.github.io/neural-vis.html)
-  Takes some time to load. Made with TensorFlow JS.
--->
-</section>
-</div><div class="column" style="width:50%;">
-<section id="interpretability" class="level3">
-<h3 class="anchored" data-anchor-id="interpretability">Interpretability</h3>
-<ul>
-<li><p><strong>Undergraduate Research</strong> | <em>Jan 2026 – Present</em></p>
-<p>Investigating interpretability in domain adaptation. Advised by <a href="https://imaginarynumber.net/research/">Dr.&nbsp;Evan Shelhammer</a>.</p></li>
-<li><p><strong>Undergrad Thesis 💾</strong> | <em>Sep 2025 – Present</em></p>
-<p>Researching how data diversity and noise affect what autoregressive models learn and the kinds of solutions they find through a controlled synthetic data setting. Advised by <a href="https://sites.google.com/view/cthrampo/home">Dr.&nbsp;Christos Thrampoulidis</a>.</p></li>
-</ul>
-</section>
-<section id="ai-for-science" class="level3">
-<h3 class="anchored" data-anchor-id="ai-for-science">AI for Science</h3>
-<ul>
-<li><p><strong>Quantum ML – Undergraduate Research 🧪</strong> | <strong>UBC Chemistry</strong> | <em>Jan 2026 – Present</em></p>
-<p>Comparing how quantum variational circuits and MLPs encode information differently for organic chemistry applications. Advised by <a href="https://www.thereidlab.com/jolenereid">Dr.&nbsp;Jolene Reid</a>.</p></li>
-<li><p><strong>Healthcare AI – Undergraduate Research 🩺</strong> | <strong>UBC Medicine</strong> (<strong>co-op</strong>) | <em>May 2025 – Sep 2025 (Continuing part-time)</em></p>
-<p>NLP tools for patients and doctors. We collaborate with UBC’s <a href="https://cic.ubc.ca/">Cloud Innovation Centre</a> for certain projects. Current projects include agentic NLP pipelines with UIs hosted on AWS for Bipolar Disorder, Depression and Cancer Care. Advised by <a href="https://nunez-comp-mental-health-cancer-care.github.io/">Dr.&nbsp;John Jose Nunez</a>.</p></li>
-<li><p><strong>AI and Automation Developer 🧬</strong> | <a href="https://www.luxbio.ca/"><strong>Lux Bio</strong></a> (<strong>co-op</strong>) | <em>Sep 2024 – May 2025</em></p>
-<p>Applied AI-based drug discovery tools like AlphaFold and ProteinMPNN to optimize sequences and 3D structures of enzymes. Revamped automation systems for bioprocess engineering, orchestrating sensors, pumps, motors, and valves.</p></li>
-<li><p><strong>Computer Vision &amp; Automation – Undergraduate Research 🔬</strong> | <strong>UBC Engineering</strong> @ <a href="https://food.chbe.ubc.ca/"><strong>Frostad Research Group</strong></a> (<strong>co-op</strong>) | <em>May 2024 – Sep 2024</em></p>
-<p>Developed particle tracking software using an ensemble of open-source computer vision models along with a UI to correct mistakes. Automated and developed data collection software for new instruments invented by the research group. Advised by <a href="https://chbe.ubc.ca/john-m-frostad/">Dr.&nbsp;John Frostad</a>.</p></li>
-<li><p><strong>Instrumentation</strong> | <strong><a href="https://ubcbiot.com/">UBC Biological Internet of Things</a> 🧬</strong> | <em>May 2025 – Present</em></p>
-<p>Automating brewing/fermentation equipment with IoT-controlled devices and experimenting with ML for brewing!</p></li>
-</ul>
-</section>
-</div><div class="column" style="width:25%;">
-<section id="social-ai-leadership" class="level3">
-<h3 class="anchored" data-anchor-id="social-ai-leadership">Social AI &amp; Leadership</h3>
-<ul>
-<li><p><strong>ML Engineer – Undergraduate Research 🏡</strong> | <strong>UBC SCARP &amp; ECE</strong> (part-time) | <em>May 2025 – Present</em></p>
-<p>Using latest developments in NLP and Computer Vision to analyze public records from Vancouver’s housing development approval process. This work bridges AI and social science to address Canada’s housing crisis. Advised by <a href="https://scarp.ubc.ca/directory/julia-harten">Dr.&nbsp;Julia Harten</a> and <a href="https://ece.ubc.ca/christos-thrampoulidis/">Dr.&nbsp;Christos Thrampoulidis</a>.</p></li>
-<li><p><strong>Unpacking AI 🎨</strong> | <strong>UBC Arts</strong> (part-time) | <em>May 2025 – Present</em></p>
-<p>Developing modules in existing faculty of arts courses that highlight how AI can be used in their field. For example, sequence modelling in economics or computer vision in archeology. Funded by UBC’s Teaching and Learning Enhancement fund (TELF). Advised by <a href="https://sociology.ubc.ca/profile/laura-nelson/">Dr.&nbsp;Laura Nelson</a> and <a href="https://economics.ubc.ca/profile/jonathan-graves/">Dr.&nbsp;Jonathan Graves</a>. <a href="https://github.com/ubcecon/praxis-ubc">More info</a>. Tangentially, working on benchmarking LLMs for historical faithfulness.</p></li>
-<li><p><strong><a href="https://ubcaiclub.github.io/">UBC AI Club</a> 🦾</strong> | <em>Jan 2025 – Present</em></p>
-<p>President: Leading initiatives to encourage student understanding and future pathways in AI and ML.</p></li>
-<li><p><strong><a href="https://ubcuas.com/">UBC Uncrewed Aircraft Systems</a> ✈️</strong> | <em>Sep 2024 – Present</em></p>
-<p>Leading the ML sub-team to explore and tune open-sourced models for object detection and tracking. This is a small piece of the puzzle on our drones that compete in two university-level autonomous drone competitions every year.</p></li>
-</ul>
-</section>
-</div>
-</div>
-<section id="papers-and-talks" class="level2">
-<h2 class="anchored" data-anchor-id="papers-and-talks">Papers and Talks</h2>
-<div class="columns">
-<div class="column" style="width:65%;">
-<div class="columns">
-<div class="column" style="width:23%;">
-<p><img src="images/corr_imagenet.png" class="img-fluid" width="150"></p>
-</div><div class="column" style="width:77%;">
+<p><img src="images/looksharp.png" class="img-fluid" style="width:100.0%"></p>
+</div><div class="column" style="width:75%;">
 <p><strong>LookSharp: Attention Entropy Minimization for Test-Time Adaptation</strong></p>
-<p><strong>Yash Mali</strong>, Evan Shelhamer</p>
-<p>We minimize the entropy of CLS-to-patch attention in the final layer as a novel TTA loss, encouraging the model to maintain focused attention on shifted data. We demonstrate that attention entropy minimization improves robustness on ImageNet-C. We also show that it is complementary to output entropy minimization and maintains performance on clean data. Preprint <a href="https://arxiv.org/abs/2511.18925">here</a> and code coming soon!</p>
-<p>🎉 Accepted to ICLR workshop <a href="https://sites.google.com/view/iclr-2026-workshop-cao/home?authuser=1#h.up62hnelvbik">CAO</a> and <a href="https://ttu-iclr2026.github.io/papers.html">TTU</a>.</p>
+<p><strong>Yash Mali</strong>, Evan Shelhamer: <em>ICLR Workshops TTU &amp; CAO 2026</em></p>
+<p>We minimize the entropy of CLS-to-patch attention in the final layer as a novel TTA loss, encouraging the model to maintain focused attention on shifted data. We demonstrate that attention entropy minimization improves robustness on ImageNet-C. We also show that it is complementary to output entropy minimization and maintains performance on clean data. <a href="https://arxiv.org/abs/2511.18925">Paper</a> / <a href="https://github.com/YashM8/looksharp">Code</a></p>
 </div>
 </div>
 <hr>
 <div class="columns">
-<div class="column" style="width:23%;">
-<p><img src="images/canmat_nlp.png" class="img-fluid" width="150"></p>
-</div><div class="column" style="width:77%;">
+<div class="column" style="width:25%;">
+<p><img src="images/canmat_nlp.png" class="img-fluid" style="width:100.0%"></p>
+</div><div class="column" style="width:75%;">
 <p><strong>A Chatbot for the Management of Bipolar Disorder</strong></p>
 <p><strong>Yash Mali</strong>, Zejiao Zeng, Kayoung Heo, Grace Zhang, Jincheng Chen, Kamyar Keramatian, Gayatri Saraf, Marco Solmi, Edwin Tam, Sagar V. Parikh, Ayal Schaffer, Serge Beaulieu, Raymond Ng, Lakshmi N. Yatham, John-Jose Nunez</p>
-<p>Posters: <a href="https://caida.ubc.ca/event/poster-session-caidatrustml-2025-icml-visits">CAIDA/TrustML ICML Visits 2025</a> (<em>July 15, 25’</em>), <a href="https://psychiatry.ubc.ca/2025-eposter-gallery/">UBC Psychiatry Research Day 2025</a> (<em>June 5 25’</em>)</p>
-<p>Talk: <a href="https://students.ubc.ca/career/events-workshops/multidisciplinary-undergraduate-research-conference/">Multidisciplinary Undergraduate Research Conference 2025</a> | <em>Mar 21, 25’</em></p>
-<p>Preprint <a href="https://www.medrxiv.org/content/10.64898/2025.11.30.25341311v1">here</a> on medRxiv. Under review at The Canadian Journal of Psychiatry!</p>
+<p>Agentic LLM system for doctors that provides fast and accurate medical recommendations with reference from reliable sources (Co-op, May 25 - Aug 25). <a href="https://www.medrxiv.org/content/10.64898/2025.11.30.25341311v2">Paper</a></p>
 </div>
 </div>
 <hr>
 <div class="columns">
-<div class="column" style="width:23%;">
-<p><img src="images/praxis.gif" class="img-fluid" width="150"></p>
-</div><div class="column" style="width:77%;">
-<p><strong>Praxis UBC: Developing AI education modules in Faculty of Arts Courses</strong> Website: <a href="https://ubcecon.github.io/praxis-ubc/">here</a></p>
-<p>Jonathan Graves, Laura Nelson, and and prAxIs Contributors (including <strong>Yash Mali</strong>)</p>
-<p><em>Feb 10, 26’</em>: Accepted at Conference on Teaching and Research in Economic Education workshop 🎉</p>
+<div class="column" style="width:25%;">
+<p><img src="images/praxis.gif" class="img-fluid" style="width:100.0%"></p>
+</div><div class="column" style="width:75%;">
+<p><strong>prAxIs UBC: Developing AI education modules in Faculty of Arts Courses</strong></p>
+<p>Jonathan Graves, Laura Nelson, and prAxIs Contributors (including <strong>Yash Mali</strong>): <em>Conference on Teaching and Research in Economic Education Workshop, 2026</em></p>
+<p>AI education in the Faculty of Arts. Building modules that teach students how to use AI to solve real problems in the arts. <a href="https://ubcecon.github.io/praxis-ubc/">Website</a></p>
 </div>
 </div>
 <hr>
 <div class="columns">
-<div class="column" style="width:23%;">
-<p><img src="images/starch.png" class="img-fluid" width="150"></p>
-</div><div class="column" style="width:77%;">
+<div class="column" style="width:25%;">
+<p><img src="images/starch.png" class="img-fluid" style="width:100.0%"></p>
+</div><div class="column" style="width:75%;">
 <p><strong>A particle cohort study (ParCS) of the impact of glucose and sucrose solutions on the kinetics of starch gelatinization</strong></p>
-<p>Lily Santos O’ Keefe, <strong>Yash Mali</strong>, John Frostad</p>
-<p>Talk: <a href="https://students.ubc.ca/career/events-workshops/multidisciplinary-undergraduate-research-conference/">Multidisciplinary Undergraduate Research Conference 2025</a> | <em>Mar 21, 25’</em></p>
-<p><em>Jan 14, 26’</em>: Accepted at Food Hydrocolloids! 🎉 | Preprint <a href="files/Starch_Sugar_Paper.pdf">here</a>, Paper <a href="https://www.sciencedirect.com/science/article/pii/S0268005X2600041X">here</a></p>
+<p>Lily Santos O’ Keefe, <strong>Yash Mali</strong>, John Frostad: <em>Food Hydrocolloids, 2026</em></p>
+<p>Contributed particle tracking software for tracking starch particles to study the kinetics of starch gelatinization (Co-op, May 24 - Aug 24). <a href="https://www.google.com/search?q=A+particle+cohort+study+(ParCS)+of+the+impact+of+glucose+and+sucrose+solutions+on+the+kinetics+of+starch+gelatinization&amp;rlz=1C5OZZY_enCA1156CA1156&amp;oq=A+particle+cohort+study+(ParCS)+of+the+impact+of+glucose+and+sucrose+solutions+on+the+kinetics+of+starch+gelatinization">Paper</a> / <a href="https://github.com/YashM8/Track">Code</a></p>
 </div>
 </div>
+</section>
+<section id="other-research" class="level4">
+<h4 class="anchored" data-anchor-id="other-research"><strong>Other Research</strong></h4>
 <hr>
 <div class="columns">
-<div class="column" style="width:23%;">
-<p><img src="images/bc_cancer.png" class="img-fluid" width="150"></p>
-</div><div class="column" style="width:77%;">
-<p><strong>BC Cancer Summit: AI for Cancer Care</strong> | <em>November 20, 25’</em></p>
-<p>John-Jose Nunez, Alen Bates, <strong>Yash Mali</strong>, Olivia Cook</p>
-<p>Initial demonstration of a conversational agent that helps patients find cancer support resources and collecting attendee feedback to guide improvements. <a href="https://bccancersummit.ca/wp-content/uploads/2025/10/Summit-Full-Schedule-31Oct2025.pdf">Talk agenda here</a> | Page 9</p>
+<div class="column" style="width:25%;">
+<p><img src="images/statsfacts.png" class="img-fluid" style="width:100.0%"></p>
+</div><div class="column" style="width:75%;">
+<p><strong>Undergraduate Thesis</strong></p>
+<p><strong>Yash Mali</strong>, Tina Behnia, Christos Thrampoulidis</p>
+<p>Investigated how noise and diversity in the training data affect the internal representations and factual recall of autoregressive language models.</p>
 </div>
 </div>
-<hr>
-</div>
-</div>
+</section>
+<section id="other-highlights" class="level4">
+<h4 class="anchored" data-anchor-id="other-highlights"><strong>Other Highlights</strong></h4>
+<ul>
+<li>Research Awards: <a href="https://students.ubc.ca/career/work-learn-international-undergraduate-research-awards/">3X Undergraduate Research Award: WLIURA</a>, <a href="https://amltn.cs.ubc.ca/people/undergraduate-research-awards">Advanced Machine Learning Network: AML-TN</a></li>
+<li>Invited Talk: <a href="https://bccancersummit.ca/">BC Cancer Summit 2025</a>: “AI for Cancer Care”</li>
+<li>President of the <a href="https://ubcaiclub.github.io/">UBC AI Club</a> (2025-2026)</li>
+<li>ML Lead at <a href="https://ubcuas.com/">UBC Uncrewed Aircraft Systems</a> (Sep 24 - )</li>
+<li>AI and Automation Developer at <a href="https://www.luxbio.ca/technology">Lux Bio</a> (co-op, Sep 24 – May 25): Applied AI drug discovery and automation for bioprocess engineering.</li>
+<li>Instrumentation member at <a href="https://ubcbiot.com/">UBC Biological Internet of Things</a> (May 25 - )</li>
+</ul>
 </section>
 
 </main>
@@ -725,5 +601,4 @@ li {
 
 
 
-<script src="index_files/libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

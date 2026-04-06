@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DINOv3 — t-SNE Feature Embedding</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tsne-js/1.0.3/tsne.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Jost', sans-serif;
+      background: #f5f2e9;
+      color: #5d4037;
+    }
+    .main-container {
+      background: #e9e4d9;
+      border: 1px solid #d3c8b4;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .title {
+      font-weight: 700;
+      color: #5d4037;
+      letter-spacing: 0.05em;
+    }
+    .btn {
+      background-color: #8d6e63;
+      border: 1px solid #8d6e63;
+      color: #f5f2e9;
+      transition: all 0.3s ease;
+      padding: 0.35rem 1rem;
+      font-weight: 600;
+      border-radius: 4px;
+    }
+    .btn:hover {
+      background-color: #5d4037;
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    #dropZone {
+      border: 2px dashed #a1887f;
+      background: #f5f2e9;
+      transition: background-color 0.3s;
+      border-radius: 4px;
+    }
+    #dropZone:hover {
+      background: #fff;
+    }
+    .accent-text { color: #8d6e63; }
+    .canvas-wrapper {
+      background: #fff;
+      border: 1px solid #d3c8b4;
+      padding: 0.75rem;
+      border-radius: 4px;
+    }
+    /* remove conflicting canvas max-width rules so JS sizes are authoritative */
+    canvas { display: block; border-radius: 2px; }
+    hr { border-color: #d3c8b4; }
+    .control-panel {
+        height: 100%;
+        overflow-y: auto;
+    }
+    .display-panel {
+        height: 100%;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="main-container w-full max-w-6xl mx-auto p-6 rounded-lg">
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+
+      <div class="md:col-span-1 lg:col-span-1 control-panel">
+        <h1 class="text-2xl title mb-2">DINOv3</h1>
+        <p class="text-sm text-slate-600 mb-4">Feature Embedding Visualizer</p>
+        <hr class="my-6"/>
+
+        <div id="dropZone" class="p-6 text-center mb-4 cursor-pointer">
+          <div class="mb-2 font-semibold">Drop Image Here</div>
+          <input id="imageLoader" type="file" accept="image/*" class="hidden" />
+          <label for="imageLoader" class="accent-text cursor-pointer text-sm underline">Or select a file</label>
+        </div>
+
+        <div class="space-y-4">
+            <div class="text-md font-semibold">Mode</div>
+            <div class="flex flex-col space-y-2">
+                <label class="text-sm"><input type="radio" name="mode" value="similarity" checked> Similarity</label>
+                <label class="text-sm"><input type="radio" name="mode" value="heatmap"> Heatmap</label>
+                <label class="text-sm"><input type="radio" name="mode" value="tsne"> t-SNE Overlay</label>
+                <label class="text-sm"><input type="radio" name="mode" value="norm"> Norm Magnitude</label>
+                <label class="text-sm"><input type="radio" name="mode" value="entropy"> Entropy</label>
+            </div>
+
+            <hr class="my-4"/>
+
+            <div class="text-md font-semibold">Scale (features per image)</div>
+            <div class="flex items-center gap-2">
+                <label class="text-xs">Scale:</label>
+                <input type="range" id="scaleSlider" min="0.25" max="2.0" step="0.25" value="1.0" class="w-full">
+                <span id="scaleValue" class="text-xs w-8">1.0x</span>
+            </div>
+            <div class="text-xs text-slate-500">Increase the scale to sample more patches from the image (higher = more features).</div>
+
+            <hr class="my-4"/>
+
+            <div class="text-md font-semibold">t-SNE Controls</div>
+            <div class="flex items-center gap-2">
+                <label class="text-xs">Perplexity:</label>
+                <input type="range" id="perplexitySlider" min="5" max="50" value="30" class="w-full">
+                <span id="perplexityValue" class="text-xs w-4">30</span>
+            </div>
+            <button id="runTsne" class="btn w-full">Run t-SNE</button>
+        </div>
+
+        <hr class="my-6"/>
+        <div class="text-sm text-center text-slate-500" id="status">Loading model...</div>
+      </div>
+
+      <div class="md:col-span-2 lg:col-span-3 display-panel grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="canvas-wrapper flex flex-col">
+          <div class="text-sm font-semibold mb-2">Original Image</div>
+          <div id="canvasContainer" class="w-full flex-grow flex items-center justify-center min-h-[300px] bg-gray-50 rounded">
+            <!-- imageCanvas is logical square and displayed square; image is letterboxed in it -->
+            <canvas id="imageCanvas" class="hidden"></canvas>
+            <div id="placeholder" class="text-slate-500">Your image will appear here</div>
+          </div>
+        </div>
+
+        <div class="canvas-wrapper flex flex-col">
+          <div class="text-sm font-semibold mb-2">t-SNE Embedding</div>
+          <div id="tsneContainer" class="w-full flex-grow flex items-center justify-center min-h-[300px] bg-gray-50 rounded">
+            <canvas id="tsneCanvas" class="hidden"></canvas>
+            <div id="tsnePlaceholder" class="text-slate-500">Run t-SNE to see embedding</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module">
+    import { pipeline, RawImage } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.2";
+
+    const MODEL_ID = "onnx-community/dinov3-vits16-pretrain-lvd1689m-ONNX";
+    const MAX_PATCHES = 2048;
+    const imageLoader = document.getElementById("imageLoader");
+    const dropZone = document.getElementById("dropZone");
+    const statusEl = document.getElementById("status");
+    const canvas = document.getElementById("imageCanvas");
+    const ctx = canvas.getContext("2d");
+    const tsneCanvas = document.getElementById("tsneCanvas");
+    const tsneCtx = tsneCanvas.getContext("2d");
+    const placeholder = document.getElementById("placeholder");
+    const tsnePlaceholder = document.getElementById("tsnePlaceholder");
+    const modeInputs = Array.from(document.querySelectorAll("input[name='mode']"));
+    const perplexitySlider = document.getElementById("perplexitySlider");
+    const perplexityValue = document.getElementById("perplexityValue");
+    const runTsneBtn = document.getElementById("runTsne");
+    const scaleSlider = document.getElementById("scaleSlider");
+    const scaleValue = document.getElementById("scaleValue");
+
+    let extractor = null;
+    let patchSize = null;
+    let originalImage = null;
+    let normVectors = null;
+    let rawVectors = null;
+    let featureNorms = null;
+    let featureEntropies = null;
+    let numPatches = 0;
+    let featureDim = 0;
+    let tsneResult = null;
+    let patchesPerRow = 0;
+    let scaleFactor = parseFloat(scaleSlider.value);
+
+    function setStatus(t) { statusEl.textContent = t; }
+
+    async function init() {
+      setStatus("Loading model...");
+      try {
+        extractor = await pipeline("image-feature-extraction", MODEL_ID, { device: navigator.gpu ? "webgpu" : "wasm" });
+        extractor.processor.image_processor.do_resize = false;
+        patchSize = extractor.model.config.patch_size;
+        setStatus("Model ready. Select an image.");
+      } catch (e) {
+        console.error("Model load failed:", e);
+        setStatus("Failed to load model.");
+      }
+    }
+
+    // ---------- computeCanvasSize: returns a square logical canvas snapped to patchSize ----------
+    function computeCanvasSize(naturalW, naturalH, container, scale) {
+      if (!patchSize) return null;
+
+      // logical image dims snapped to patch boundaries
+      let logicalW = Math.max(patchSize, Math.floor((naturalW * scale) / patchSize) * patchSize);
+      let logicalH = Math.max(patchSize, Math.floor((naturalH * scale) / patchSize) * patchSize);
+
+      // create square logical canvas that fully contains the scaled image
+      let squareLogical = Math.max(logicalW, logicalH);
+      squareLogical = Math.max(patchSize, Math.floor(squareLogical / patchSize) * patchSize);
+
+      // patches per side and total patches
+      let patchesPerSide = Math.floor(squareLogical / patchSize);
+      let total = patchesPerSide * patchesPerSide;
+
+      // enforce MAX_PATCHES by reducing patches per side if necessary
+      if (total > MAX_PATCHES) {
+        patchesPerSide = Math.floor(Math.sqrt(MAX_PATCHES));
+        patchesPerSide = Math.max(1, patchesPerSide);
+        squareLogical = patchesPerSide * patchSize;
+        total = patchesPerSide * patchesPerSide;
+      }
+
+      // display size: square that fits container
+      const containerW = container.clientWidth;
+      const containerH = container.clientHeight;
+      const displaySize = Math.max(1, Math.floor(Math.min(containerW, containerH)));
+
+      return {
+        logicalSize: squareLogical,   // internal canvas width == height (pixels)
+        patchesPerSide,
+        total,
+        displaySize                 // CSS width/height for displaying the square canvas
+      };
+    }
+
+    async function handleFile(file) {
+      if (!file) return;
+      placeholder.style.display = "none";
+      tsnePlaceholder.style.display = "block";
+      tsneCanvas.style.display = "none";
+      tsneResult = null;
+
+      originalImage = new Image();
+      originalImage.onload = async () => {
+        if (!patchSize) { setStatus("Model not ready."); return; }
+        await applyScaleAndExtract();
+      };
+      originalImage.onerror = () => { setStatus("Failed to load image."); placeholder.style.display = "block"; };
+      originalImage.src = URL.createObjectURL(file);
+    }
+
+    // ---------- applyScaleAndExtract: sets square canvas and letterboxes the image ----------
+    async function applyScaleAndExtract() {
+      if (!originalImage) return;
+      if (!patchSize) { setStatus("Model not ready."); return; }
+
+      const container = document.getElementById('canvasContainer');
+      const dims = computeCanvasSize(originalImage.naturalWidth, originalImage.naturalHeight, container, scaleFactor);
+
+      if (!dims) {
+        setStatus("Image too small or incompatible.");
+        return;
+      }
+
+      // Logical (internal) square resolution for sampling patches
+      canvas.width = dims.logicalSize;
+      canvas.height = dims.logicalSize;
+
+      // CSS display size (square) that fits the container
+      canvas.style.width = dims.displaySize + "px";
+      canvas.style.height = dims.displaySize + "px";
+      canvas.style.maxWidth = "none";
+      canvas.style.maxHeight = "none";
+      canvas.style.display = "block";
+
+      // Update patch grid info
+      patchesPerRow = dims.patchesPerSide;
+
+      // Clear and fill background (visible letterbox)
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Compute uniform scaling to fit the image inside the square logical canvas
+      const fitScale = Math.min(canvas.width / originalImage.naturalWidth, canvas.height / originalImage.naturalHeight);
+      const drawW = Math.round(originalImage.naturalWidth * fitScale);
+      const drawH = Math.round(originalImage.naturalHeight * fitScale);
+      const dx = Math.floor((canvas.width - drawW) / 2);
+      const dy = Math.floor((canvas.height - drawH) / 2);
+
+      // Draw the image centered (letterboxed if necessary)
+      ctx.drawImage(originalImage, dx, dy, drawW, drawH);
+
+      setStatus(`Rescaled → logical: ${canvas.width}×${canvas.height}, patches per side: ${patchesPerRow}, total: ${dims.total}`);
+
+      // Slight delay to let the display update then extract features
+      setTimeout(async () => {
+        setStatus("Extracting features...");
+        await extractFeatures();
+      }, 10);
+    }
+
+    async function extractFeatures() {
+      try {
+        const raw = await RawImage.fromCanvas(canvas);
+        const feats = await extractor(raw, { pooling: "none" });
+        const startIndex = 1 + (extractor.model.config.num_register_tokens ?? 0);
+        const patchesArr = (await feats.slice(null, [startIndex, null]).tolist())[0];
+
+        numPatches = patchesArr.length;
+
+        if (numPatches === 0) { setStatus("No patches returned."); return; }
+        featureDim = patchesArr[0].length;
+
+        rawVectors = new Float32Array(numPatches * featureDim);
+        normVectors = new Float32Array(numPatches * featureDim);
+        featureNorms = new Float32Array(numPatches);
+        featureEntropies = new Float32Array(numPatches);
+
+        for (let i = 0; i < numPatches; ++i) {
+          const vec = patchesArr[i];
+          let sum2 = 0;
+
+          const maxVal = Math.max(...vec);
+          const exps = vec.map(x => Math.exp(x - maxVal));
+          const sumExps = exps.reduce((a, b) => a + b, 0);
+          const probabilities = exps.map(e => e / sumExps);
+
+          let entropy = 0;
+          for (const p of probabilities) {
+              if (p > 0) {
+                  entropy -= p * Math.log2(p);
+              }
+          }
+          featureEntropies[i] = entropy;
+
+          for (let j = 0; j < featureDim; ++j) {
+            const v = vec[j];
+            rawVectors[i * featureDim + j] = v;
+            sum2 += v * v;
+          }
+          const norm = Math.sqrt(sum2) || 1.0;
+          featureNorms[i] = norm;
+          const base = i * featureDim;
+          for (let j = 0; j < featureDim; ++j) normVectors[base + j] = vec[j] / norm;
+        }
+        setStatus(`Image processed. Hover to explore or run t-SNE. Patches: ${numPatches} (${Math.round(scaleFactor * 100)}% scale)`);
+      } catch (e) {
+        console.error("Processing error:", e);
+        setStatus("Error during processing.");
+      }
+    }
+
+    function runTSNE() {
+      if (!rawVectors || numPatches === 0) return;
+
+      setStatus("Running t-SNE...");
+      runTsneBtn.disabled = true;
+
+      const perplexity = parseInt(perplexitySlider.value);
+      const data = [];
+      for (let i = 0; i < numPatches; i++) {
+        const row = [];
+        for (let j = 0; j < featureDim; j++) {
+          row.push(rawVectors[i * featureDim + j]);
+        }
+        data.push(row);
+      }
+
+      if (typeof tSNE === 'undefined') {
+        setStatus("t-SNE library failed to load. Using PCA fallback...");
+        runPCAFallback(data);
+        return;
+      }
+
+      const tsne = new tSNE({
+        dim: 2,
+        perplexity: perplexity,
+        earlyExaggeration: 4.0,
+        learningRate: 100.0,
+        nIter: 1000
+      });
+
+      tsne.initDataRaw(data);
+
+      let iter = 0;
+      const maxIter = 1000;
+      const step = () => {
+        tsne.step();
+        iter++;
+        if (iter % 100 === 0) {
+          setStatus(`t-SNE progress: ${iter}/${maxIter}`);
+        }
+        if (iter < maxIter) {
+          requestAnimationFrame(step);
+        } else {
+          tsneResult = tsne.getSolution();
+          drawTSNE();
+          setStatus(`t-SNE complete. Hover to explore.`);
+          runTsneBtn.disabled = false;
+        }
+      };
+
+      requestAnimationFrame(step);
+    }
+
+    function runPCAFallback(data) {
+      const n = data.length;
+      const d = data[0].length;
+      const means = new Array(d).fill(0);
+      for (let i = 0; i < n; i++) {
+        for (let j = 0; j < d; j++) {
+          means[j] += data[i][j];
+        }
+      }
+      for (let j = 0; j < d; j++) means[j] /= n;
+      const centered = data.map(row => row.map((val, j) => val - means[j]));
+      tsneResult = centered.map(row => [row[0] || 0, row[1] || 0]);
+      drawTSNE();
+      setStatus("PCA fallback complete. Hover to explore.");
+      runTsneBtn.disabled = false;
+    }
+
+    // ---------- drawTSNE: square TSNE canvas ----------
+    function drawTSNE() {
+      if (!tsneResult) return;
+
+      const container = tsneCanvas.parentElement;
+      const displaySize = Math.max(1, Math.floor(Math.min(container.clientWidth, container.clientHeight)));
+
+      // keep logical and display square equal for now
+      tsneCanvas.width = displaySize;
+      tsneCanvas.height = displaySize;
+      tsneCanvas.style.width = displaySize + "px";
+      tsneCanvas.style.height = displaySize + "px";
+      tsneCanvas.style.maxWidth = "none";
+      tsneCanvas.style.maxHeight = "none";
+      tsneCanvas.style.display = "block";
+      tsnePlaceholder.style.display = "none";
+
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      for (const point of tsneResult) {
+        minX = Math.min(minX, point[0]); maxX = Math.max(maxX, point[0]);
+        minY = Math.min(minY, point[1]); maxY = Math.max(maxY, point[1]);
+      }
+
+      // protect against zero range
+      if (maxX === minX) { maxX = minX + 1e-6; }
+      if (maxY === minY) { maxY = minY + 1e-6; }
+
+      tsneCtx.fillStyle = '#fff';
+      tsneCtx.fillRect(0, 0, tsneCanvas.width, tsneCanvas.height);
+
+      const margin = 20;
+      const plotWidth = tsneCanvas.width - 2 * margin;
+      const plotHeight = tsneCanvas.height - 2 * margin;
+
+      for (let i = 0; i < tsneResult.length; i++) {
+        const [x, y] = tsneResult[i];
+        const screenX = margin + ((x - minX) / (maxX - minX)) * plotWidth;
+        const screenY = margin + ((y - minY) / (maxY - minY)) * plotHeight;
+
+        const centerX = tsneCanvas.width / 2;
+        const centerY = tsneCanvas.height / 2;
+        const angle = Math.atan2(screenY - centerY, screenX - centerX);
+        const distance = Math.sqrt((screenX - centerX) ** 2 + (screenY - centerY) ** 2);
+        const maxDist = Math.sqrt(plotWidth ** 2 + plotHeight ** 2) / 2;
+
+        const hue = ((angle + Math.PI) / (2 * Math.PI)) * 360;
+        const saturation = Math.min(100, (distance / maxDist) * 100);
+        const lightness = 40;
+
+        tsneCtx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        tsneCtx.beginPath();
+        tsneCtx.arc(screenX, screenY, 3, 0, 2 * Math.PI);
+        tsneCtx.fill();
+      }
+    }
+
+    function drawTSNEOverlay() {
+      if (!tsneResult || !originalImage) return;
+      // draw the original image first as letterboxed (same logic used in applyScaleAndExtract)
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const fitScale = Math.min(canvas.width / originalImage.naturalWidth, canvas.height / originalImage.naturalHeight);
+      const drawW = Math.round(originalImage.naturalWidth * fitScale);
+      const drawH = Math.round(originalImage.naturalHeight * fitScale);
+      const dx = Math.floor((canvas.width - drawW) / 2);
+      const dy = Math.floor((canvas.height - drawH) / 2);
+      ctx.drawImage(originalImage, dx, dy, drawW, drawH);
+
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      for (const point of tsneResult) {
+        minX = Math.min(minX, point[0]); maxX = Math.max(maxX, point[0]);
+        minY = Math.min(minY, point[1]); maxY = Math.max(maxY, point[1]);
+      }
+      const centerX = (maxX + minX) / 2;
+      const centerY = (maxY + minY) / 2;
+      const maxDist = Math.max(maxX - minX, maxY - minY) / 2 || 1.0;
+
+      for (let i = 0; i < numPatches; i++) {
+        const [tsneX, tsneY] = tsneResult[i];
+        const angle = Math.atan2(tsneY - centerY, tsneX - centerX);
+        const distance = Math.sqrt((tsneX - centerX) ** 2 + (tsneY - centerY) ** 2);
+        const hue = ((angle + Math.PI) / (2 * Math.PI)) * 360;
+        const saturation = Math.min(100, (distance / maxDist) * 100);
+        const lightness = 50;
+        const patchX = (i % patchesPerRow) * patchSize;
+        const patchY = Math.floor(i / patchesPerRow) * patchSize;
+        ctx.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness}%, 0.8)`;
+        ctx.fillRect(patchX, patchY, patchSize, patchSize);
+      }
+    }
+
+    function drawNormMagnitude() {
+        if (!featureNorms || !originalImage) return;
+        // redraw letterboxed image
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const fitScale = Math.min(canvas.width / originalImage.naturalWidth, canvas.height / originalImage.naturalHeight);
+        const drawW = Math.round(originalImage.naturalWidth * fitScale);
+        const drawH = Math.round(originalImage.naturalHeight * fitScale);
+        const dx = Math.floor((canvas.width - drawW) / 2);
+        const dy = Math.floor((canvas.height - drawH) / 2);
+        ctx.drawImage(originalImage, dx, dy, drawW, drawH);
+
+        let min = Infinity, max = -Infinity;
+        for (let i = 0; i < numPatches; ++i) {
+            const norm = featureNorms[i];
+            if (norm < min) min = norm;
+            if (norm > max) max = norm;
+        }
+
+        const range = (max - min) || 1.0;
+        for (let i = 0; i < numPatches; ++i) {
+            const t = (featureNorms[i] - min) / range;
+            const color = infernoColor(t);
+            const x = (i % patchesPerRow) * patchSize;
+            const y = Math.floor(i / patchesPerRow) * patchSize;
+            ctx.fillStyle = `${color.slice(0, -1)}, 0.8)`;
+            ctx.fillRect(x, y, patchSize, patchSize);
+        }
+    }
+
+    function drawEntropyHeatmap() {
+        if (!featureEntropies || !originalImage) return;
+        // redraw letterboxed image
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const fitScale = Math.min(canvas.width / originalImage.naturalWidth, canvas.height / originalImage.naturalHeight);
+        const drawW = Math.round(originalImage.naturalWidth * fitScale);
+        const drawH = Math.round(originalImage.naturalHeight * fitScale);
+        const dx = Math.floor((canvas.width - drawW) / 2);
+        const dy = Math.floor((canvas.height - drawH) / 2);
+        ctx.drawImage(originalImage, dx, dy, drawW, drawH);
+
+        let min = Infinity, max = -Infinity;
+        for (let i = 0; i < numPatches; ++i) {
+            const entropy = featureEntropies[i];
+            if (entropy < min) min = entropy;
+            if (entropy > max) max = entropy;
+        }
+
+        const range = (max - min) || 1.0;
+        for (let i = 0; i < numPatches; ++i) {
+            const t = (featureEntropies[i] - min) / range;
+            const color = infernoColor(t);
+            const x = (i % patchesPerRow) * patchSize;
+            const y = Math.floor(i / patchesPerRow) * patchSize;
+            ctx.fillStyle = `${color.slice(0, -1)}, 0.8)`;
+            ctx.fillRect(x, y, patchSize, patchSize);
+        }
+    }
+
+    const INFERNO = [[0,0,4],[39,12,69],[84,15,104],[128,31,103],[170,48,88],[209,70,68],[240,97,47],[253,138,28],[252,185,26],[240,231,56],[252,255,160]];
+    function infernoColor(t) {
+      t = Math.max(0, Math.min(1, t));
+      const idx = Math.min(9, Math.floor(t * 10));
+      const frac = t * 10 - idx;
+      const a = INFERNO[idx], b = INFERNO[idx + 1];
+      const r = Math.round(a[0] + frac * (b[0] - a[0]));
+      const g = Math.round(a[1] + frac * (b[1] - a[1]));
+      const bl = Math.round(a[2] + frac * (b[2] - a[2]));
+      return `rgb(${r},${g},${bl})`;
+    }
+
+    function drawOverlay(queryIdx) {
+      if (!normVectors || numPatches === 0) return;
+      const mode = document.querySelector("input[name='mode']:checked").value;
+      if (mode === "tsne" || mode === "norm" || mode === "entropy") {
+        return;
+      }
+      const qBase = queryIdx * featureDim;
+      const scores = new Float32Array(numPatches);
+      let min = Infinity, max = -Infinity;
+      for (let i = 0; i < numPatches; ++i) {
+        let sum = 0;
+        const base = i * featureDim;
+        for (let j = 0; j < featureDim; ++j) sum += normVectors[qBase + j] * normVectors[base + j];
+        scores[i] = sum;
+        if (sum < min) min = sum;
+        if (sum > max) max = sum;
+      }
+      // redraw letterboxed base image
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const fitScale = Math.min(canvas.width / originalImage.naturalWidth, canvas.height / originalImage.naturalHeight);
+      const drawW = Math.round(originalImage.naturalWidth * fitScale);
+      const drawH = Math.round(originalImage.naturalHeight * fitScale);
+      const dx = Math.floor((canvas.width - drawW) / 2);
+      const dy = Math.floor((canvas.height - drawH) / 2);
+      ctx.drawImage(originalImage, dx, dy, drawW, drawH);
+
+      if (mode === "similarity") {
+        ctx.fillStyle = "rgba(0,0,0,0.6)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      const range = (max - min) || 1.0;
+      for (let i = 0; i < numPatches; ++i) {
+        if (i === queryIdx) continue;
+        const t = (scores[i] - min) / range;
+        const x = (i % patchesPerRow) * patchSize;
+        const y = Math.floor(i / patchesPerRow) * patchSize;
+        if (mode === "similarity") {
+          const alpha = Math.pow(t, 2) * 0.85;
+          ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+        } else {
+          ctx.fillStyle = infernoColor(t);
+        }
+        ctx.fillRect(x, y, patchSize, patchSize);
+      }
+      const qx = (queryIdx % patchesPerRow) * patchSize;
+      const qy = Math.floor(queryIdx / patchesPerRow) * patchSize;
+      ctx.strokeStyle = "#fff";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(qx, qy, patchSize, patchSize);
+    }
+
+    imageLoader.addEventListener("change", e => handleFile(e.target.files[0]));
+    dropZone.addEventListener("drop", e => { e.preventDefault(); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+    dropZone.addEventListener("dragover", e => e.preventDefault());
+    perplexitySlider.addEventListener("input", e => {
+      perplexityValue.textContent = e.target.value;
+    });
+    runTsneBtn.addEventListener("click", runTSNE);
+
+    scaleSlider.addEventListener("input", e => {
+      scaleFactor = parseFloat(e.target.value);
+      scaleValue.textContent = scaleFactor.toFixed(2) + "x";
+      if (originalImage) {
+        if (window._scaleTimeout) clearTimeout(window._scaleTimeout);
+        window._scaleTimeout = setTimeout(async () => {
+          setStatus("Rescaling and extracting features...");
+          await applyScaleAndExtract();
+        }, 250);
+      }
+    });
+
+    canvas.addEventListener("mousemove", e => {
+      if (!normVectors || numPatches === 0) return;
+      const mode = document.querySelector("input[name='mode']:checked").value;
+      if (mode === "tsne" || mode === "norm" || mode === "entropy") return;
+
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = (e.clientX - rect.left) * scaleX;
+      const y = (e.clientY - rect.top) * scaleY;
+      if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return;
+      const px = Math.floor(x / patchSize);
+      const py = Math.floor(y / patchSize);
+      const idx = py * patchesPerRow + px;
+      if (idx >= 0 && idx < numPatches) drawOverlay(idx);
+    });
+
+    canvas.addEventListener("mouseleave", () => {
+      if (!originalImage) return;
+      const mode = document.querySelector("input[name='mode']:checked").value;
+      if (mode === "tsne") {
+        if (tsneResult) drawTSNEOverlay();
+      } else if (mode === "norm") {
+        if (featureNorms) drawNormMagnitude();
+      } else if (mode === "entropy") {
+        if (featureEntropies) drawEntropyHeatmap();
+      } else {
+        // redraw base letterboxed image
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const fitScale = Math.min(canvas.width / originalImage.naturalWidth, canvas.height / originalImage.naturalHeight);
+        const drawW = Math.round(originalImage.naturalWidth * fitScale);
+        const drawH = Math.round(originalImage.naturalHeight * fitScale);
+        const dx = Math.floor((canvas.width - drawW) / 2);
+        const dy = Math.floor((canvas.height - drawH) / 2);
+        ctx.drawImage(originalImage, dx, dy, drawW, drawH);
+      }
+    });
+
+    document.addEventListener("change", e => {
+      if (e.target.name === "mode") {
+        if (!originalImage) return;
+        const mode = e.target.value;
+        if (mode === "tsne") {
+          if (tsneResult) drawTSNEOverlay();
+        } else if (mode === "norm") {
+          if (featureNorms) drawNormMagnitude();
+        } else if (mode === "entropy") {
+          if (featureEntropies) drawEntropyHeatmap();
+        } else {
+          // redraw base letterboxed image
+          ctx.fillStyle = "#fff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          const fitScale = Math.min(canvas.width / originalImage.naturalWidth, canvas.height / originalImage.naturalHeight);
+          const drawW = Math.round(originalImage.naturalWidth * fitScale);
+          const drawH = Math.round(originalImage.naturalHeight * fitScale);
+          const dx = Math.floor((canvas.width - drawW) / 2);
+          const dy = Math.floor((canvas.height - drawH) / 2);
+          ctx.drawImage(originalImage, dx, dy, drawW, drawH);
+        }
+      }
+    });
+
+    window.addEventListener('resize', () => {
+        if (originalImage) {
+            applyScaleAndExtract().catch(e => console.warn("Resize extraction failed", e));
+        }
+        if (tsneResult) {
+            drawTSNE();
+        }
+    });
+
+    init();
+  </script>
+</body>
+</html>
