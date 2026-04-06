@@ -90,17 +90,6 @@ google-scholar: "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ"
 ::: {.column-main}
 👋 I am an undergraduate student at the University of British Columbia. I am broadly interested in understanding what models learn and studying their robustness under distribution shift. I am also interested in the applications of AI in science and society.
 
-[//]: # (Specifically, I am interested in:)
-
-[//]: # ()
-[//]: # (- Understanding the inner workings of models and their development during learning. )
-
-[//]: # (- Helping models adapt when there are distribution shifts. )
-
-[//]: # (- AI in science and education. )
-
-[//]: # (**Advisory & Collaborations:**  )
-
 - Advised by [Dr. Christos Thrampoulidis](https://sites.google.com/view/cthrampo/home).  
 - Collaborators: 
   - [Dr. Evan Shelhammer](https://imaginarynumber.net/research/) on domain adaptation.
@@ -132,7 +121,7 @@ google-scholar: "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ"
 
 **Yash Mali**, Evan Shelhamer
 
-We minimize the entropy of CLS-to-patch attention in the final layer as a novel TTA loss, encouraging the model to maintain focused attention on shifted data. We demonstrate that attention entropy minimization improves robustness on ImageNet-C. We also show that it is complementary to output entropy minimization and maintains performance on clean data. [Paper](https://arxiv.org/abs/2511.18925) / [Code](https://github.com/YashM8/looksharp)
+We minimize the entropy of CLS-to-patch attention in the final layer as a novel test-time loss, encouraging the model to maintain focused attention on shifted data. [Paper](https://arxiv.org/abs/2511.18925) / [Code](https://github.com/YashM8/looksharp)
 :::
 :::
 
@@ -147,8 +136,6 @@ We minimize the entropy of CLS-to-patch attention in the final layer as a novel 
 **A Chatbot for the Management of Bipolar Disorder**
 
 **Yash Mali**, Zejiao Zeng, Kayoung Heo, Grace Zhang, Jincheng Chen, Kamyar Keramatian, Gayatri Saraf, Marco Solmi, Edwin Tam, Sagar V. Parikh, Ayal Schaffer, Serge Beaulieu, Raymond Ng, Lakshmi N. Yatham, John-Jose Nunez
-
-[//]: # (*Journal, Year*)
 
 Agentic LLM system for doctors that provides fast and accurate medical recommendations with reference from reliable sources (Co-op, May 25 - Aug 25). [Paper](https://www.medrxiv.org/content/10.64898/2025.11.30.25341311v2) 
 
@@ -166,7 +153,6 @@ Agentic LLM system for doctors that provides fast and accurate medical recommend
 **prAxIs UBC: Developing AI education modules in Faculty of Arts Courses**: *Conference on Teaching and Research in Economic Education Workshop, 2026* 
 
 Jonathan Graves, Laura Nelson, and prAxIs Contributors (including **Yash Mali**)
-
 
 AI education in the Faculty of Arts. Building modules that teach students how to use AI to solve real problems in the arts. [Website](https://ubcecon.github.io/praxis-ubc/) 
 :::
