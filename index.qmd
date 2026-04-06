@@ -41,7 +41,9 @@ format:
             "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ",
             "https://github.com/yashm8",
             "https://www.linkedin.com/in/yash-mali-ubc",
-            "https://orcid.org/0009-0003-0274-1072"
+            "https://orcid.org/0009-0003-0274-1072",
+            "https://arxiv.org/search/cs?searchtype=author&query=Mali,+Y",
+            "http://arxiv.org/a/mali_y_1"
           ]
         }
         </script>
@@ -101,7 +103,8 @@ google-scholar: "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ"
 [Google Scholar](https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ) /
 [LinkedIn](https://www.linkedin.com/in/yash-mali-ubc) /
 [GitHub](https://github.com/yashm8) /
-[CV](cv/YashMaliCV_3p.pdf)
+[CV](cv/YashMaliCV_3p.pdf) /
+[arXiv](http://arxiv.org/a/mali_y_1)
 :::
 
 ::: {.column-side}
