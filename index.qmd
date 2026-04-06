@@ -128,9 +128,9 @@ google-scholar: "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ"
 :::
 
 ::: {.column width="75%"}
-**LookSharp: Attention Entropy Minimization for Test-Time Adaptation**
+**LookSharp: Attention Entropy Minimization for Test-Time Adaptation**: *ICLR Workshops TTU & CAO 2026*
 
-**Yash Mali**, Evan Shelhamer: *ICLR Workshops TTU & CAO 2026*
+**Yash Mali**, Evan Shelhamer
 
 We minimize the entropy of CLS-to-patch attention in the final layer as a novel TTA loss, encouraging the model to maintain focused attention on shifted data. We demonstrate that attention entropy minimization improves robustness on ImageNet-C. We also show that it is complementary to output entropy minimization and maintains performance on clean data. [Paper](https://arxiv.org/abs/2511.18925) / [Code](https://github.com/YashM8/looksharp)
 :::
@@ -163,9 +163,9 @@ Agentic LLM system for doctors that provides fast and accurate medical recommend
 :::
 
 ::: {.column width="75%"}
-**prAxIs UBC: Developing AI education modules in Faculty of Arts Courses** 
+**prAxIs UBC: Developing AI education modules in Faculty of Arts Courses**: *Conference on Teaching and Research in Economic Education Workshop, 2026* 
 
-Jonathan Graves, Laura Nelson, and prAxIs Contributors (including **Yash Mali**): *Conference on Teaching and Research in Economic Education Workshop, 2026* 
+Jonathan Graves, Laura Nelson, and prAxIs Contributors (including **Yash Mali**)
 
 
 AI education in the Faculty of Arts. Building modules that teach students how to use AI to solve real problems in the arts. [Website](https://ubcecon.github.io/praxis-ubc/) 
@@ -180,9 +180,9 @@ AI education in the Faculty of Arts. Building modules that teach students how to
 :::
 
 ::: {.column width="75%"}
-**A particle cohort study (ParCS) of the impact of glucose and sucrose solutions on the kinetics of starch gelatinization**
+**A particle cohort study (ParCS) of the impact of glucose and sucrose solutions on the kinetics of starch gelatinization**: *Food Hydrocolloids, 2026*
 
-Lily Santos O' Keefe, **Yash Mali**, John Frostad: *Food Hydrocolloids, 2026*
+Lily Santos O' Keefe, **Yash Mali**, John Frostad
 
 Contributed particle tracking software for tracking starch particles to study the kinetics of starch gelatinization (Co-op, May 24 - Aug 24). [Paper](https://www.google.com/search?q=A+particle+cohort+study+(ParCS)+of+the+impact+of+glucose+and+sucrose+solutions+on+the+kinetics+of+starch+gelatinization&rlz=1C5OZZY_enCA1156CA1156&oq=A+particle+cohort+study+(ParCS)+of+the+impact+of+glucose+and+sucrose+solutions+on+the+kinetics+of+starch+gelatinization) / [Code](https://github.com/YashM8/Track)
 :::
