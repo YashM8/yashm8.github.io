@@ -12,6 +12,12 @@ format:
     favicon: images/favicon.ico
     include-in-header:
       text: |
+        <meta name="description" content="Yash Mali is a Machine Learning AI researcher at UBC">
+        <meta property="og:title" content="Yash Mali | Machine Learning Researcher">
+        <meta property="og:description" content="Yash Mali is a Machine Learning AI researcher at UBC">
+        <meta property="og:image" content="https://yashm8.github.io/images/bio-photo.png">
+        <meta property="og:type" content="profile">
+        <meta property="og:url" content="https://yashm8.github.io">
         <script type="application/ld+json">
         {
           "@context": "https://schema.org",
@@ -25,6 +31,8 @@ format:
             "name": "University of British Columbia"
           },
           "sameAs": [
+            "https://www.wikidata.org/wiki/Q138952457",
+            "https://openreview.net/profile?id=~Yash_Mali1",
             "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ",
             "https://github.com/yashm8",
             "https://www.linkedin.com/in/yash-mali-ubc",
