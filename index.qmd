@@ -1,7 +1,6 @@
 ---
 title: "Yash Mali"
 canonical-url: "https://yashm8.github.io"
-
 format:
   html:
     page-layout: full
