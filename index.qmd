@@ -165,7 +165,7 @@ Agentic LLM system for doctors that provides fast and accurate medical recommend
 
 ::: {.columns}
 ::: {.column width="25%"}
-![](images/bccancer.png){width=100%}
+![](images/bccrc.png){width=100%}
 :::
 
 ::: {.column width="75%"}
