@@ -112,7 +112,7 @@ google-scholar: "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ"
 :::
 :::
 
-#### **Selected Research**
+#### **Research**
 
 ::: {.columns}
 ::: {.column width="25%"}
@@ -125,6 +125,22 @@ google-scholar: "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ"
 **Yash Mali**, Evan Shelhamer
 
 We minimize the entropy of CLS-to-patch attention in the final layer as a novel test-time loss, encouraging the model to maintain focused attention on shifted data. [Paper](https://arxiv.org/abs/2511.18925) / [Code](https://github.com/YashM8/looksharp)
+:::
+:::
+
+---
+
+::: {.columns}
+::: {.column width="25%"}
+![](images/praxis.gif){width="100%"}
+:::
+
+::: {.column width="75%"}
+**prAxIs UBC: Developing AI education modules in Faculty of Arts Courses**: *Conference on Teaching and Research in Economic Education Workshop, 2026* 
+
+Jonathan Graves, Laura Nelson, and prAxIs Contributors (including **Yash Mali**)
+
+AI education in the Faculty of Arts. Building modules that teach students how to use AI to solve real problems in the arts. [Website](https://ubcecon.github.io/praxis-ubc/) 
 :::
 :::
 
@@ -145,19 +161,20 @@ Agentic LLM system for doctors that provides fast and accurate medical recommend
 :::
 :::
 
+
 ---
 
 ::: {.columns}
 ::: {.column width="25%"}
-![](images/praxis.gif){width="100%"}
+![](images/bc_cancer.png){width=100%}
 :::
 
 ::: {.column width="75%"}
-**prAxIs UBC: Developing AI education modules in Faculty of Arts Courses**: *Conference on Teaching and Research in Economic Education Workshop, 2026* 
+**Investigating fine-tuning versus zero-shot learning for general large language models when predicting cancer survival from initial oncology consultation documents**: *ESMO Digital Oncology, 2026*
 
-Jonathan Graves, Laura Nelson, and prAxIs Contributors (including **Yash Mali**)
+Tejas Phaterpekar, Zejiao Zeng, **Yash Mali**, Bonnie Leung, Carol Ho, Raymond Ng, Alan T Bates, John-Jose Nunez
 
-AI education in the Faculty of Arts. Building modules that teach students how to use AI to solve real problems in the arts. [Website](https://ubcecon.github.io/praxis-ubc/) 
+LLM fine-tuning for survival prediction. (Co-op, May 25 - Aug 25). [Paper](https://www.esmorwd.org/article/S2949-8201(26)00022-6/fulltext) 
 :::
 :::
 
