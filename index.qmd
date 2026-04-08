@@ -5,7 +5,7 @@ format:
   html:
     page-layout: full
     css: styles/site-theme.css
-    fontsize: 0.85em
+    fontsize: 0.75em
     open-graph: true
     twitter-card: true
     favicon: images/favicon.ico
