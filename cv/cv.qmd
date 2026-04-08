@@ -1,0 +1,166 @@
+---
+format:
+  pdf:
+    documentclass: article
+    papersize: letter
+    geometry:
+      - top=0.3in
+      - bottom=0.3in
+      - left=0.5in
+      - right=0.5in
+    fontsize: 11pt
+    keep-tex: false
+    include-in-header:
+      - text: |
+          \usepackage{fancyhdr}
+          \pagestyle{fancy}
+          \fancyhf{}
+          \rfoot{\thepage}
+          \renewcommand{\headrulewidth}{0pt}
+          \renewcommand{\footrulewidth}{0pt}
+---
+
+# Yash Mali
+
+::: {.center}
+[ymali@student.ubc.ca](mailto:ymali@student.ubc.ca) | [Google Scholar](https://scholar.google.com/citations?user=NOvveC4AAAAJ&hl=en) | [Linkedin](https://linkedin.com/in/yash-mali-ubc) | [Github](https://yashm8.github.io)
+:::
+
+## Education
+
+**University of British Columbia**  
+*BSc in Computer Science* | Vancouver, BC
+
+## Experience
+
+**Healthcare AI – Undergraduate Research** | May 2025 – Present  
+*UBC Medicine & BC Cancer (**co-op**, continuing part-time)* | Vancouver, BC
+
+- Built and deployed (on AWS) multi step LLM agents with knowledge bases that ingest medical guidelines and deliver evidence-based recommendations to doctors and patients. Collaborated with **UBC's [Cloud Innovation Centre](https://cic.ubc.ca/)**.
+
+- Apart from the technical side of research, I have worked on securing partnerships with companies like AWS, submitted grants as a "co-investigator", and submitted research ethics board documents. Advised by [Dr. John Jose Nunez](https://www.google.com/search?q=john+jose+nunez).
+
+**ML Engineer – Undergraduate Research** | May 2025 – Present  
+*UBC SCARP & ECE (part-time)* | Vancouver, BC
+
+- Using latest developments in NLP and Computer Vision to analyze public records from Vancouver's housing development approval process. Advised by [Dr. Julia Harten](https://scarp.ubc.ca/directory/julia-harten) and [Dr. Christos Thrampoulidis](https://ece.ubc.ca/christos-thrampoulidis/).
+
+**AI and Automation Developer** | Sep 2024 – May 2025  
+*[Lux Bio](https://www.luxbio.ca/) (**co-op**)* | Vancouver, BC
+
+- Applied **AI-based drug discovery tools** like AlphaFold and ProteinMPNN to optimize sequences and 3D structures of enzymes. Revamped automation systems for bioprocess engineering -- orchestrating sensors, pumps, motors, and valves.
+
+**Computer Vision & Automation – Undergraduate Research** | May 2024 – Sep 2024  
+*UBC Engineering @ [Frostad Research Group](https://food.chbe.ubc.ca/) (**co-op**)* | Vancouver, BC
+
+- Developed particle tracking software using an **ensemble of open-source computer vision models**. Automated and developed data collection software for new instruments invented by the research group. Advised by [Dr. John Frostad](https://chbe.ubc.ca/john-m-frostad/).
+
+## Additional Experience
+
+**Domain Adaptation Research** | Jan 2026 – Present  
+*UBC Computer Science (part-time, course-based)* | Vancouver, BC
+
+- Domain adaptation methods based on feature sharpening. Investigating how domain adaptation methods change representations and decision boundaries. Advised by [Dr. Evan Shelhamer](https://scholar.google.com/citations?user=-ltRSM0AAAAJ&hl=en).
+
+**Quantum ML in Chemistry** | Jan 2026 – Present  
+*UBC Chemistry (part-time, course-based)* | Vancouver, BC
+
+- Investigated how variational quantum circuits and quantum encoding methods provide improved privacy to input reconstruction in federated learning for chemical applications, compared to classical machine learning models. Advised by [Dr. Jolene Reid](https://www.chem.ubc.ca/jolene-reid).
+
+**Undergraduate Thesis** | May 2025 – Dec 2025  
+*UBC ECE (part-time, course-based)* | Vancouver, BC
+
+- I am researching how combinations of diversity and noise in pretraining data affect generalization, learning dynamics, and representations through controlled synthetic data experiments. Advised by [Dr. Christos Thrampoulidis](https://ece.ubc.ca/christos-thrampoulidis/).
+
+**AI Curriculum Development** | May 2025 – Dec 2025  
+*UBC Arts, prAxIs Team (part-time, course based)* | Vancouver, BC
+
+- **Developing applied AI modules** in existing faculty of arts courses that highlight how AI can be used in their field. For example, sequence modelling in economics or computer vision in archeology. Advised by [Dr. Laura Nelson](https://sociology.ubc.ca/profile/laura-nelson/) and [Dr. Jonathan Graves](https://economics.ubc.ca/profile/jonathan-graves/). [More info here](https://github.com/ubcecon/praxis-ubc). 
+
+- I am **teaching** some modules like "Autoregressive models in Economics" and "A Visual Introduction to Deep Learning"
+
+## Publications and Preprints
+
+- **Mali, Y.**, Shelhamer, E. **2026**
+
+  *LookSharp: Attention Entropy Minimization for Test-Time Adaptation*
+
+  Developed a novel test time adaptation objective based on the attention mechanism to improve robustness to corruptions. Accepted to Test-Time Updates and Catch, Adapt, and Operate **workshops at ICLR**.
+
+- **Mali, Y.**, Zeng, J., Heo, K., Zhang, G., Chen, J., Keramatian, K., Saraf, G., Solmi, M., Tam, E., Parikh, S., Schaffer, A., Beaulieu, S., Ng, R., Yatham, L. N., and Nunez, J.-J. **2026**
+
+  *A Chatbot for the Management of Bipolar Disorder: Using Retrieval-Augmented Generation with an Open-Weight Large Language Model to Answer Clinical Questions Based on the CANMAT and ISBD 2018 Guidelines.* **Canadian Journal of Psychiatry.** **Submitted, under review**
+
+  Secured compute/hosting funding, prepared ethics board submissions, designed and implemented methodology, developed AWS backend, built initial frontend, contributed to evaluation framework, and wrote the initial draft.
+
+- Phaterpekar, T., Zeng, Z., **Mali, Y.**, Leung, B., Ho, C., Ng, R. T., Bates, A. T., and Nunez, J.-J. **2026**
+
+  *Investigating Fine-tuning versus Zero-Shot Learning for General Large Language Models when Predicting Cancer Survival from Initial Oncology Consultation Documents.* **ESMO Real World Data and Digital Oncology**.
+
+  Designed and executed secondary experiments, helped engineer the ML pipeline, conducted evaluation analyses, and assisted in drafting/revising the manuscript.
+
+- Santos O'Keefe, L. M. A., **Mali, Y.**, and Frostad, J. **2026**
+
+  *A particle cohort study (ParCS) of the impact of glucose and sucrose solutions on the kinetics of starch gelatinization.* **Food Hydrocolloids**.
+
+  Developed particle-tracking software and analysis pipeline.
+
+- Nelson, L., Graves, J., **Mali, Y.**, and prAxIs Contributors. **2025**
+
+  *Integrating Applied AI Modules into Economics Education.* **Conference on Teaching and Research in Economic Education (CTREE)**
+
+  Developed applied AI education modules, contributed to curriculum design and implementation through Jupyter Notebooks.
+
+## Talks and Presentations
+
+- *LookSharp: Attention Entropy Minimization for Test-Time Adaptation* -- **Mali, Y.**, Shelhamer, E. **2026**
+
+  Computer Science Society Research Conference (Institutional, Talk)
+
+- *Co-Designing AI for Cancer Care: Interactive Demo and Feedback on a Personal Navigation Assistant Prototype.* -- Nunez, J.-J., Avery, J., Wu, S., Bates, A., **Mali, Y.**, Cook, O., and Chen, T. **2025**
+
+  BC Cancer Summit 2025. (National, Invited Talk). **Only undergraduate speaker at the summit.**
+
+- *AI in Clinical Decision Support for Mood Disorders* -- **Mali, Y.**, Nunez, J.-J. **2025**
+
+  Mood Disorders Center Trainee Seminar **2025**. (Institutional, Invited Talk).
+
+- *Agentic NLP for Medical Guidelines.* -- **Mali, Y.** and Nunez, J.-J. **2025**
+
+  CAIDA/TrustML @ ICML Visits 2025. (Institutional, Poster).
+
+  UBC Psychiatry Research Day 2025. (Institutional, Poster).
+
+  Multidisciplinary Undergraduate Research Conference 2025. (Institutional, Talk).
+
+- *Quantification of Starch Gelatinization Properties in Glucose and Sucrose Solutions using ParCS and Deep Learning.* -- Santos O'Keefe, L. M. A., **Mali, Y.**, and Frostad, J. **2025**
+
+  Multidisciplinary Undergraduate Research Conference 2025. (Institutional, Talk).
+
+## Awards
+
+[**Advanced Machine Learning Network: AML-TN | $ 5,000**](https://amltn.cs.ubc.ca/people/undergraduate-research-awards) *April 2025*
+
+[**3X Undergraduate Research Award: WLIURA | $ 6,000 Each**](https://students.ubc.ca/career/ubc-experiences/work-learn-international-undergraduate-research-awards/) *May 2024, 2025, 2026*
+
+## Additional Experience
+
+**[UBC AI Club](https://ubcaiclub.github.io/) -- President** | Jan 2025 – Present
+
+- President: Leading initiatives to encourage student understanding and future pathways in AI and ML. Started the AI reading group where we teach students interested in research foundational papers in deep learning.
+
+**[UBC Uncrewed Aircraft Systems](https://ubcuas.com/) -- ML Lead** | Sep 2024 – Present
+
+- Leading the ML sub-team to explore and tune open-sourced models for object detection and tracking. This is a small piece of the puzzle on our drones that compete in two university-level autonomous drone competitions every year.
+
+**[UBC Biological Internet of Things](https://ubcbiot.com/) -- Instrumentation** | May 2025 – Present
+
+- Automating brewing/fermentation equipment with IoT-controlled devices.
+
+## Technical Skills
+
+**Languages:** Python, Java, C#, C/C++, Java/TypeScript, R, MATLAB, PHP, Kotlin
+
+**Libraries/Frameworks:** Slurm, scikit-learn, PyTorch, JAX, HuggingFace, Sentence Transformers, LangChain/Graph, DSPy, NumPy, Polars, OpenAI, TensorFlow, Pandas, CuPy, Open-CV, React, Node.js, Flask, JUnit
+
+**Tools:** Git, SQL, Docker, Visual Studio Code, PyCharm, IntelliJ, Eclipse, Linux, Bash/Zsh, Azure, AWS SageMaker, Bedrock, Lambda, Gateway, Cognito & S3, Google Vertex AI
