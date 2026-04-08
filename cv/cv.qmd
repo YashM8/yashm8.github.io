@@ -79,6 +79,8 @@ format:
 
 - I am **teaching** some modules like "Autoregressive models in Economics" and "A Visual Introduction to Deep Learning"
 
+---
+
 ## Publications and Preprints
 
 - **Mali, Y.**, Shelhamer, E. **2026**
@@ -111,6 +113,8 @@ format:
 
   Developed applied AI education modules, contributed to curriculum design and implementation through Jupyter Notebooks.
 
+---
+
 ## Talks and Presentations
 
 - *LookSharp: Attention Entropy Minimization for Test-Time Adaptation* -- **Mali, Y.**, Shelhamer, E. **2026**
@@ -137,11 +141,15 @@ format:
 
   Multidisciplinary Undergraduate Research Conference 2025. (Institutional, Talk).
 
+---
+
 ## Awards
 
 [**Advanced Machine Learning Network: AML-TN | $ 5,000**](https://amltn.cs.ubc.ca/people/undergraduate-research-awards) *April 2025*
 
 [**3X Undergraduate Research Award: WLIURA | $ 6,000 Each**](https://students.ubc.ca/career/ubc-experiences/work-learn-international-undergraduate-research-awards/) *May 2024, 2025, 2026*
+
+---
 
 ## Additional Experience
 
@@ -156,6 +164,8 @@ format:
 **[UBC Biological Internet of Things](https://ubcbiot.com/) -- Instrumentation** | May 2025 – Present
 
 - Automating brewing/fermentation equipment with IoT-controlled devices.
+
+---
 
 ## Technical Skills
 
