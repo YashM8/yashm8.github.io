@@ -155,7 +155,7 @@ AI education in the Faculty of Arts. Building modules that teach students how to
 
 **Yash Mali**, Zejiao Zeng, Kayoung Heo, Grace Zhang, Jincheng Chen, Kamyar Keramatian, Gayatri Saraf, Marco Solmi, Edwin Tam, Sagar V. Parikh, Ayal Schaffer, Serge Beaulieu, Raymond Ng, Lakshmi N. Yatham, John-Jose Nunez
 
-Agentic LLM system for doctors that provides fast and accurate medical recommendations with reference from reliable sources (Co-op, May 25 - Aug 25). [Paper](https://www.medrxiv.org/content/10.64898/2025.11.30.25341311v2) 
+Agentic LLM system for doctors that provides fast and accurate medical recommendations with reference from reliable sources (Co-op, May 25 - Aug 25). [Paper](https://www.medrxiv.org/content/10.64898/2025.11.30.25341311v2) / [Summary](https://cic.ubc.ca/project/ai-powered-clinical-guideline-assistant/)
 
 :::
 :::
