@@ -214,7 +214,7 @@ Investigated how noise and diversity in the training data affect the internal re
 
 #### **Other Highlights**
 
-- Research Awards: [3X Undergraduate Research Award: WLIURA](https://students.ubc.ca/career/work-learn-international-undergraduate-research-awards/), [Advanced Machine Learning Network: AML-TN](https://amltn.cs.ubc.ca/people/undergraduate-research-awards)
+- Research Awards: [3X Undergraduate Research Award: WLIURA](https://students.ubc.ca/career/work-learn-international-undergraduate-research-awards/), [Advanced Machine Learning Network: AML-TN](https://amltn.cs.ubc.ca/ubc-students/)
 - Invited Talk: [BC Cancer Summit 2025](https://bccancersummit.ca/): "AI for Cancer Care"
 - President of the [UBC AI Club](https://ubcaiclub.github.io/) (2025-2026)
 - ML Lead at [UBC Uncrewed Aircraft Systems](https://ubcuas.com/) (Sep 24 - )
