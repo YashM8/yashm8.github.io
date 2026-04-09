@@ -113,6 +113,8 @@ google-scholar: "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ"
 
 #### **Research**
 
+---
+
 ::: {.columns}
 ::: {.column width="25%"}
 ![](images/looksharp.png){width="100%"}
