@@ -99,7 +99,6 @@ google-scholar: "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ"
 
 
 **Email:** [ymali@student.ubc.ca](mailto:ymali@student.ubc.ca) /
-[Website](https://yashm8.github.io) /
 [Google Scholar](https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ) /
 [LinkedIn](https://www.linkedin.com/in/yash-mali-ubc) /
 [GitHub](https://github.com/yashm8) /

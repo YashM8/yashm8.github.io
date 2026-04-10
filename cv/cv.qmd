@@ -23,7 +23,7 @@ format:
 # Yash Mali
 
 ::: {.center}
-[ymali@student.ubc.ca](mailto:ymali@student.ubc.ca) | [Google Scholar](https://scholar.google.com/citations?user=NOvveC4AAAAJ&hl=en) | [Linkedin](https://linkedin.com/in/yash-mali-ubc) | [Github](https://yashm8.github.io)
+[ymali@student.ubc.ca](mailto:ymali@student.ubc.ca) | [Website](https://yashm8.github.io/) | [Google Scholar](https://scholar.google.com/citations?user=NOvveC4AAAAJ&hl=en) | [Linkedin](https://linkedin.com/in/yash-mali-ubc) | [Github](https://yashm8.github.io)
 :::
 
 ## Education
