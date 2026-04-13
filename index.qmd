@@ -11,6 +11,7 @@ format:
     favicon: images/favicon.ico
     include-in-header:
       text: |
+        <meta name="google-site-verification" content="uf2ILnjfrgwo5vodu64OiVqERhoIw5fBKtGctMf-IMQ" />
         <meta name="description" content="Yash Mali is a Machine Learning AI researcher at UBC">
         <meta property="og:title" content="Yash Mali | Machine Learning Researcher">
         <meta property="og:description" content="Yash Mali is a Machine Learning AI researcher at UBC">
