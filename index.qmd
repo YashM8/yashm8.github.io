@@ -95,7 +95,7 @@ google-scholar: "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ"
 - Advised by [Dr. Christos Thrampoulidis](https://sites.google.com/view/cthrampo/home).  
 - Collaborators: 
   - [Dr. Evan Shelhammer](https://imaginarynumber.net/research/) on domain adaptation.
-  - [Dr. Jolene Reid](https://www.thereidlab.com/jolenereid), [Dr. John Jose Nunez](https://nunez-comp-mental-health-cancer-care.github.io/), and [Dr. John Frostad](https://chbe.ubc.ca/john-m-frostad/) on AI for science.
+  - [Dr. Jolene Reid](https://www.thereidlab.com/jolenereid), [Dr. John Jose Nunez](https://nunezlab.ca/), and [Dr. John Frostad](https://chbe.ubc.ca/john-m-frostad/) on AI for science.
   - [Dr. Laura Nelson](https://sociology.ubc.ca/profile/laura-nelson/), [Dr. Jonathan Graves](https://economics.ubc.ca/profile/jonathan-graves/), and [Dr. Julia Harten](https://scarp.ubc.ca/directory/julia-harten/) on social and educational applications of AI.
 
 
