@@ -160,7 +160,7 @@ AI education in the Faculty of Arts. Building modules that teach students how to
 :::
 
 ::: {.column width="75%"}
-**A Chatbot for the Management of Bipolar Disorder**
+**A Chatbot for the Management of Bipolar Disorder**: *Canadian Journal of Psychiatry*
 
 **Yash Mali**, Zejiao Zeng, Kayoung Heo, Grace Zhang, Antarip Kashyap, Jincheng Chen, Kamyar Keramatian, Gayatri Saraf, Marco Solmi, Edwin Tam, Sagar V. Parikh, Ayal Schaffer, Serge Beaulieu, Raymond Ng, Lakshmi N. Yatham, John-Jose Nunez
 
