@@ -91,7 +91,7 @@ format:
 
 - **Mali, Y.**, Zeng, J., Heo, K., Zhang, G., Chen, J., Keramatian, K., Saraf, G., Solmi, M., Tam, E., Parikh, S., Schaffer, A., Beaulieu, S., Ng, R., Yatham, L. N., and Nunez, J.-J. **2026**
 
-  *A Chatbot for the Management of Bipolar Disorder: Using Retrieval-Augmented Generation with an Open-Weight Large Language Model to Answer Clinical Questions Based on the CANMAT and ISBD 2018 Guidelines.* **Canadian Journal of Psychiatry.** **Submitted, under review**
+  *A Chatbot for the Management of Bipolar Disorder: Using Retrieval-Augmented Generation with an Open-Weight Large Language Model to Answer Clinical Questions Based on the CANMAT and ISBD 2018 Guidelines.* **Canadian Journal of Psychiatry.**
 
   Secured compute/hosting funding, prepared ethics board submissions, designed and implemented methodology, developed AWS backend, built initial frontend, contributed to evaluation framework, and wrote the initial draft.
 
