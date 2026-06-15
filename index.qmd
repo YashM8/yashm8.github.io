@@ -94,7 +94,7 @@ google-scholar: "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ"
 
 - Advised by [Dr. Christos Thrampoulidis](https://sites.google.com/view/cthrampo/home).  
 
-Last updated: May 21, 2026
+Last updated: June 14, 2026
 
 [//]: # (- Collaborators: )
 
