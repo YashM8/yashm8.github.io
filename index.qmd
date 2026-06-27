@@ -100,7 +100,7 @@ Last updated: June 14, 2026
 
 [//]: # (  - [Dr. Evan Shelhammer]&#40;https://imaginarynumber.net/research/&#41; on domain adaptation.)
 
-[//]: # (  - [Dr. Jolene Reid]&#40;https://www.thereidlab.com/jolenereid&#41;, [Dr. John Jose Nunez]&#40;https://nunezlab.ca/&#41;, and [Dr. John Frostad]&#40;https://chbe.ubc.ca/john-m-frostad/&#41; on AI for science.)
+[//]: # (  - [Dr. Jolene Reid]&#40;https://www.thereidlab.com/jolenereid&#41;, [Dr. John Jose Nunez]&#40;https://nunezlab.ca/&#41;, and [Dr. John Frostad]&#40;https://chbe.ubc.ca/john-m-frostad; on AI for science.)
 
 [//]: # (  - [Dr. Laura Nelson]&#40;https://sociology.ubc.ca/profile/laura-nelson/&#41;, [Dr. Jonathan Graves]&#40;https://economics.ubc.ca/profile/jonathan-graves/&#41;, and [Dr. Julia Harten]&#40;https://scarp.ubc.ca/directory/julia-harten/&#41; on social and educational applications of AI.)
 
@@ -164,7 +164,7 @@ AI education in the Faculty of Arts. Building modules that teach students how to
 
 **Yash Mali**, Zejiao Zeng, Kayoung Heo, Grace Zhang, Antarip Kashyap, Jincheng Chen, Kamyar Keramatian, Gayatri Saraf, Marco Solmi, Edwin Tam, Sagar V. Parikh, Ayal Schaffer, Serge Beaulieu, Raymond Ng, Lakshmi N. Yatham, John-Jose Nunez
 
-Agentic LLM system for doctors that provides fast and accurate medical recommendations with reference from reliable sources (Co-op, May 25 - Aug 25). [Paper](https://www.medrxiv.org/content/10.64898/2025.11.30.25341311v2) / [Summary](https://cic.ubc.ca/project/ai-powered-clinical-guideline-assistant/)
+Agentic LLM system for doctors that provides fast and accurate medical recommendations with reference from reliable sources (Co-op, May 25 - Aug 25). [Nunez Lab](https://nunezlab.ca/) / [Paper](https://www.medrxiv.org/content/10.64898/2025.11.30.25341311v2) / [Summary](https://cic.ubc.ca/project/ai-powered-clinical-guideline-assistant/)
 
 :::
 :::
@@ -198,7 +198,7 @@ LLM fine-tuning for survival prediction. (Co-op, May 25 - Aug 25). [Paper](https
 
 Lily Santos O' Keefe, **Yash Mali**, John Frostad
 
-Contributed particle tracking software for tracking starch particles to study the kinetics of starch gelatinization (Co-op, May 24 - Aug 24). [Paper](https://www.google.com/search?q=A+particle+cohort+study+(ParCS)+of+the+impact+of+glucose+and+sucrose+solutions+on+the+kinetics+of+starch+gelatinization&rlz=1C5OZZY_enCA1156CA1156&oq=A+particle+cohort+study+(ParCS)+of+the+impact+of+glucose+and+sucrose+solutions+on+the+kinetics+of+starch+gelatinization) / [Code](https://github.com/YashM8/Track)
+Contributed particle tracking software for tracking starch particles to study the kinetics of starch gelatinization (Co-op, May 24 - Aug 24). [Frostad Lab](https://food.chbe.ubc.ca/people2/) / [Paper](https://www.google.com/search?q=A+particle+cohort+study+(ParCS)+of+the+impact+of+glucose+and+sucrose+solutions+on+the+kinetics+of+starch+gelatinization&rlz=1C5OZZY_enCA1156CA1156&oq=A+particle+cohort+study+(ParCS)+of+the+impact+of+glucose+and+sucrose+solutions+on+the+kinetics+of+starch+gelatinization) / [Code](https://github.com/YashM8/Track)
 :::
 :::
 
