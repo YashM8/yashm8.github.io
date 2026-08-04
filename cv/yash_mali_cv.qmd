@@ -29,40 +29,44 @@ format:
 ## Education
 
 **University of British Columbia**  
-*BSc in Computer Science, expected* | Vancouver, BC
+*MASc in Electrical and Computer Engineering, 2028* | Vancouver, BC
+
+**University of British Columbia**  
+*BSc in Computer Science, 2026* | Vancouver, BC
+
 
 ## Experience
 
-**Healthcare AI – Undergraduate Research** | May 2025 – Present  
-*UBC Medicine & BC Cancer (**co-op**, continuing part-time)* | Vancouver, BC
+**Healthcare AI – Undergraduate Research** | May 2025 – May 2026  
+*UBC Medicine & BC Cancer (**co-op, full-time**, continuing part-time)* | Vancouver, BC
 
 - Built and deployed (on AWS) multi step LLM agents with knowledge bases that ingest medical guidelines and deliver evidence-based recommendations to doctors and patients. Collaborated with **UBC's [Cloud Innovation Centre](https://cic.ubc.ca/)**.
 
 - Apart from the technical side of research, I have worked on securing partnerships with companies like AWS, submitted grants as a "co-investigator", and submitted research ethics board documents. Advised by [Dr. John Jose Nunez](https://www.google.com/search?q=john+jose+nunez).
 
 **ML Engineer – Undergraduate Research** | May 2025 – Present  
-*UBC SCARP & ECE (part-time)* | Vancouver, BC
+*UBC SCARP & ECE (**part-time**)* | Vancouver, BC
 
 - Using latest developments in NLP and Computer Vision to analyze public records from Vancouver's housing development approval process. Advised by [Dr. Julia Harten](https://scarp.ubc.ca/directory/julia-harten) and [Dr. Christos Thrampoulidis](https://ece.ubc.ca/christos-thrampoulidis/).
 
 **AI and Automation Developer** | Sep 2024 – May 2025  
-*[Lux Bio](https://www.luxbio.ca/) (**co-op**)* | Vancouver, BC
+*[Lux Bio](https://www.luxbio.ca/) (**co-op, full-time**)* | Vancouver, BC
 
 - Applied **AI-based drug discovery tools** like AlphaFold and ProteinMPNN to optimize sequences and 3D structures of enzymes. Revamped automation systems for bioprocess engineering -- orchestrating sensors, pumps, motors, and valves.
 
 **Computer Vision & Automation – Undergraduate Research** | May 2024 – Sep 2024  
-*UBC Engineering @ [Frostad Research Group](https://food.chbe.ubc.ca/) (**co-op**)* | Vancouver, BC
+*UBC Engineering @ [Frostad Research Group](https://food.chbe.ubc.ca/) (**co-op, full-time**)* | Vancouver, BC
 
 - Developed particle tracking software using an **ensemble of open-source computer vision models**. Automated and developed data collection software for new instruments invented by the research group. Advised by [Dr. John Frostad](https://chbe.ubc.ca/john-m-frostad/).
 
 ## Additional Experience
 
-**Domain Adaptation Research** | Jan 2026 – Present  
+**Domain Adaptation Research** | Jan 2026 – May 2026  
 *UBC Computer Science (part-time, course-based)* | Vancouver, BC
 
 - Domain adaptation methods based on feature sharpening. Investigating how domain adaptation methods change representations and decision boundaries. Advised by [Dr. Evan Shelhamer](https://scholar.google.com/citations?user=-ltRSM0AAAAJ&hl=en).
 
-**Quantum ML in Chemistry** | Jan 2026 – Present  
+**Quantum ML in Chemistry** | Jan 2026 – May 2026  
 *UBC Chemistry (part-time, course-based)* | Vancouver, BC
 
 - Investigated how variational quantum circuits and quantum encoding methods provide improved privacy to input reconstruction in federated learning for chemical applications, compared to classical machine learning models. Advised by [Dr. Jolene Reid](https://www.chem.ubc.ca/jolene-reid).
