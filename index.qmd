@@ -94,8 +94,6 @@ google-scholar: "https://scholar.google.com/citations?hl=en&user=NOvveC4AAAAJ"
 
 - Advised by [Dr. Christos Thrampoulidis](https://sites.google.com/view/cthrampo/home).  
 
-Last updated: June 14, 2026
-
 [//]: # (- Collaborators: )
 
 [//]: # (  - [Dr. Evan Shelhammer]&#40;https://imaginarynumber.net/research/&#41; on domain adaptation.)
@@ -110,7 +108,8 @@ Last updated: June 14, 2026
 [LinkedIn](https://www.linkedin.com/in/yash-mali-ubc) /
 [GitHub](https://github.com/yashm8) /
 [CV](cv/yash_mali_cv.pdf) /
-[arXiv](http://arxiv.org/a/mali_y_1)
+[arXiv](http://arxiv.org/a/mali_y_1) /
+[Blog](blog.html)
 :::
 
 ::: {.column-side}

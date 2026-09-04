@@ -34,7 +34,6 @@ format:
 **University of British Columbia**  
 *BSc in Computer Science, 2026* | Vancouver, BC
 
-
 ## Experience
 
 **Healthcare AI – Undergraduate Research** | May 2025 – May 2026  
@@ -44,7 +43,7 @@ format:
 
 - Apart from the technical side of research, I have worked on securing partnerships with companies like AWS, submitted grants as a "co-investigator", and submitted research ethics board documents. Advised by [Dr. John Jose Nunez](https://www.google.com/search?q=john+jose+nunez).
 
-**ML Engineer – Undergraduate Research** | May 2025 – Present  
+**ML Engineer – Undergraduate Research** | May 2025 – May 2026  
 *UBC SCARP & ECE (**part-time**)* | Vancouver, BC
 
 - Using latest developments in NLP and Computer Vision to analyze public records from Vancouver's housing development approval process. Advised by [Dr. Julia Harten](https://scarp.ubc.ca/directory/julia-harten) and [Dr. Christos Thrampoulidis](https://ece.ubc.ca/christos-thrampoulidis/).
@@ -157,17 +156,17 @@ format:
 
 ## Additional Experience
 
-**[UBC AI Club](https://ubcaiclub.github.io/) -- President** | Jan 2025 – Present
-
-- President: Leading initiatives to encourage student understanding and future pathways in AI and ML. Started the AI reading group where we teach students interested in research foundational papers in deep learning.
-
-**[UBC Uncrewed Aircraft Systems](https://ubcuas.com/) -- ML Lead** | Sep 2024 – Present
-
-- Leading the ML sub-team to explore and tune open-sourced models for object detection and tracking. This is a small piece of the puzzle on our drones that compete in two university-level autonomous drone competitions every year.
-
 **[UBC Biological Internet of Things](https://ubcbiot.com/) -- Instrumentation** | May 2025 – Present
 
 - Automating brewing/fermentation equipment with IoT-controlled devices.
+
+**[UBC AI Club](https://ubcaiclub.github.io/) -- President** | Jan 2025 – May 2026
+
+- President: Leading initiatives to encourage student understanding and future pathways in AI and ML. Started the AI reading group where we teach students interested in research foundational papers in deep learning.
+
+**[UBC Uncrewed Aircraft Systems](https://ubcuas.com/) -- ML Lead** | Sep 2024 – Dec 2025
+
+- Leading the ML sub-team to explore and tune open-sourced models for object detection and tracking. This is a small piece of the puzzle on our drones that compete in two university-level autonomous drone competitions every year.
 
 ---
 

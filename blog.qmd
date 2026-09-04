@@ -1,0 +1,13 @@
+---
+title: "Blog"
+format:
+  html:
+    page-layout: full
+    css: styles/site-theme.css
+    fontsize: 1em
+    favicon: images/favicon.ico
+---
+
+![](images/banner.png){width="40%" fig-align="center"}
+
+- [Going Mad with Sparsity: A Reference for Interpretability Researchers](blog/sparse.html)
