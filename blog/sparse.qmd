@@ -1,0 +1,835 @@
+---
+title: "Going Mad with Sparsity: A Reference for Interpretability Researchers"
+author: "Yash Mali"
+categories: [Machine Learning, Mechanistic Interpretability]
+format:
+  html:
+    page-layout: article
+    css: ../styles/site-theme.css
+    fontsize: 0.85em
+    toc: true
+---
+
+## Assumptions
+
+Of course, there are many more ways to do interpretability in deep learning than sparse coding. However, this post focuses on the Sparse Autoencoders (SAEs) and their variants like Transcoders and Crosscoders. This post assumes that you are aware of the intuition and motivation behind sparse coding. If not, please read the following papers first:
+
+- From the 90s. A short 3 page paper that introduces sparse coding to do interpretation. [Emergence of simple-cell receptive field properties by learning a sparse code for natural images](https://www.snn.ru.nl/~bertk/comp_neurosci/olshausen_field_nature_1996.pdf)
+
+- Motivates the need for "unpacking" the dense activation space in modern deep learning models [Toy Models of Superposition](https://transformer-circuits.pub/2022/toy_model/index.html)
+
+- The paper that introduced sparse coding to interpret LLMs. [Sparse Autoencoders Find Highly Interpretable Features in Language Models](https://arxiv.org/abs/2309.08600)
+
+If you find mistakes/have clarifications or feedback please email: ymali@ece.ubc.ca
+
+A full table of notation is given at the [end of the post](#notation). The short version: $\mathbf{a} \in \mathbb{R}^d$ is an activation vector, $\mathbf{z} \in \mathbb{R}^M$ is the sparse latent it is encoded into, and $W_e$, $W_d$ are the encoder and decoder.
+
+---
+
+## 1. Vanilla Sparse Autoencoder
+
+The standard SAE uses a ReLU activation in the encoder and an $L_1$ penalty on the latent vector to encourage sparsity.
+
+### Model
+
+**Encoder.** The input is first centered by subtracting the decoder bias, then projected into the overcomplete latent space:
+
+$$
+\mathbf{z} = \text{ReLU}\!\big(W_e\,(\mathbf{a} - \mathbf{b}_d) + \mathbf{b}_e\big)
+$$
+
+**Decoder.** The reconstruction is a linear projection of the latent back to the activation space:
+
+$$
+\hat{\mathbf{a}} = W_d\,\mathbf{z} + \mathbf{b}_d
+$$
+
+### Input / Output
+
+- **Input:** $\mathbf{a} \in \mathbb{R}^d$
+- **Output:** reconstruction $\hat{\mathbf{a}} \in \mathbb{R}^d$, sparse latent $\mathbf{z} \in \mathbb{R}^M$
+
+### Loss
+
+$$
+\mathcal{L} = \underbrace{\|\mathbf{a} - \hat{\mathbf{a}}\|_2^2}_{\text{reconstruction}} + \underbrace{\lambda\,\|\mathbf{z}\|_1}_{\text{sparsity}}
+$$
+
+The $L_1$ penalty $\|\mathbf{z}\|_1 = \sum_{j=1}^{M} |z_j|$ drives most latent components to zero. The hyperparameter $\lambda$ controls the trade-off between reconstruction fidelity and sparsity. In practice, tuning $\lambda$ is delicate: too large and the autoencoder under-reconstructs; too small and latents are not sufficiently sparse.
+
+This was introduced in [Cunningham et al.](https://arxiv.org/abs/2309.08600)
+
+
+---
+
+## 2. Top-$K$ Sparse Autoencoder
+
+The Top-$K$ SAE replaces the ReLU + $L_1$ mechanism with a hard top-$K$ selection, enforcing exactly $K$ active latents per input. This eliminates the need to tune the sparsity coefficient $\lambda$.
+
+### Model
+
+**Encoder.** Compute pre-activations and retain only the $K$ largest:
+
+$$
+\mathbf{z}_{\text{pre}} = W_e\,(\mathbf{a} - \mathbf{b}_d) + \mathbf{b}_e
+$$
+
+$$
+\mathbf{z} = \text{TopK}(\mathbf{z}_{\text{pre}})
+$$
+
+where the $\text{TopK}$ operator is defined component-wise as:
+
+$$
+[\text{TopK}(\mathbf{x})]_j =
+\begin{cases}
+x_j & \text{if } x_j \text{ is among the } K \text{ largest entries of } \mathbf{x} \\
+0 & \text{otherwise}
+\end{cases}
+$$
+
+**Decoder.** Same linear reconstruction:
+
+$$
+\hat{\mathbf{a}} = W_d\,\mathbf{z} + \mathbf{b}_d
+$$
+
+### Input / Output
+
+- **Input:** $\mathbf{a} \in \mathbb{R}^d$
+- **Output:** reconstruction $\hat{\mathbf{a}} \in \mathbb{R}^d$, sparse latent $\mathbf{z} \in \mathbb{R}^M$ with $\|\mathbf{z}\|_0 = K$
+
+### Loss
+
+$$
+\mathcal{L} = \|\mathbf{a} - \hat{\mathbf{a}}\|_2^2
+$$
+
+No sparsity penalty is needed since $\|\mathbf{z}\|_0 = K$ by construction.
+
+This was introduced in [Gao et al.](https://arxiv.org/abs/2406.04093)
+
+---
+
+## 3. Batch Top-$K$ Sparse Autoencoder
+
+The Batch Top-$K$ SAE relaxes the per-sample constraint of the Top-$K$ SAE. Instead of requiring exactly $K$ active latents for every input, it enforces that the *average* number of active latents across a batch is $K$. This allows individual samples to activate more or fewer than $K$ features, accommodating inputs of varying complexity.
+
+### Model
+
+**Encoder.** For a batch $\{\mathbf{a}^{(i)}\}_{i=1}^B$, compute all pre-activations:
+
+$$
+\mathbf{z}_{\text{pre}}^{(i)} = W_e\,(\mathbf{a}^{(i)} - \mathbf{b}_d) + \mathbf{b}_e, \quad i = 1, \ldots, B
+$$
+
+Find a threshold $\theta$ such that exactly $B \cdot K$ entries survive across the entire batch:
+
+$$
+\theta = \text{the } (B \cdot K)\text{-th largest value in } \big\{\,z_{\text{pre},j}^{(i)} : i \in [B],\; j \in [M]\,\big\}
+$$
+
+Apply the threshold:
+
+$$
+z_j^{(i)} = z_{\text{pre},j}^{(i)} \cdot \mathbf{1}\!\big[z_{\text{pre},j}^{(i)} \geq \theta\big]
+$$
+
+**Decoder.** Same linear reconstruction per sample:
+
+$$
+\hat{\mathbf{a}}^{(i)} = W_d\,\mathbf{z}^{(i)} + \mathbf{b}_d
+$$
+
+### Input / Output
+
+- **Input:** batch $\{\mathbf{a}^{(i)}\}_{i=1}^B$, each $\mathbf{a}^{(i)} \in \mathbb{R}^d$
+- **Output:** reconstructions $\{\hat{\mathbf{a}}^{(i)}\}_{i=1}^B$, sparse latents $\{\mathbf{z}^{(i)}\}_{i=1}^B$ satisfying $\sum_{i=1}^B \|\mathbf{z}^{(i)}\|_0 = B \cdot K$
+
+Note that individual $\|\mathbf{z}^{(i)}\|_0$ may vary across samples; the constraint is only on the batch aggregate. As with the per-sample Top-$K$ (Section 2), no straight-through estimator is needed: once the surviving set is fixed, thresholding is multiplication by a locally-constant $0/1$ mask, so the gradient through it is exact almost everywhere.
+
+### Loss
+
+$$
+\mathcal{L} = \frac{1}{B}\sum_{i=1}^{B} \|\mathbf{a}^{(i)} - \hat{\mathbf{a}}^{(i)}\|_2^2
+$$
+
+As with the Top-$K$ SAE, no explicit sparsity penalty is required. The batch-level $\ell_0$ constraint is enforced by the thresholding operation.
+
+### Inference: a fixed global threshold
+
+The training rule above cannot be used at inference. The threshold $\theta$ is defined by the composition of the batch, so the latent assigned to an activation would depend on whatever else happened to be batched alongside it, and a single input ($B = 1$) collapses to per-sample Top-$K$. Instead, one input-independent threshold is estimated during training and reused for every subsequent forward pass.
+
+**Estimating the threshold.** Take the smallest *positive* activation in each sample and average, in expectation over batches:
+
+$$
+\theta^\star = \mathbb{E}_{\mathbf{X}}\Big[\min\big\{\, z_j(\mathbf{X}) \;\big|\; z_j(\mathbf{X}) > 0 \,\big\}\Big]
+$$
+
+In practice this is accumulated as a running estimate. At step $t$,
+
+$$
+\hat{\theta}^{(t)} = \frac{1}{B}\sum_{i=1}^{B} \; \min_{j \,:\, z_j^{(i)} > 0} z_j^{(i)},
+\qquad
+\theta^{(t)} = \mu\,\theta^{(t-1)} + (1 - \mu)\,\hat{\theta}^{(t)}
+$$
+
+with decay $\mu \in (0,1)$, and $\theta^\star = \theta^{(T)}$ is frozen at the end of training.
+
+**Applying it.** At inference the batch-level selection is discarded entirely and each latent is thresholded independently:
+
+$$
+z_j = z_{\text{pre},j} \cdot \mathbf{1}\!\big[z_{\text{pre},j} > \theta^\star\big]
+$$
+
+This is the JumpReLU activation function. A trained BatchTopK SAE is therefore *deployed* as a JumpReLU SAE with a single shared threshold: the batch-level ranking is purely a training-time device for hitting a target sparsity, and no ranking is performed at inference. Since $\theta^\star$ averages positive activations, $\theta^\star > 0$, so the indicator also excludes negative pre-activations.
+
+One consequence of the swap: $\|\mathbf{z}\|_0$ is no longer pinned to any exact value. It varies per input, and the target $K$ holds only in expectation, $\mathbb{E}\big[\|\mathbf{z}\|_0\big] \approx K$, so the realised $\ell_0$ should be measured on held-out data rather than assumed.
+
+This was introduced in [Bussmann et al.](https://arxiv.org/abs/2412.06410)
+
+
+---
+
+## 4. JumpReLU Sparse Autoencoder
+
+The vanilla SAE couples two decisions into one number: *whether* a latent fires and *how strongly*. The $L_1$ penalty therefore shrinks the magnitudes of latents it does not suppress (Section 1). Top-$K$ breaks the coupling by removing the magnitude penalty entirely, but replaces it with a rigid constraint — exactly $K$ active latents on every input, regardless of whether the input is simple or complex.
+
+The JumpReLU SAE takes a third route: keep a genuinely input-dependent $\ell_0$, but penalise $\ell_0$ *directly* rather than penalising magnitude as a proxy for it. Each latent gets its own learned activation threshold.
+
+### Model
+
+**Encoder.** Pre-activations are computed as usual, then passed through a per-latent gate:
+
+$$
+\mathbf{z}_{\text{pre}} = W_e\,(\mathbf{a} - \mathbf{b}_d) + \mathbf{b}_e
+$$
+
+$$
+z_j = \text{JumpReLU}_{\theta_j}\!\big(z_{\text{pre},j}\big) = z_{\text{pre},j} \cdot H\!\big(z_{\text{pre},j} - \theta_j\big)
+$$
+
+where $H$ is the Heaviside step function and $\boldsymbol{\theta} \in \mathbb{R}^M_{>0}$ is a **learned per-latent threshold vector**, usually parameterised through its logarithm so it stays positive.
+
+The name describes the shape: below $\theta_j$ the output is zero, at $\theta_j$ it jumps discontinuously to $\theta_j$, and above it the function is the identity. Compare this to ReLU, which rises continuously from zero. The discontinuity is the point — a latent that fires does so at its *true* pre-activation magnitude, with no shrinkage toward zero.
+
+**Decoder.** Unchanged from the vanilla SAE:
+
+$$
+\hat{\mathbf{a}} = W_d\,\mathbf{z} + \mathbf{b}_d
+$$
+
+### Input / Output
+
+- **Input:** $\mathbf{a} \in \mathbb{R}^d$
+- **Output:** reconstruction $\hat{\mathbf{a}} \in \mathbb{R}^d$, sparse latent $\mathbf{z} \in \mathbb{R}^M$ with input-dependent $\|\mathbf{z}\|_0$
+
+### Loss
+
+$$
+\mathcal{L} = \|\mathbf{a} - \hat{\mathbf{a}}\|_2^2 + \lambda\,\|\mathbf{z}\|_0,
+\qquad
+\|\mathbf{z}\|_0 = \sum_{j=1}^{M} H\!\big(z_{\text{pre},j} - \theta_j\big)
+$$
+
+The sparsity term counts firing latents instead of summing their magnitudes. This is what removes the shrinkage bias: the penalty is completely independent of *how large* an active latent is, so there is no downward pressure on the magnitude of a latent that has already been paid for.
+
+### Training: where a straight-through estimator is genuinely required
+
+Both the $L_0$ term and the gate are piecewise constant in $\boldsymbol{\theta}$. The Heaviside step has zero derivative everywhere it is defined, so under ordinary autograd $\partial\mathcal{L}/\partial\theta_j = 0$ and the thresholds would never move at all. This is the situation Top-$K$ is often wrongly said to be in, and it is where a straight-through estimator is actually needed.
+
+The fix is to replace the derivative of the step with a kernel density estimate of bandwidth $\varepsilon$:
+
+$$
+\frac{\partial}{\partial \theta_j} H\!\big(z_{\text{pre},j} - \theta_j\big)
+\;\longleftarrow\;
+-\frac{1}{\varepsilon}\,\mathcal{K}\!\left(\frac{z_{\text{pre},j} - \theta_j}{\varepsilon}\right)
+$$
+
+$$
+\frac{\partial}{\partial \theta_j} \text{JumpReLU}_{\theta_j}\!\big(z_{\text{pre},j}\big)
+\;\longleftarrow\;
+-\frac{\theta_j}{\varepsilon}\,\mathcal{K}\!\left(\frac{z_{\text{pre},j} - \theta_j}{\varepsilon}\right)
+$$
+
+where $\mathcal{K}$ is a bounded symmetric kernel, e.g. the rectangle $\mathcal{K}(x) = \mathbf{1}[|x| \leq \tfrac{1}{2}]$. The second expression carries an extra factor $\theta_j$ because the size of the jump is itself $\theta_j$.
+
+The intuition: a threshold receives gradient only from pre-activations landing in a band of width $\varepsilon$ around it — the ones near enough that nudging $\theta_j$ would flip whether they fire. Pre-activations far above or below contribute nothing.
+
+Two things worth being precise about:
+
+- **Only the $\boldsymbol{\theta}$ gradient is a surrogate.** The gradient with respect to $\mathbf{z}_{\text{pre}}$ is $\partial z_j / \partial z_{\text{pre},j} = H(z_{\text{pre},j} - \theta_j)$, which is exact almost everywhere — the discontinuity is a measure-zero set. So the encoder and decoder weights train on true gradients; only the thresholds rely on the estimator.
+- **This is a real approximation**, unlike Top-$K$ (Section 2). There the mask is locally constant and the gradient is genuinely exact; here the true gradient is identically zero and the estimator supplies information the objective does not contain.
+
+The bandwidth $\varepsilon$ is a live hyperparameter. Too small and few pre-activations fall in the band, so thresholds receive sparse, high-variance updates; too large and the estimate is biased toward pre-activations that are nowhere near the boundary.
+
+### Relation to BatchTopK
+
+A deployed BatchTopK SAE (Section 3) and a JumpReLU SAE evaluate the *same* function — an elementwise comparison against a threshold. They differ in how the threshold is obtained and in how many there are: BatchTopK estimates a single scalar $\theta^\star$ as a running average after the fact, while a JumpReLU SAE learns a full vector $\boldsymbol{\theta} \in \mathbb{R}^M$ by gradient descent. Per-latent thresholds are the more expressive choice; the batch rank constraint is the easier one to train, and it lets you specify target sparsity directly instead of tuning $\lambda$ to reach it.
+
+### Where the four architectures differ
+
+| | Vanilla | Top-$K$ | BatchTopK | JumpReLU |
+|---|---|---|---|---|
+| Sparsity mechanism | $L_1$ penalty | per-sample rank | batch rank, then fixed $\theta^\star$ | per-latent learned $\theta_j$ |
+| $\ell_0$ per input | unconstrained | exactly $K$ | varies, mean $\approx K$ | varies |
+| Magnitude bias | shrinkage | none | none | none |
+| Main hyperparameter | $\lambda$ | $K$ | $K$ | $\lambda$ and bandwidth $\varepsilon$ |
+| Gradient through gate | exact | exact | exact | straight-through surrogate |
+
+This was introduced in [Rajamanoharan et al.](https://arxiv.org/abs/2407.14435)
+
+
+---
+
+## 5. Matryoshka Sparse Autoencoder
+
+Standard SAEs suffer from two pathologies as dictionary size $M$ grows. Both are referred to by name later in this post, and these are the definitions used:
+
+- **Feature absorption:** a general latent (e.g. "female names") develops blind spots for instances captured by more specialised latents (e.g. a "Lily"-specific latent), so the general feature becomes "female names *except* Lily."
+- **Feature splitting:** a coherent high-level concept fragments into many narrow latents, and the original concept disappears from the dictionary entirely.
+
+Both arise because the sparsity objective rewards replacing one general latent with a set of specialised ones that achieve the same reconstruction with fewer active features. The Matryoshka SAE addresses this by training multiple **nested sub-SAEs** of increasing size simultaneously, named after the Russian nesting dolls. Smaller sub-dictionaries are forced to reconstruct the input on their own, so their latents must capture broad, high-level concepts; larger sub-dictionaries can then specialise without absorbing the general features.
+
+### Model
+
+Fix a set of nested dictionary sizes $\mathcal{M} = \{m_1, m_2, \ldots, m_n\}$ with $m_1 < m_2 < \cdots < m_n = M$. The encoder and decoder share a single set of weights; each sub-SAE at scale $m_k$ uses only the first $m_k$ latents.
+
+**Encoder.** The *full* latent vector is computed once:
+
+$$
+\mathbf{z} = \sigma \!\big(W_e\,(\mathbf{a} - \mathbf{b}_d) + \mathbf{b}_e\big) \in \mathbb{R}^M
+$$
+
+where $\sigma$ is an activation function (ReLU, BatchTopK, etc.). For each scale $m_k \in \mathcal{M}$, define the **prefix latent**:
+
+$$
+\mathbf{z}^{(m_k)} = \mathbf{z}_{1:m_k} \in \mathbb{R}^{m_k}
+$$
+
+i.e. the first $m_k$ components of $\mathbf{z}$.
+
+**Decoder.** Each prefix reconstructs independently using the corresponding prefix of the decoder matrix:
+
+$$
+\hat{\mathbf{a}}^{(m_k)} = W_{d}^{(\cdot,\,1:m_k)}\,\mathbf{z}^{(m_k)} + \mathbf{b}_d
+$$
+
+where $W_{d}^{(\cdot,\,1:m_k)} \in \mathbb{R}^{d \times m_k}$ denotes the first $m_k$ columns of $W_d$.
+
+### Input / Output
+
+- **Input:** $\mathbf{a} \in \mathbb{R}^d$
+- **Output:** $n$ reconstructions $\{\hat{\mathbf{a}}^{(m_k)}\}_{k=1}^{n}$, one per nesting scale; a single sparse latent $\mathbf{z} \in \mathbb{R}^M$ whose prefixes of length $m_1 < m_2 < \cdots < m_n$ each form a self-contained feature set
+
+### Loss
+
+The training objective sums reconstruction losses over all nesting scales:
+
+$$
+\mathcal{L} = \sum_{m_k \in \mathcal{M}} \big\|\mathbf{a} - \hat{\mathbf{a}}^{(m_k)}\big\|_2^2 \;+\; \alpha\,\mathcal{L}_{\text{aux}}
+$$
+
+where $\mathcal{L}_{\text{aux}}$ is a standard auxiliary loss (e.g. for dead-latent recovery). No explicit sparsity penalty $\lambda\|\mathbf{z}\|_1$ is needed when using BatchTopK as the activation function $\sigma $; sparsity is enforced structurally.
+
+The key effect: because the first $m_1$ latents must minimise *their own* reconstruction term, they cannot rely on later latents and are therefore pressured to learn the most broadly useful features. Latents indexed $m_1{+}1$ through $m_2$ refine the reconstruction at the next scale, and so on. This produces a hierarchy from general to specific *within a single weight matrix*.
+
+#### Trade-offs
+
+- **Reconstruction:** the multi-scale constraint prevents the SAE from concentrating capacity, so full-dictionary reconstruction is mildly worse than an unconstrained BatchTopK SAE of the same size.
+- **Downstream quality:** despite worse raw reconstruction, Matryoshka SAEs match or exceed baselines on downstream cross-entropy loss, sparse probing, and concept erasure—tasks that depend on feature *quality* rather than reconstruction fidelity.
+- **Training cost:** computing $|\mathcal{M}|$ reconstruction losses per step increases wall-clock time roughly proportional to $|\mathcal{M}|$ (e.g. ${\sim}50\%$ overhead with 5 nesting scales).
+
+This was introduced in [Bussmann et al.](https://arxiv.org/abs/2503.17547)
+
+
+---
+
+## 6. Transcoders
+
+All SAE variants above share the same goal: **decompose a single activation vector** $\mathbf{a}_l$ into sparse features and reconstruct it. They describe *what* is represented at a point in the network, but not *how* the network computes the transformation from one representation to the next.
+
+Transcoders address this gap. A transcoder is trained to approximate the **input → output mapping of a specific MLP sublayer**, replacing the dense, nonlinear $\text{MLP}_l(\cdot)$ with a wider, sparsely-activating surrogate. This enables weights-based circuit analysis *through* MLP layers, which is otherwise intractable because each interpretable feature is a linear combination of many neurons, each gated by its own nonlinearity.
+
+#### Where transcoders are used
+
+Transcoders are applied **per-MLP-sublayer** in a transformer. In a standard pre-norm transformer, each layer $l$ has two residual sub-steps, with the normalisation written explicitly because it matters here:
+
+$$
+\mathbf{r}_l = \mathbf{a}_l + \text{Attn}_l\!\big(\text{LN}_1(\mathbf{a}_l)\big)
+$$
+$$
+\mathbf{a}_{l+1} = \mathbf{r}_l + \text{MLP}_l\!\big(\text{LN}_2(\mathbf{r}_l)\big)
+$$
+
+Here $\mathbf{r}_l$ is the residual stream after the attention update at layer $l$. Define
+
+$$
+\mathbf{x}_l = \text{LN}_2(\mathbf{r}_l)
+$$
+
+as the **normalised** MLP input — the vector the MLP sublayer actually consumes. This, not the raw residual $\mathbf{r}_l$, is what the transcoder encoder reads, and $\mathbf{x}_l$ denotes it consistently for the rest of this section. The distinction is not cosmetic: a transcoder trained on $\mathbf{r}_l$ would have to absorb the normalisation into its own weights, and its features would no longer align with the basis the MLP itself operates in.
+
+The MLP computes an additive update $\text{MLP}_l(\mathbf{x}_l)$ that is written back into the residual stream. A transcoder replaces this specific component:
+
+$$
+\text{MLP}_l(\mathbf{x}_l) \;\approx\; \text{TC}_l(\mathbf{x}_l)
+$$
+
+Transcoders **typically** target MLP sublayers rather than attention sublayers or the full residual stream, because MLPs are where dense nonlinear computation makes fine-grained circuit analysis most difficult. The construction is not restricted to MLPs in principle, and variants that decompose attention outputs do exist.
+
+### Model
+
+**Encoder.** The MLP input $\mathbf{x}_l \in \mathbb{R}^d$ is projected into a sparse overcomplete space:
+
+$$
+\mathbf{z} = \text{ReLU}\!\big(W_e\,\mathbf{x}_l + \mathbf{b}_e\big)
+$$
+
+**Decoder.** The sparse features are projected to approximate the MLP's *output* (not its input):
+
+$$
+\widehat{\text{MLP}}_l(\mathbf{x}_l) = W_d\,\mathbf{z} + \mathbf{b}_{\text{dec}}
+$$
+
+Note the asymmetry with SAEs: the encoder reads $\mathbf{x}_l$ (MLP input) but the decoder targets $\text{MLP}_l(\mathbf{x}_l)$ (MLP output). There is no centering by a shared bias because input and output live in different functional roles.
+
+### Input / Output
+
+- **Input:** $\mathbf{x}_l \in \mathbb{R}^d$ — the MLP sublayer input at layer $l$ (residual stream post-attention, post-LayerNorm)
+- **Output:** $\widehat{\text{MLP}}_l(\mathbf{x}_l) \in \mathbb{R}^d$ — a sparse approximation of the MLP's additive contribution to the residual stream; sparse latent $\mathbf{z} \in \mathbb{R}^M$
+
+### Loss
+
+$$
+\mathcal{L} = \big\|\text{MLP}_l(\mathbf{x}_l) - \widehat{\text{MLP}}_l(\mathbf{x}_l)\big\|_2^2 + \lambda\,\|\mathbf{z}\|_1
+$$
+
+The reconstruction target is the *true MLP output*, not the input. The $L_1$ penalty encourages sparsity in the latent features, just as in a vanilla SAE.
+
+**A behaviour term in the loss.** The reconstruction term above is *local*: it measures only how closely the transcoder matches the MLP output at layer $l$. It says nothing about whether the network still behaves the same once the transcoder is spliced in, since a small residual-stream error at layer $l$ can be amplified by later layers. To constrain that directly, an additional KL term is sometimes added, taken over the **model's output distribution over the vocabulary**.
+
+Write $\mathcal{M}(\mathbf{t}) \in \mathbb{R}^{|V|}$ for the next-token logits the unmodified model assigns to a token sequence $\mathbf{t}$, and $\mathcal{M}[\text{MLP}_l \to \text{TC}_l](\mathbf{t})$ for the logits of the same model with the layer-$l$ MLP sublayer replaced by the transcoder. Then
+
+$$
+\mathcal{L}_{\text{KL}} = \text{KL}\Big(\text{softmax}\big(\mathcal{M}(\mathbf{t})\big) \;\Big\|\; \text{softmax}\big(\mathcal{M}[\text{MLP}_l \to \text{TC}_l](\mathbf{t})\big)\Big)
+$$
+
+and the full objective becomes
+
+$$
+\mathcal{L} = \big\|\text{MLP}_l(\mathbf{x}_l) - \widehat{\text{MLP}}_l(\mathbf{x}_l)\big\|_2^2 + \lambda\,\|\mathbf{z}\|_1 + \beta\,\mathcal{L}_{\text{KL}}
+$$
+
+Both softmaxes are taken over the vocabulary dimension $|V|$, so each argument is a distribution over next tokens rather than over residual-stream coordinates. This is what makes the term a *behavioural* constraint: it penalises the transcoder for changing what the model predicts, which is the property circuit analysis depends on. The cost is that evaluating $\mathcal{L}_{\text{KL}}$ requires a second full forward pass through the patched model at every step, making it considerably more expensive than the local MSE term.
+
+#### Why this enables circuit analysis
+
+Because both attention and MLP outputs add linearly into the residual stream, the transcoder's decoder decomposes the MLP contribution as:
+
+$$
+\widehat{\text{MLP}}_l(\mathbf{x}_l) = \sum_{j=1}^{M} z_j \cdot \mathbf{w}_{d,j} + \mathbf{b}_{\text{dec}}
+$$
+
+where $\mathbf{w}_{d,j}$ is the $j$-th column of $W_d$. Each term $z_j \cdot \mathbf{w}_{d,j}$ is a rank-1 contribution that can be attributed to a single interpretable feature. This factorises the MLP computation into **input-dependent** activations $z_j$ (which features fire) and **input-invariant** directions $\mathbf{w}_{d,j}$ (what each feature writes to the residual stream), enabling weights-based circuit tracing across layers.
+
+This was introduced in [Dunefsky et al.](https://arxiv.org/abs/2406.11944)
+
+
+### Skip Transcoder
+
+The skip transcoder adds a learned affine skip connection that captures the linear component of the MLP mapping, freeing the sparse bottleneck to focus on the nonlinear part:
+
+$$
+\widehat{\text{MLP}}_l(\mathbf{x}_l) = W_d\,\mathbf{z} + W_{\text{skip}}\,\mathbf{x}_l + \mathbf{b}_{\text{dec}}
+$$
+
+The loss is unchanged:
+
+$$
+\mathcal{L} = \big\|\text{MLP}_l(\mathbf{x}_l) - \widehat{\text{MLP}}_l(\mathbf{x}_l)\big\|_2^2 + \lambda\,\|\mathbf{z}\|_1
+$$
+
+The skip connection $W_{\text{skip}} \in \mathbb{R}^{d \times d}$ acts as a linear baseline: any part of $\text{MLP}_l$ that is well-approximated by a linear map is offloaded to $W_{\text{skip}}$, so the sparse latents $\mathbf{z}$ need only represent the genuinely nonlinear transformations. This yields a Pareto improvement—lower reconstruction error at the same sparsity level—and makes the learned features more interpretable because they are not burdened with representing linear pass-through behaviour.
+
+This was introduced in [Paulo et al.](https://arxiv.org/abs/2501.18823)
+
+
+### Cross-Layer Transcoder (CLT)
+
+A standard transcoder replaces one MLP layer at a time, requiring a separate transcoder per layer. The cross-layer transcoder replaces **all MLP sublayers jointly** with a shared sparse feature set.
+
+#### Model
+
+**Encoder.** For each layer $l$, the encoder reads the normalised MLP input $\mathbf{x}_l = \text{LN}_2(\mathbf{r}_l)$ and computes sparse features:
+
+$$
+\mathbf{z}_l = \sigma \!\big(W_e^{(l)}\,\mathbf{x}_l + \mathbf{b}_e^{(l)}\big) \in \mathbb{R}^M
+$$
+
+There is a full set of $M$ features *per layer*: the pair $(\ell, j)$ indexes feature $j$ encoded at layer $\ell$, so a CLT spanning $L$ layers has $L \cdot M$ features in total. Each feature has exactly one encoder layer — the layer whose residual stream it reads — and writes to every layer at or after it.
+
+**Decoder.** Feature $(\ell, j)$ has a decoder column at layer $\ell$ and at **every later layer**. The MLP output at layer $l$ is therefore reconstructed from all features encoded at or before $l$:
+
+$$
+\widehat{\text{MLP}}_l(\mathbf{x}_l) = \sum_{\ell \leq l} \sum_{j=1}^{M} z_{\ell,j} \cdot \mathbf{w}_{d,j}^{(\ell \to l)} + \mathbf{b}_{\text{dec}}^{(l)}
+$$
+
+where $\mathbf{w}_{d,j}^{(\ell \to l)} \in \mathbb{R}^d$ is the column through which feature $(\ell, j)$ writes into layer $l$. The superscript must name both layers: the same index $j$ at two different encoder layers refers to two different features, each with its own set of output columns.
+
+Feature $(\ell, j)$ therefore owns $L - \ell + 1$ decoder columns, and the decoder holds $\tfrac{1}{2}L(L+1)Md$ parameters in total — quadratic in depth, which is the dominant cost of the architecture.
+
+#### Input / Output
+
+- **Input:** normalised MLP inputs $\{\mathbf{x}_l\}$ across all layers of one model
+- **Output:** sparse approximation $\widehat{\text{MLP}}_l$ for every MLP sublayer simultaneously; a shared sparse feature set where each feature reads from one layer but writes to one or more downstream layers
+
+#### Loss
+
+$$
+\mathcal{L} = \sum_{l=1}^{L} \big\|\text{MLP}_l(\mathbf{x}_l) - \widehat{\text{MLP}}_l(\mathbf{x}_l)\big\|_2^2 + \lambda \sum_{l=1}^{L} \|\mathbf{z}_l\|_1
+$$
+
+The key advantage: because each feature has one encoder layer and multi-layer decoder columns, the **attribution graph** can be read off from the weights. Nodes are features $(\ell, j)$; the edge from $(\ell, j)$ to $(\ell', k)$ with $\ell' > \ell$ is the linear effect of the former's output column at layer $\ell'$ on the latter's encoder input:
+
+$$
+z_{\ell,j} \cdot \big\langle\, \mathbf{w}_{e,k}^{(\ell')},\; \mathbf{w}_{d,j}^{(\ell \to \ell')} \,\big\rangle
+$$
+
+where $\mathbf{w}_{e,k}^{(\ell')}$ is the $k$-th row of $W_e^{(\ell')}$. The inner product is input-invariant and available from the weights alone; only the scalar $z_{\ell,j}$ depends on the input. Note that this is the *direct* residual-stream path only — contributions routed through intervening attention sublayers are not captured by it.
+
+This was introduced in [Ameisen et al.](https://transformer-circuits.pub/2025/attribution-graphs/methods.html)
+
+
+---
+
+## 7. Crosscoders
+
+All architectures above operate on activations from a **single model**. Crosscoders generalise the SAE framework so that the encoder and decoder span **multiple activation sources** — either different layers of one model, or the same layer of different models, or both.
+
+The core idea: instead of training separate SAEs, a single SAE is trained where the encoder reads from multiple sources simultaneously. In practice, this is implemented by giving each source its own slice of the encoder weights, computing their independent projections, and summing them before the activation function. Features that learn to read/write from multiple sources are "shared"; features that load on only one are "exclusive" to that source.
+
+
+### 7.1 Cross-Layer Crosscoder
+
+Applied to **one model, multiple layers**. Instead of training a separate SAE per layer, a cross-layer crosscoder trains one encoder/decoder pair on the stacked residual stream activations across layers.
+
+#### Model
+
+Given a set of layers $\mathcal{S} = \{l_1, l_2, \ldots, l_S\}$, each layer receives its own slice of the encoder weights $W_e^{(l_s)} \in \mathbb{R}^{M \times d}$.
+
+**Encoder:** The encoder sums the projections from each layer:
+
+$$
+\mathbf{z} = \sigma \!\Big(\sum_{s=1}^{S} W_e^{(l_s)}\,\mathbf{a}_{l_s} + \mathbf{b}_e\Big) \in \mathbb{R}^M
+$$
+
+**Decoder:** The decoder reconstructs each layer's activation using a layer-specific decoder matrix $W_d^{(l_s)} \in \mathbb{R}^{d \times M}$:
+
+$$
+\hat{\mathbf{a}}_{l_s} = W_d^{(l_s)}\,\mathbf{z} + \mathbf{b}_d^{(l_s)}
+$$
+
+#### Input / Output
+
+- **Input:** activations $\{\mathbf{a}_{l_s}\}_{s=1}^{S}$ from $S$ layers of one model
+- **Output:** reconstructions $\{\hat{\mathbf{a}}_{l_s}\}_{s=1}^{S}$; a shared sparse latent $\mathbf{z} \in \mathbb{R}^M$
+
+#### Loss
+
+$$
+\mathcal{L} = \sum_{s=1}^{S} \big\|\mathbf{a}_{l_s} - \hat{\mathbf{a}}_{l_s}\big\|_2^2 \;+\; \lambda \sum_{j=1}^{M} \Big( \sum_{s=1}^{S} \big\|\mathbf{w}_{d,j}^{(l_s)}\big\|_2 \Big) z_j
+$$
+
+Note the sparsity term: each latent is weighted by the **sum of its decoder norms across sources**, not penalised uniformly. This is the norm-weighted $L_1$ from Section 1, extended over sources, and it is what makes the per-source decoder norms comparable to one another — without it the scale degeneracy would let the model shuffle norm between sources for free, and the analysis below would be meaningless.
+
+#### What the decoder norms reveal
+
+For each feature $j$, compute $\|\mathbf{w}_{d,j}^{(l_s)}\|$ — the decoder norm at each layer. Features that peak at a single layer are **layer-local**. Features with substantial norm across many layers are **cross-layer features** that persist through depth. Feature directions often **drift** across layers even when the feature persists, which a single shared-dictionary approach would miss.
+
+Crosscoders, in both the cross-layer and model-diffing forms, were introduced in [Lindsey et al.](https://transformer-circuits.pub/2024/crosscoders/index.html)
+
+
+### 7.2 Model-Diffing Crosscoder
+
+Applied to the **same layer of two (or more) different models** — typically a base model $\mathcal{M}_1$ and its fine-tuned variant $\mathcal{M}_2$, but equally two entirely different models. The crosscoder learns a shared latent space that captures both models' activations, enabling direct comparison of their learned features.
+
+#### Model
+
+At layer $l$, each model $\mathcal{M}_n$ has its own slice of the encoder weights $W_e^{(n)} \in \mathbb{R}^{M \times d}$.
+
+**Encoder:** The latent vector is computed from the sum of both models' projections:
+
+$$
+\mathbf{z} = \sigma \!\Big(W_e^{(1)}\,\mathbf{a}_l^{(1)} + W_e^{(2)}\,\mathbf{a}_l^{(2)} + \mathbf{b}_e\Big) \in \mathbb{R}^M
+$$
+
+**Decoder:** Each model's activation is reconstructed via its own decoder block, $W_d^{(1)}$ and $W_d^{(2)} \in \mathbb{R}^{d \times M}$:
+
+$$
+\hat{\mathbf{a}}_l^{(1)} = W_d^{(1)}\,\mathbf{z} + \mathbf{b}_d^{(1)}
+$$
+$$
+\hat{\mathbf{a}}_l^{(2)} = W_d^{(2)}\,\mathbf{z} + \mathbf{b}_d^{(2)}
+$$
+
+This can be generalized to $N$ models using summation notation:
+
+$$
+\mathbf{z} = \sigma \!\Big(\sum_{n=1}^{N} W_e^{(n)}\,\mathbf{a}_l^{(n)} + \mathbf{b}_e\Big) \in \mathbb{R}^M
+$$
+$$
+\hat{\mathbf{a}}_l^{(n)} = W_d^{(n)}\,\mathbf{z} + \mathbf{b}_d^{(n)} \quad \text{for } n = 1, \dots, N
+$$
+
+#### Input / Output
+
+- **Input:** activations $\mathbf{a}_l^{(1)}, \mathbf{a}_l^{(2)} \in \mathbb{R}^d$ from models $\mathcal{M}_1, \mathcal{M}_2$ at layer $l$, run on the same input tokens
+- **Output:** per-model reconstructions $\hat{\mathbf{a}}_l^{(1)}, \hat{\mathbf{a}}_l^{(2)}$; shared sparse latent $\mathbf{z} \in \mathbb{R}^M$
+
+#### Loss
+
+$$
+\mathcal{L} = \sum_{n=1}^{N} \big\|\mathbf{a}_l^{(n)} - \hat{\mathbf{a}}_l^{(n)}\big\|_2^2 \;+\; \lambda \sum_{j=1}^{M} \Big( \sum_{n=1}^{N} \big\|\mathbf{w}_{d,j}^{(n)}\big\|_2 \Big) z_j
+$$
+
+As in the cross-layer case, the sparsity term weights each latent by the sum of its per-model decoder norms. This is essential here rather than merely tidy: the entire model-diffing analysis is a comparison of those norms, and a plain $\lambda\|\mathbf{z}\|_1$ would leave their relative scale unidentified.
+
+#### What the decoder norms reveal
+
+For each feature $j$, compare $\|\mathbf{w}_{d,j}^{(1)}\|_2$ against $\|\mathbf{w}_{d,j}^{(2)}\|_2$. The usual summary statistic is the **relative decoder norm strength**
+
+$$
+\Delta_j = \frac{1}{2} + \frac{1}{2}\cdot\frac{\big\|\mathbf{w}_{d,j}^{(1)}\big\|_2 - \big\|\mathbf{w}_{d,j}^{(2)}\big\|_2}{\max\!\big(\big\|\mathbf{w}_{d,j}^{(1)}\big\|_2,\; \big\|\mathbf{w}_{d,j}^{(2)}\big\|_2\big)} \;\in\; [0, 1]
+$$
+
+Features then fall into three groups:
+
+- **Shared features:** $\Delta_j \approx 0.5$ — comparable norm in both models, i.e. the same concept in each.
+- **$\mathcal{M}_1$-exclusive:** $\Delta_j \approx 1$ — present in base, absent in fine-tuned.
+- **$\mathcal{M}_2$-exclusive:** $\Delta_j \approx 0$ — introduced by fine-tuning.
+
+The histogram of $\Delta_j$ over all features typically shows a large central mass near $0.5$ with two smaller peaks at the extremes. The $\mathcal{M}_2$-exclusive peak is the "diff" — nominally what fine-tuning added (e.g. refusal behaviour, instruction-following patterns, formatting conventions).
+
+#### Exclusive features should not be taken at face value
+
+The reading above assumes an apparently exclusive latent reflects a genuine representational difference between the two models. Frequently it does not, and the extreme bins of the $\Delta_j$ histogram contain a substantial fraction of artifacts. Two mechanisms produce them:
+
+- **$L_1$ shrinkage.** The sparsity penalty biases activations downward (Section 1). The crosscoder can compensate by inflating a decoder norm on one side while suppressing the other, so a latent genuinely present in both models is pushed toward an extreme $\Delta_j$.
+- **Reconstruction asymmetry.** If one model's activations are harder to reconstruct at the chosen sparsity level, the crosscoder allocates its capacity unevenly. The resulting exclusivity reflects the training budget, not the models being compared.
+
+Two mitigations are standard. First, train the crosscoder with a BatchTopK activation instead of an $L_1$ penalty, which removes the shrinkage mechanism outright. Second, validate candidate exclusive latents by **latent scaling**: re-fit per-model scalar coefficients on the latent's contribution to each model's activation and check whether the apparent one-sidedness survives. Latents that fail this check should be discarded before any interpretation is attached to them.
+
+These sparsity artifacts, and Latent Scaling as a diagnostic for them, were introduced in [Minder et al.](https://arxiv.org/abs/2504.02922)
+
+---
+
+## 8. Subspace Level SAEs
+
+All SAE variants discussed so far assign each latent a single decoder direction, implicitly assuming every semantic feature is **one-dimensional**. There also exists a **Multi-dimensional Linear Representation Hypothesis**: many learned features occupy low-dimensional *subspaces* rather than single directions.
+
+The hypothesis, the existence of circular days of the week and months of the year features along with a definition of what makes a multi-dimensional feature *irreducible* and a method for finding such features automatically, was introduced in [Engels et al.](https://arxiv.org/abs/2405.14860)
+
+This creates a fundamental tension: if a feature has intrinsic dimension $d_i \geq 2$, a standard SAE must tile the corresponding subspace with many near-collinear decoder directions to achieve low reconstruction error. The result is feature splitting as defined in Section 5.
+
+Two lines of work converge on the same fix — make a **subspace**, rather than a direction, the atomic unit of the dictionary — and differ in what they add on top. **Subspace-Aware SAEs (SASA)** adapt each block's effective rank with a spectral penalty; **Block-Sparse Featurizers (BSFs)** tie the encoder to the decoder and constrain blocks to be orthonormal. Both start from the same construction, which is worth stating once on its own.
+
+
+### 8.1 Basic Subspace SAE
+
+Replace single-vector decoder columns with **block decoders**. Let $M = G r$ be the total latent dimension, partitioned into $G$ groups of size $r$, of which $s$ are active for any given input. Note that $G$ and $s$ play the structural roles that $M$ and $K$ play elsewhere in this post: $G$ counts groups rather than individual latents, and $s$ counts *active groups* rather than active latents, so $s$ active blocks means $s\,r$ nonzero latent components.
+
+Define the block-structured encoder
+
+$$W_e =
+\begin{bmatrix}
+W_{e,1} \\
+W_{e,2} \\
+\vdots \\
+W_{e,G}
+\end{bmatrix}
+\in \mathbb{R}^{M \times d}.$$
+
+and the decoder
+
+$$W_d = [W_{d,1} \cdots W_{d,G}] \in \mathbb{R}^{d \times M},$$
+
+with $W_{e,k} \in \mathbb{R}^{r \times d}$ and $W_{d,k} \in \mathbb{R}^{d \times r}$ for $k = 1, \dots, G$.
+
+**Encoder.** Compute block pre-activations and select the $s$ blocks of largest norm (a block-wise Top-$K$, with blocks in place of scalars):
+
+$$
+\mathbf{z}_k = W_{e,k}\,\mathbf{a} \in \mathbb{R}^r
+$$
+
+$$
+\mathcal{T}_s(\mathbf{a}) \in \operatorname*{arg\,max}_{\mathcal{T} \subset [G],\, |\mathcal{T}|=s}
+\sum_{k \in \mathcal{T}} \|\mathbf{z}_k\|_2, \qquad
+\mathbf{z}_k \leftarrow \begin{cases} \mathbf{z}_k & k \in \mathcal{T}_s(\mathbf{a}) \\ \mathbf{0} & \text{otherwise} \end{cases}
+$$
+
+**Decoder.** Reconstruct by summing over active blocks:
+
+$$
+\hat{\mathbf{a}} = W_d\,\mathbf{z} = \sum_{k=1}^{G} W_{d,k}\,\mathbf{z}_k
+$$
+
+#### Input / Output
+
+- **Input:** $\mathbf{a} \in \mathbb{R}^d$
+- **Output:** reconstruction $\hat{\mathbf{a}} \in \mathbb{R}^d$, block-sparse latent $\mathbf{z} \in \mathbb{R}^M$ with exactly $s$ non-zero blocks (hence $\|\mathbf{z}\|_0 \leq s\,r$)
+
+#### Loss
+
+$$
+\mathcal{L} = \|\mathbf{a} - \hat{\mathbf{a}}\|_2^2
+$$
+
+As with Top-$K$, the hard selection makes an explicit sparsity penalty unnecessary — $s$ is fixed by construction.
+
+#### What a block buys you
+
+A $d_i$-dimensional feature now costs *one* active block rather than a fan of near-collinear latents, and the internal structure that a direction-based dictionary had to shatter — the circle of weekdays, the ordering of months — is retained inside the block.
+
+The object carrying that structure is not the latent code but the block's **contribution to the reconstruction**:
+
+$$
+\mathbf{m}_k = W_{d,k}\,\mathbf{z}_k \;\in\; \mathbb{R}^d
+$$
+
+a point in activation space constrained to lie in the $r$-dimensional subspace $\operatorname{span}(W_{d,k})$. Sweeping over the inputs that activate block $k$, the set of contributions $\{\mathbf{m}_k\}$ traces out the **concept manifold**. This is what "recovering a manifold rather than a direction" means: a direction-based dictionary can only ever produce a ray $z_j\,\mathbf{w}_{d,j}$, whereas a block can produce any shape inside its subspace.
+
+Two quantities, read at different resolutions:
+
+- $\|\mathbf{z}_k\|_2$ — the block's **presence**: how strongly the concept fires on this input. This is the scalar used for top-$s$ selection.
+- $\mathbf{m}_k$ — the block's **position on the concept manifold**: which instance of the concept this is.
+
+Both papers below build on this construction.
+
+### 8.2 Subspace-Aware SAE (SASA)
+
+SASA leaves the encoder and decoder untied and adds a spectral penalty that lets each block discover its own dimensionality.
+
+#### Loss
+
+$$
+\mathcal{L} = \|\mathbf{a} - \hat{\mathbf{a}}\|_2^2
++ \lambda_{\text{dim}} \sum_{k=1}^{G} \|W_{d,k}\, W_{e,k}\|_*
+$$
+
+The nuclear norm $\|W_{d,k} W_{e,k}\|_*$ penalises the spectrum of the per-block reconstruction map $W_k = W_{d,k} W_{e,k} \in \mathbb{R}^{d \times d}$, adaptively shrinking the effective rank of each active block toward the intrinsic dimension of the feature it represents. A one-dimensional feature is pushed toward a rank-1 block; a three-dimensional one is free to use rank 3. The block size $r$ is thus an upper bound on feature dimension, not a fixed cost.
+
+#### Practical notes
+
+- The nuclear norm is evaluated efficiently via the Gram trace identity $\sum_j \sigma_j(W_k) = \operatorname{tr}\!\left((W_k^\top W_k)^{1/2}\right)$, avoiding explicit SVDs at every step.
+- Dead groups (those with activation frequency below a threshold $\nu$) are kept alive via an auxiliary loss targeting the current reconstruction residual with the dead groups' pre-activations.
+- SASA matches or exceeds standard SAE performance while training on roughly half the token budget, and substantially reduces both feature absorption and feature splitting.
+
+This was introduced in [Dalili and Mahdavi](https://arxiv.org/abs/2606.06333)
+
+
+### 8.3 Grassmannian Block-Sparse Featurizer
+
+The Grassmannian BSF makes two changes to the basic construction: the encoder is **tied** to the decoder transpose, and each block is constrained to be **orthonormal**.
+
+#### Model
+
+Each block decoder is required to lie on the Stiefel manifold of orthonormal $r$-frames in $\mathbb{R}^d$,
+
+$$
+W_{d,k} \in \text{St}(r, d) = \big\{\, U \in \mathbb{R}^{d \times r} \;:\; U^\top U = I_r \,\big\}
+$$
+
+and the encoder is discarded as a free parameter, replaced by $\gamma\,W_d^\top$:
+
+$$
+\mathbf{z}_k = \gamma\, W_{d,k}^\top\, \mathbf{a} \in \mathbb{R}^r
+$$
+
+where $\gamma$ is a single **learned scalar gain** compensating the energy lost by tying the two maps. Block selection and reconstruction are unchanged from Section 8.1, and the loss is plain reconstruction error subject to the manifold constraint:
+
+$$
+\mathcal{L} = \|\mathbf{a} - \hat{\mathbf{a}}\|_2^2
+\qquad \text{s.t.} \quad W_{d,k} \in \text{St}(r, d) \;\; \forall k
+$$
+
+Sparsity comes entirely from the top-$s$ block selection; there is no sparsity penalty and no spectral penalty. The constraint is imposed by optimising on the manifold directly rather than by adding a soft orthogonality term to the loss.
+
+#### Why orthonormal and tied
+
+Orthonormality turns block selection into a clean geometric statement. Since $W_{d,k}^\top W_{d,k} = I_r$, the matrix $P_k = W_{d,k} W_{d,k}^\top$ is the orthogonal projector onto the block's subspace, and
+
+$$
+\|\mathbf{z}_k\|_2 = \gamma \big\|W_{d,k}^\top \mathbf{a}\big\|_2 = \gamma \big\|P_k\,\mathbf{a}\big\|_2
+$$
+
+So ranking blocks by $\|\mathbf{z}_k\|_2$ is exactly ranking subspaces by how much of the activation's energy they capture. Selection is no longer mediated by a separately-learned encoder that may disagree with the decoder about which block is relevant.
+
+#### Practical notes
+
+- The source paper writes activations as row vectors ($\mathbf{x}W$, $\mathbf{z}D$); the equations above are transposed to match the column-vector convention used throughout this post.
+- The same paper introduces a third variant, a group-lasso BSF that replaces hard block selection with a soft-thresholding activation and an $\ell_{2,1}$ penalty. It is not covered here.
+- Recovered blocks are reported to be typically two- to four-dimensional in DINOv3, which is a useful prior when choosing $r$.
+
+This was introduced in [Fel et al.](https://arxiv.org/abs/2606.25234)
+
+
+### Practical notes on subspace methods
+
+- This subspace nature could potentially be used for transcoders, CLTs and crosscoders.
+- $r$ is an architectural choice with a real cost: too small and multi-dimensional features still split, too large and blocks waste capacity (SASA mitigates this with the nuclear norm, the Grassmannian BSF does not).
+
+---
+
+## Notation
+
+Let $\mathbf{a}_l \in \mathbb{R}^d$ denote an activation vector at layer $l$ of a neural network. When we need to specify a particular token position, we write $\mathbf{a}_{l,t}$ for the activation at layer $l$ and token position $t$. For batched inputs, $\mathbf{a}_{l,t}^{(i)}$ denotes the activation for the $i$-th example in a batch of size $B$.
+
+Throughout, we use the following:
+
+| Symbol | Description |
+|--------|-------------|
+| $\mathbf{a}_{l,t}^{(i)}$ | Activation at layer $l$, token $t$, batch index $i$ |
+| $W_e \in \mathbb{R}^{M \times d}$ | Encoder weight matrix |
+| $W_d \in \mathbb{R}^{d \times M}$ | Decoder weight matrix |
+| $\mathbf{b}_e \in \mathbb{R}^M$ | Encoder bias |
+| $\mathbf{b}_d \in \mathbb{R}^d$ | Decoder bias (pre-encoder centering) |
+| $\mathbf{z} \in \mathbb{R}^M$ | Latent (feature) vector |
+| $M$ | Dictionary size, typically $M \gg d$ |
+| $K$ | Target number of active latents |
+| $\lambda$ | Sparsity penalty coefficient |
+| $\mathbf{w}_{d,j}$ | $j$-th decoder column, i.e. feature $j$'s output direction |
+| $H(\cdot)$ | Heaviside step function |
+| $\boldsymbol{\theta} \in \mathbb{R}^M_{>0}$ | Learned per-latent thresholds (JumpReLU) |
+| $\theta^\star$ | Single frozen inference-time threshold (BatchTopK) |
+| $\varepsilon,\; \mathcal{K}$ | Bandwidth and kernel of the straight-through estimator |
+| $\text{MLP}_l(\cdot)$ | MLP sublayer at layer $l$ |
+| $\mathbf{r}_l$ | Residual stream after the attention update at layer $l$ |
+| $\mathbf{x}_l = \text{LN}_2(\mathbf{r}_l)$ | Normalised MLP input at layer $l$ (what a transcoder reads) |
+| $\lvert V \rvert$ | Vocabulary size |
+| $\beta$ | Weight on the behavioural (KL) loss term |
+| $W_{\text{skip}}$ | Skip connection weight matrix (skip transcoders) |
+| $\mathbf{w}_{d,j}^{(\ell \to l)}$ | Decoder column through which feature $(\ell, j)$ writes into layer $l$ |
+| $\mathcal{M}_n$ | Model $n$ in a multi-model setting ($n = 1, 2, \ldots$) |
+| $\mathbf{a}^{(n)}_l$ | Activation at layer $l$ from model $\mathcal{M}_n$ |
+| $W_e^{(n)},\, W_d^{(n)}$ | Encoder / decoder weights for model $\mathcal{M}_n$ |
+| $\Delta_j$ | Relative decoder norm strength of feature $j$ (model diffing) |
+| $G,\, r,\, s$ | Number of latent groups, group size, active groups (subspace level SAEs) |
+| $\mathbf{m}_k = W_{d,k}\mathbf{z}_k$ | Contribution of block $k$ to the reconstruction; a point on the concept manifold |
+---
+
+Where the context is clear, we drop the subscripts and superscripts and simply write $\mathbf{a}$ for the input activation.
+
+## Citation
+
+If you find this useful, please cite it as:
+
+```bibtex
+@misc{mali2026sparsity,
+  author       = {Mali, Yash},
+  title        = {Going Mad with Sparsity: A Reference for Interpretability Researchers},
+  year         = {2026},
+  howpublished = {\url{https://yashm8.github.io/blog/sparse.html}}
+}
+```
+

@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Yash Mali">
+
+<title>Going Mad with Sparsity: A Reference for Interpretability Researchers</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="sparse_files/libs/clipboard/clipboard.min.js"></script>
+<script src="sparse_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="sparse_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="sparse_files/libs/quarto-html/popper.min.js"></script>
+<script src="sparse_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="sparse_files/libs/quarto-html/anchor.min.js"></script>
+<link href="sparse_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="sparse_files/libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="sparse_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="sparse_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="sparse_files/libs/bootstrap/bootstrap-08c559d9595903813e54b2845933e70c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles/site-theme.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#assumptions" id="toc-assumptions" class="nav-link active" data-scroll-target="#assumptions">Assumptions</a></li>
+  <li><a href="#vanilla-sparse-autoencoder" id="toc-vanilla-sparse-autoencoder" class="nav-link" data-scroll-target="#vanilla-sparse-autoencoder">1. Vanilla Sparse Autoencoder</a>
+  <ul class="collapse">
+  <li><a href="#model" id="toc-model" class="nav-link" data-scroll-target="#model">Model</a></li>
+  <li><a href="#input-output" id="toc-input-output" class="nav-link" data-scroll-target="#input-output">Input / Output</a></li>
+  <li><a href="#loss" id="toc-loss" class="nav-link" data-scroll-target="#loss">Loss</a></li>
+  </ul></li>
+  <li><a href="#top-k-sparse-autoencoder" id="toc-top-k-sparse-autoencoder" class="nav-link" data-scroll-target="#top-k-sparse-autoencoder">2. Top-<span class="math inline">\(K\)</span> Sparse Autoencoder</a>
+  <ul class="collapse">
+  <li><a href="#model-1" id="toc-model-1" class="nav-link" data-scroll-target="#model-1">Model</a></li>
+  <li><a href="#input-output-1" id="toc-input-output-1" class="nav-link" data-scroll-target="#input-output-1">Input / Output</a></li>
+  <li><a href="#loss-1" id="toc-loss-1" class="nav-link" data-scroll-target="#loss-1">Loss</a></li>
+  </ul></li>
+  <li><a href="#batch-top-k-sparse-autoencoder" id="toc-batch-top-k-sparse-autoencoder" class="nav-link" data-scroll-target="#batch-top-k-sparse-autoencoder">3. Batch Top-<span class="math inline">\(K\)</span> Sparse Autoencoder</a>
+  <ul class="collapse">
+  <li><a href="#model-2" id="toc-model-2" class="nav-link" data-scroll-target="#model-2">Model</a></li>
+  <li><a href="#input-output-2" id="toc-input-output-2" class="nav-link" data-scroll-target="#input-output-2">Input / Output</a></li>
+  <li><a href="#loss-2" id="toc-loss-2" class="nav-link" data-scroll-target="#loss-2">Loss</a></li>
+  <li><a href="#inference-a-fixed-global-threshold" id="toc-inference-a-fixed-global-threshold" class="nav-link" data-scroll-target="#inference-a-fixed-global-threshold">Inference: a fixed global threshold</a></li>
+  </ul></li>
+  <li><a href="#jumprelu-sparse-autoencoder" id="toc-jumprelu-sparse-autoencoder" class="nav-link" data-scroll-target="#jumprelu-sparse-autoencoder">4. JumpReLU Sparse Autoencoder</a>
+  <ul class="collapse">
+  <li><a href="#model-3" id="toc-model-3" class="nav-link" data-scroll-target="#model-3">Model</a></li>
+  <li><a href="#input-output-3" id="toc-input-output-3" class="nav-link" data-scroll-target="#input-output-3">Input / Output</a></li>
+  <li><a href="#loss-3" id="toc-loss-3" class="nav-link" data-scroll-target="#loss-3">Loss</a></li>
+  <li><a href="#training-where-a-straight-through-estimator-is-genuinely-required" id="toc-training-where-a-straight-through-estimator-is-genuinely-required" class="nav-link" data-scroll-target="#training-where-a-straight-through-estimator-is-genuinely-required">Training: where a straight-through estimator is genuinely required</a></li>
+  <li><a href="#relation-to-batchtopk" id="toc-relation-to-batchtopk" class="nav-link" data-scroll-target="#relation-to-batchtopk">Relation to BatchTopK</a></li>
+  <li><a href="#where-the-four-architectures-differ" id="toc-where-the-four-architectures-differ" class="nav-link" data-scroll-target="#where-the-four-architectures-differ">Where the four architectures differ</a></li>
+  </ul></li>
+  <li><a href="#matryoshka-sparse-autoencoder" id="toc-matryoshka-sparse-autoencoder" class="nav-link" data-scroll-target="#matryoshka-sparse-autoencoder">5. Matryoshka Sparse Autoencoder</a>
+  <ul class="collapse">
+  <li><a href="#model-4" id="toc-model-4" class="nav-link" data-scroll-target="#model-4">Model</a></li>
+  <li><a href="#input-output-4" id="toc-input-output-4" class="nav-link" data-scroll-target="#input-output-4">Input / Output</a></li>
+  <li><a href="#loss-4" id="toc-loss-4" class="nav-link" data-scroll-target="#loss-4">Loss</a></li>
+  </ul></li>
+  <li><a href="#transcoders" id="toc-transcoders" class="nav-link" data-scroll-target="#transcoders">6. Transcoders</a>
+  <ul class="collapse">
+  <li><a href="#model-5" id="toc-model-5" class="nav-link" data-scroll-target="#model-5">Model</a></li>
+  <li><a href="#input-output-5" id="toc-input-output-5" class="nav-link" data-scroll-target="#input-output-5">Input / Output</a></li>
+  <li><a href="#loss-5" id="toc-loss-5" class="nav-link" data-scroll-target="#loss-5">Loss</a></li>
+  <li><a href="#skip-transcoder" id="toc-skip-transcoder" class="nav-link" data-scroll-target="#skip-transcoder">Skip Transcoder</a></li>
+  <li><a href="#cross-layer-transcoder-clt" id="toc-cross-layer-transcoder-clt" class="nav-link" data-scroll-target="#cross-layer-transcoder-clt">Cross-Layer Transcoder (CLT)</a></li>
+  </ul></li>
+  <li><a href="#crosscoders" id="toc-crosscoders" class="nav-link" data-scroll-target="#crosscoders">7. Crosscoders</a>
+  <ul class="collapse">
+  <li><a href="#cross-layer-crosscoder" id="toc-cross-layer-crosscoder" class="nav-link" data-scroll-target="#cross-layer-crosscoder">7.1 Cross-Layer Crosscoder</a></li>
+  <li><a href="#model-diffing-crosscoder" id="toc-model-diffing-crosscoder" class="nav-link" data-scroll-target="#model-diffing-crosscoder">7.2 Model-Diffing Crosscoder</a></li>
+  </ul></li>
+  <li><a href="#subspace-level-saes" id="toc-subspace-level-saes" class="nav-link" data-scroll-target="#subspace-level-saes">8. Subspace Level SAEs</a>
+  <ul class="collapse">
+  <li><a href="#basic-subspace-sae" id="toc-basic-subspace-sae" class="nav-link" data-scroll-target="#basic-subspace-sae">8.1 Basic Subspace SAE</a></li>
+  <li><a href="#subspace-aware-sae-sasa" id="toc-subspace-aware-sae-sasa" class="nav-link" data-scroll-target="#subspace-aware-sae-sasa">8.2 Subspace-Aware SAE (SASA)</a></li>
+  <li><a href="#grassmannian-block-sparse-featurizer" id="toc-grassmannian-block-sparse-featurizer" class="nav-link" data-scroll-target="#grassmannian-block-sparse-featurizer">8.3 Grassmannian Block-Sparse Featurizer</a></li>
+  <li><a href="#practical-notes-on-subspace-methods" id="toc-practical-notes-on-subspace-methods" class="nav-link" data-scroll-target="#practical-notes-on-subspace-methods">Practical notes on subspace methods</a></li>
+  </ul></li>
+  <li><a href="#notation" id="toc-notation" class="nav-link" data-scroll-target="#notation">Notation</a></li>
+  <li><a href="#citation" id="toc-citation" class="nav-link" data-scroll-target="#citation">Citation</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Going Mad with Sparsity: A Reference for Interpretability Researchers</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Machine Learning</div>
+    <div class="quarto-category">Mechanistic Interpretability</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Yash Mali </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="assumptions" class="level2">
+<h2 class="anchored" data-anchor-id="assumptions">Assumptions</h2>
+<p>Of course, there are many more ways to do interpretability in deep learning than sparse coding. However, this post focuses on the Sparse Autoencoders (SAEs) and their variants like Transcoders and Crosscoders. This post assumes that you are aware of the intuition and motivation behind sparse coding. If not, please read the following papers first:</p>
+<ul>
+<li><p>From the 90s. A short 3 page paper that introduces sparse coding to do interpretation. <a href="https://www.snn.ru.nl/~bertk/comp_neurosci/olshausen_field_nature_1996.pdf">Emergence of simple-cell receptive field properties by learning a sparse code for natural images</a></p></li>
+<li><p>Motivates the need for “unpacking” the dense activation space in modern deep learning models <a href="https://transformer-circuits.pub/2022/toy_model/index.html">Toy Models of Superposition</a></p></li>
+<li><p>The paper that introduced sparse coding to interpret LLMs. <a href="https://arxiv.org/abs/2309.08600">Sparse Autoencoders Find Highly Interpretable Features in Language Models</a></p></li>
+</ul>
+<p>If you find mistakes/have clarifications or feedback please email: ymali@ece.ubc.ca</p>
+<p>A full table of notation is given at the <a href="#notation">end of the post</a>. The short version: <span class="math inline">\(\mathbf{a} \in \mathbb{R}^d\)</span> is an activation vector, <span class="math inline">\(\mathbf{z} \in \mathbb{R}^M\)</span> is the sparse latent it is encoded into, and <span class="math inline">\(W_e\)</span>, <span class="math inline">\(W_d\)</span> are the encoder and decoder.</p>
+<hr>
+</section>
+<section id="vanilla-sparse-autoencoder" class="level2">
+<h2 class="anchored" data-anchor-id="vanilla-sparse-autoencoder">1. Vanilla Sparse Autoencoder</h2>
+<p>The standard SAE uses a ReLU activation in the encoder and an <span class="math inline">\(L_1\)</span> penalty on the latent vector to encourage sparsity.</p>
+<section id="model" class="level3">
+<h3 class="anchored" data-anchor-id="model">Model</h3>
+<p><strong>Encoder.</strong> The input is first centered by subtracting the decoder bias, then projected into the overcomplete latent space:</p>
+<p><span class="math display">\[
+\mathbf{z} = \text{ReLU}\!\big(W_e\,(\mathbf{a} - \mathbf{b}_d) + \mathbf{b}_e\big)
+\]</span></p>
+<p><strong>Decoder.</strong> The reconstruction is a linear projection of the latent back to the activation space:</p>
+<p><span class="math display">\[
+\hat{\mathbf{a}} = W_d\,\mathbf{z} + \mathbf{b}_d
+\]</span></p>
+</section>
+<section id="input-output" class="level3">
+<h3 class="anchored" data-anchor-id="input-output">Input / Output</h3>
+<ul>
+<li><strong>Input:</strong> <span class="math inline">\(\mathbf{a} \in \mathbb{R}^d\)</span></li>
+<li><strong>Output:</strong> reconstruction <span class="math inline">\(\hat{\mathbf{a}} \in \mathbb{R}^d\)</span>, sparse latent <span class="math inline">\(\mathbf{z} \in \mathbb{R}^M\)</span></li>
+</ul>
+</section>
+<section id="loss" class="level3">
+<h3 class="anchored" data-anchor-id="loss">Loss</h3>
+<p><span class="math display">\[
+\mathcal{L} = \underbrace{\|\mathbf{a} - \hat{\mathbf{a}}\|_2^2}_{\text{reconstruction}} + \underbrace{\lambda\,\|\mathbf{z}\|_1}_{\text{sparsity}}
+\]</span></p>
+<p>The <span class="math inline">\(L_1\)</span> penalty <span class="math inline">\(\|\mathbf{z}\|_1 = \sum_{j=1}^{M} |z_j|\)</span> drives most latent components to zero. The hyperparameter <span class="math inline">\(\lambda\)</span> controls the trade-off between reconstruction fidelity and sparsity. In practice, tuning <span class="math inline">\(\lambda\)</span> is delicate: too large and the autoencoder under-reconstructs; too small and latents are not sufficiently sparse.</p>
+<p>This was introduced in <a href="https://arxiv.org/abs/2309.08600">Cunningham et al.</a></p>
+<hr>
+</section>
+</section>
+<section id="top-k-sparse-autoencoder" class="level2">
+<h2 class="anchored" data-anchor-id="top-k-sparse-autoencoder">2. Top-<span class="math inline">\(K\)</span> Sparse Autoencoder</h2>
+<p>The Top-<span class="math inline">\(K\)</span> SAE replaces the ReLU + <span class="math inline">\(L_1\)</span> mechanism with a hard top-<span class="math inline">\(K\)</span> selection, enforcing exactly <span class="math inline">\(K\)</span> active latents per input. This eliminates the need to tune the sparsity coefficient <span class="math inline">\(\lambda\)</span>.</p>
+<section id="model-1" class="level3">
+<h3 class="anchored" data-anchor-id="model-1">Model</h3>
+<p><strong>Encoder.</strong> Compute pre-activations and retain only the <span class="math inline">\(K\)</span> largest:</p>
+<p><span class="math display">\[
+\mathbf{z}_{\text{pre}} = W_e\,(\mathbf{a} - \mathbf{b}_d) + \mathbf{b}_e
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{z} = \text{TopK}(\mathbf{z}_{\text{pre}})
+\]</span></p>
+<p>where the <span class="math inline">\(\text{TopK}\)</span> operator is defined component-wise as:</p>
+<p><span class="math display">\[
+[\text{TopK}(\mathbf{x})]_j =
+\begin{cases}
+x_j &amp; \text{if } x_j \text{ is among the } K \text{ largest entries of } \mathbf{x} \\
+0 &amp; \text{otherwise}
+\end{cases}
+\]</span></p>
+<p><strong>Decoder.</strong> Same linear reconstruction:</p>
+<p><span class="math display">\[
+\hat{\mathbf{a}} = W_d\,\mathbf{z} + \mathbf{b}_d
+\]</span></p>
+</section>
+<section id="input-output-1" class="level3">
+<h3 class="anchored" data-anchor-id="input-output-1">Input / Output</h3>
+<ul>
+<li><strong>Input:</strong> <span class="math inline">\(\mathbf{a} \in \mathbb{R}^d\)</span></li>
+<li><strong>Output:</strong> reconstruction <span class="math inline">\(\hat{\mathbf{a}} \in \mathbb{R}^d\)</span>, sparse latent <span class="math inline">\(\mathbf{z} \in \mathbb{R}^M\)</span> with <span class="math inline">\(\|\mathbf{z}\|_0 = K\)</span></li>
+</ul>
+</section>
+<section id="loss-1" class="level3">
+<h3 class="anchored" data-anchor-id="loss-1">Loss</h3>
+<p><span class="math display">\[
+\mathcal{L} = \|\mathbf{a} - \hat{\mathbf{a}}\|_2^2
+\]</span></p>
+<p>No sparsity penalty is needed since <span class="math inline">\(\|\mathbf{z}\|_0 = K\)</span> by construction.</p>
+<p>This was introduced in <a href="https://arxiv.org/abs/2406.04093">Gao et al.</a></p>
+<hr>
+</section>
+</section>
+<section id="batch-top-k-sparse-autoencoder" class="level2">
+<h2 class="anchored" data-anchor-id="batch-top-k-sparse-autoencoder">3. Batch Top-<span class="math inline">\(K\)</span> Sparse Autoencoder</h2>
+<p>The Batch Top-<span class="math inline">\(K\)</span> SAE relaxes the per-sample constraint of the Top-<span class="math inline">\(K\)</span> SAE. Instead of requiring exactly <span class="math inline">\(K\)</span> active latents for every input, it enforces that the <em>average</em> number of active latents across a batch is <span class="math inline">\(K\)</span>. This allows individual samples to activate more or fewer than <span class="math inline">\(K\)</span> features, accommodating inputs of varying complexity.</p>
+<section id="model-2" class="level3">
+<h3 class="anchored" data-anchor-id="model-2">Model</h3>
+<p><strong>Encoder.</strong> For a batch <span class="math inline">\(\{\mathbf{a}^{(i)}\}_{i=1}^B\)</span>, compute all pre-activations:</p>
+<p><span class="math display">\[
+\mathbf{z}_{\text{pre}}^{(i)} = W_e\,(\mathbf{a}^{(i)} - \mathbf{b}_d) + \mathbf{b}_e, \quad i = 1, \ldots, B
+\]</span></p>
+<p>Find a threshold <span class="math inline">\(\theta\)</span> such that exactly <span class="math inline">\(B \cdot K\)</span> entries survive across the entire batch:</p>
+<p><span class="math display">\[
+\theta = \text{the } (B \cdot K)\text{-th largest value in } \big\{\,z_{\text{pre},j}^{(i)} : i \in [B],\; j \in [M]\,\big\}
+\]</span></p>
+<p>Apply the threshold:</p>
+<p><span class="math display">\[
+z_j^{(i)} = z_{\text{pre},j}^{(i)} \cdot \mathbf{1}\!\big[z_{\text{pre},j}^{(i)} \geq \theta\big]
+\]</span></p>
+<p><strong>Decoder.</strong> Same linear reconstruction per sample:</p>
+<p><span class="math display">\[
+\hat{\mathbf{a}}^{(i)} = W_d\,\mathbf{z}^{(i)} + \mathbf{b}_d
+\]</span></p>
+</section>
+<section id="input-output-2" class="level3">
+<h3 class="anchored" data-anchor-id="input-output-2">Input / Output</h3>
+<ul>
+<li><strong>Input:</strong> batch <span class="math inline">\(\{\mathbf{a}^{(i)}\}_{i=1}^B\)</span>, each <span class="math inline">\(\mathbf{a}^{(i)} \in \mathbb{R}^d\)</span></li>
+<li><strong>Output:</strong> reconstructions <span class="math inline">\(\{\hat{\mathbf{a}}^{(i)}\}_{i=1}^B\)</span>, sparse latents <span class="math inline">\(\{\mathbf{z}^{(i)}\}_{i=1}^B\)</span> satisfying <span class="math inline">\(\sum_{i=1}^B \|\mathbf{z}^{(i)}\|_0 = B \cdot K\)</span></li>
+</ul>
+<p>Note that individual <span class="math inline">\(\|\mathbf{z}^{(i)}\|_0\)</span> may vary across samples; the constraint is only on the batch aggregate. As with the per-sample Top-<span class="math inline">\(K\)</span> (Section 2), no straight-through estimator is needed: once the surviving set is fixed, thresholding is multiplication by a locally-constant <span class="math inline">\(0/1\)</span> mask, so the gradient through it is exact almost everywhere.</p>
+</section>
+<section id="loss-2" class="level3">
+<h3 class="anchored" data-anchor-id="loss-2">Loss</h3>
+<p><span class="math display">\[
+\mathcal{L} = \frac{1}{B}\sum_{i=1}^{B} \|\mathbf{a}^{(i)} - \hat{\mathbf{a}}^{(i)}\|_2^2
+\]</span></p>
+<p>As with the Top-<span class="math inline">\(K\)</span> SAE, no explicit sparsity penalty is required. The batch-level <span class="math inline">\(\ell_0\)</span> constraint is enforced by the thresholding operation.</p>
+</section>
+<section id="inference-a-fixed-global-threshold" class="level3">
+<h3 class="anchored" data-anchor-id="inference-a-fixed-global-threshold">Inference: a fixed global threshold</h3>
+<p>The training rule above cannot be used at inference. The threshold <span class="math inline">\(\theta\)</span> is defined by the composition of the batch, so the latent assigned to an activation would depend on whatever else happened to be batched alongside it, and a single input (<span class="math inline">\(B = 1\)</span>) collapses to per-sample Top-<span class="math inline">\(K\)</span>. Instead, one input-independent threshold is estimated during training and reused for every subsequent forward pass.</p>
+<p><strong>Estimating the threshold.</strong> Take the smallest <em>positive</em> activation in each sample and average, in expectation over batches:</p>
+<p><span class="math display">\[
+\theta^\star = \mathbb{E}_{\mathbf{X}}\Big[\min\big\{\, z_j(\mathbf{X}) \;\big|\; z_j(\mathbf{X}) &gt; 0 \,\big\}\Big]
+\]</span></p>
+<p>In practice this is accumulated as a running estimate. At step <span class="math inline">\(t\)</span>,</p>
+<p><span class="math display">\[
+\hat{\theta}^{(t)} = \frac{1}{B}\sum_{i=1}^{B} \; \min_{j \,:\, z_j^{(i)} &gt; 0} z_j^{(i)},
+\qquad
+\theta^{(t)} = \mu\,\theta^{(t-1)} + (1 - \mu)\,\hat{\theta}^{(t)}
+\]</span></p>
+<p>with decay <span class="math inline">\(\mu \in (0,1)\)</span>, and <span class="math inline">\(\theta^\star = \theta^{(T)}\)</span> is frozen at the end of training.</p>
+<p><strong>Applying it.</strong> At inference the batch-level selection is discarded entirely and each latent is thresholded independently:</p>
+<p><span class="math display">\[
+z_j = z_{\text{pre},j} \cdot \mathbf{1}\!\big[z_{\text{pre},j} &gt; \theta^\star\big]
+\]</span></p>
+<p>This is the JumpReLU activation function. A trained BatchTopK SAE is therefore <em>deployed</em> as a JumpReLU SAE with a single shared threshold: the batch-level ranking is purely a training-time device for hitting a target sparsity, and no ranking is performed at inference. Since <span class="math inline">\(\theta^\star\)</span> averages positive activations, <span class="math inline">\(\theta^\star &gt; 0\)</span>, so the indicator also excludes negative pre-activations.</p>
+<p>One consequence of the swap: <span class="math inline">\(\|\mathbf{z}\|_0\)</span> is no longer pinned to any exact value. It varies per input, and the target <span class="math inline">\(K\)</span> holds only in expectation, <span class="math inline">\(\mathbb{E}\big[\|\mathbf{z}\|_0\big] \approx K\)</span>, so the realised <span class="math inline">\(\ell_0\)</span> should be measured on held-out data rather than assumed.</p>
+<p>This was introduced in <a href="https://arxiv.org/abs/2412.06410">Bussmann et al.</a></p>
+<hr>
+</section>
+</section>
+<section id="jumprelu-sparse-autoencoder" class="level2">
+<h2 class="anchored" data-anchor-id="jumprelu-sparse-autoencoder">4. JumpReLU Sparse Autoencoder</h2>
+<p>The vanilla SAE couples two decisions into one number: <em>whether</em> a latent fires and <em>how strongly</em>. The <span class="math inline">\(L_1\)</span> penalty therefore shrinks the magnitudes of latents it does not suppress (Section 1). Top-<span class="math inline">\(K\)</span> breaks the coupling by removing the magnitude penalty entirely, but replaces it with a rigid constraint — exactly <span class="math inline">\(K\)</span> active latents on every input, regardless of whether the input is simple or complex.</p>
+<p>The JumpReLU SAE takes a third route: keep a genuinely input-dependent <span class="math inline">\(\ell_0\)</span>, but penalise <span class="math inline">\(\ell_0\)</span> <em>directly</em> rather than penalising magnitude as a proxy for it. Each latent gets its own learned activation threshold.</p>
+<section id="model-3" class="level3">
+<h3 class="anchored" data-anchor-id="model-3">Model</h3>
+<p><strong>Encoder.</strong> Pre-activations are computed as usual, then passed through a per-latent gate:</p>
+<p><span class="math display">\[
+\mathbf{z}_{\text{pre}} = W_e\,(\mathbf{a} - \mathbf{b}_d) + \mathbf{b}_e
+\]</span></p>
+<p><span class="math display">\[
+z_j = \text{JumpReLU}_{\theta_j}\!\big(z_{\text{pre},j}\big) = z_{\text{pre},j} \cdot H\!\big(z_{\text{pre},j} - \theta_j\big)
+\]</span></p>
+<p>where <span class="math inline">\(H\)</span> is the Heaviside step function and <span class="math inline">\(\boldsymbol{\theta} \in \mathbb{R}^M_{&gt;0}\)</span> is a <strong>learned per-latent threshold vector</strong>, usually parameterised through its logarithm so it stays positive.</p>
+<p>The name describes the shape: below <span class="math inline">\(\theta_j\)</span> the output is zero, at <span class="math inline">\(\theta_j\)</span> it jumps discontinuously to <span class="math inline">\(\theta_j\)</span>, and above it the function is the identity. Compare this to ReLU, which rises continuously from zero. The discontinuity is the point — a latent that fires does so at its <em>true</em> pre-activation magnitude, with no shrinkage toward zero.</p>
+<p><strong>Decoder.</strong> Unchanged from the vanilla SAE:</p>
+<p><span class="math display">\[
+\hat{\mathbf{a}} = W_d\,\mathbf{z} + \mathbf{b}_d
+\]</span></p>
+</section>
+<section id="input-output-3" class="level3">
+<h3 class="anchored" data-anchor-id="input-output-3">Input / Output</h3>
+<ul>
+<li><strong>Input:</strong> <span class="math inline">\(\mathbf{a} \in \mathbb{R}^d\)</span></li>
+<li><strong>Output:</strong> reconstruction <span class="math inline">\(\hat{\mathbf{a}} \in \mathbb{R}^d\)</span>, sparse latent <span class="math inline">\(\mathbf{z} \in \mathbb{R}^M\)</span> with input-dependent <span class="math inline">\(\|\mathbf{z}\|_0\)</span></li>
+</ul>
+</section>
+<section id="loss-3" class="level3">
+<h3 class="anchored" data-anchor-id="loss-3">Loss</h3>
+<p><span class="math display">\[
+\mathcal{L} = \|\mathbf{a} - \hat{\mathbf{a}}\|_2^2 + \lambda\,\|\mathbf{z}\|_0,
+\qquad
+\|\mathbf{z}\|_0 = \sum_{j=1}^{M} H\!\big(z_{\text{pre},j} - \theta_j\big)
+\]</span></p>
+<p>The sparsity term counts firing latents instead of summing their magnitudes. This is what removes the shrinkage bias: the penalty is completely independent of <em>how large</em> an active latent is, so there is no downward pressure on the magnitude of a latent that has already been paid for.</p>
+</section>
+<section id="training-where-a-straight-through-estimator-is-genuinely-required" class="level3">
+<h3 class="anchored" data-anchor-id="training-where-a-straight-through-estimator-is-genuinely-required">Training: where a straight-through estimator is genuinely required</h3>
+<p>Both the <span class="math inline">\(L_0\)</span> term and the gate are piecewise constant in <span class="math inline">\(\boldsymbol{\theta}\)</span>. The Heaviside step has zero derivative everywhere it is defined, so under ordinary autograd <span class="math inline">\(\partial\mathcal{L}/\partial\theta_j = 0\)</span> and the thresholds would never move at all. This is the situation Top-<span class="math inline">\(K\)</span> is often wrongly said to be in, and it is where a straight-through estimator is actually needed.</p>
+<p>The fix is to replace the derivative of the step with a kernel density estimate of bandwidth <span class="math inline">\(\varepsilon\)</span>:</p>
+<p><span class="math display">\[
+\frac{\partial}{\partial \theta_j} H\!\big(z_{\text{pre},j} - \theta_j\big)
+\;\longleftarrow\;
+-\frac{1}{\varepsilon}\,\mathcal{K}\!\left(\frac{z_{\text{pre},j} - \theta_j}{\varepsilon}\right)
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial}{\partial \theta_j} \text{JumpReLU}_{\theta_j}\!\big(z_{\text{pre},j}\big)
+\;\longleftarrow\;
+-\frac{\theta_j}{\varepsilon}\,\mathcal{K}\!\left(\frac{z_{\text{pre},j} - \theta_j}{\varepsilon}\right)
+\]</span></p>
+<p>where <span class="math inline">\(\mathcal{K}\)</span> is a bounded symmetric kernel, e.g.&nbsp;the rectangle <span class="math inline">\(\mathcal{K}(x) = \mathbf{1}[|x| \leq \tfrac{1}{2}]\)</span>. The second expression carries an extra factor <span class="math inline">\(\theta_j\)</span> because the size of the jump is itself <span class="math inline">\(\theta_j\)</span>.</p>
+<p>The intuition: a threshold receives gradient only from pre-activations landing in a band of width <span class="math inline">\(\varepsilon\)</span> around it — the ones near enough that nudging <span class="math inline">\(\theta_j\)</span> would flip whether they fire. Pre-activations far above or below contribute nothing.</p>
+<p>Two things worth being precise about:</p>
+<ul>
+<li><strong>Only the <span class="math inline">\(\boldsymbol{\theta}\)</span> gradient is a surrogate.</strong> The gradient with respect to <span class="math inline">\(\mathbf{z}_{\text{pre}}\)</span> is <span class="math inline">\(\partial z_j / \partial z_{\text{pre},j} = H(z_{\text{pre},j} - \theta_j)\)</span>, which is exact almost everywhere — the discontinuity is a measure-zero set. So the encoder and decoder weights train on true gradients; only the thresholds rely on the estimator.</li>
+<li><strong>This is a real approximation</strong>, unlike Top-<span class="math inline">\(K\)</span> (Section 2). There the mask is locally constant and the gradient is genuinely exact; here the true gradient is identically zero and the estimator supplies information the objective does not contain.</li>
+</ul>
+<p>The bandwidth <span class="math inline">\(\varepsilon\)</span> is a live hyperparameter. Too small and few pre-activations fall in the band, so thresholds receive sparse, high-variance updates; too large and the estimate is biased toward pre-activations that are nowhere near the boundary.</p>
+</section>
+<section id="relation-to-batchtopk" class="level3">
+<h3 class="anchored" data-anchor-id="relation-to-batchtopk">Relation to BatchTopK</h3>
+<p>A deployed BatchTopK SAE (Section 3) and a JumpReLU SAE evaluate the <em>same</em> function — an elementwise comparison against a threshold. They differ in how the threshold is obtained and in how many there are: BatchTopK estimates a single scalar <span class="math inline">\(\theta^\star\)</span> as a running average after the fact, while a JumpReLU SAE learns a full vector <span class="math inline">\(\boldsymbol{\theta} \in \mathbb{R}^M\)</span> by gradient descent. Per-latent thresholds are the more expressive choice; the batch rank constraint is the easier one to train, and it lets you specify target sparsity directly instead of tuning <span class="math inline">\(\lambda\)</span> to reach it.</p>
+</section>
+<section id="where-the-four-architectures-differ" class="level3">
+<h3 class="anchored" data-anchor-id="where-the-four-architectures-differ">Where the four architectures differ</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Vanilla</th>
+<th>Top-<span class="math inline">\(K\)</span></th>
+<th>BatchTopK</th>
+<th>JumpReLU</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sparsity mechanism</td>
+<td><span class="math inline">\(L_1\)</span> penalty</td>
+<td>per-sample rank</td>
+<td>batch rank, then fixed <span class="math inline">\(\theta^\star\)</span></td>
+<td>per-latent learned <span class="math inline">\(\theta_j\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\ell_0\)</span> per input</td>
+<td>unconstrained</td>
+<td>exactly <span class="math inline">\(K\)</span></td>
+<td>varies, mean <span class="math inline">\(\approx K\)</span></td>
+<td>varies</td>
+</tr>
+<tr class="odd">
+<td>Magnitude bias</td>
+<td>shrinkage</td>
+<td>none</td>
+<td>none</td>
+<td>none</td>
+</tr>
+<tr class="even">
+<td>Main hyperparameter</td>
+<td><span class="math inline">\(\lambda\)</span></td>
+<td><span class="math inline">\(K\)</span></td>
+<td><span class="math inline">\(K\)</span></td>
+<td><span class="math inline">\(\lambda\)</span> and bandwidth <span class="math inline">\(\varepsilon\)</span></td>
+</tr>
+<tr class="odd">
+<td>Gradient through gate</td>
+<td>exact</td>
+<td>exact</td>
+<td>exact</td>
+<td>straight-through surrogate</td>
+</tr>
+</tbody>
+</table>
+<p>This was introduced in <a href="https://arxiv.org/abs/2407.14435">Rajamanoharan et al.</a></p>
+<hr>
+</section>
+</section>
+<section id="matryoshka-sparse-autoencoder" class="level2">
+<h2 class="anchored" data-anchor-id="matryoshka-sparse-autoencoder">5. Matryoshka Sparse Autoencoder</h2>
+<p>Standard SAEs suffer from two pathologies as dictionary size <span class="math inline">\(M\)</span> grows. Both are referred to by name later in this post, and these are the definitions used:</p>
+<ul>
+<li><strong>Feature absorption:</strong> a general latent (e.g.&nbsp;“female names”) develops blind spots for instances captured by more specialised latents (e.g.&nbsp;a “Lily”-specific latent), so the general feature becomes “female names <em>except</em> Lily.”</li>
+<li><strong>Feature splitting:</strong> a coherent high-level concept fragments into many narrow latents, and the original concept disappears from the dictionary entirely.</li>
+</ul>
+<p>Both arise because the sparsity objective rewards replacing one general latent with a set of specialised ones that achieve the same reconstruction with fewer active features. The Matryoshka SAE addresses this by training multiple <strong>nested sub-SAEs</strong> of increasing size simultaneously, named after the Russian nesting dolls. Smaller sub-dictionaries are forced to reconstruct the input on their own, so their latents must capture broad, high-level concepts; larger sub-dictionaries can then specialise without absorbing the general features.</p>
+<section id="model-4" class="level3">
+<h3 class="anchored" data-anchor-id="model-4">Model</h3>
+<p>Fix a set of nested dictionary sizes <span class="math inline">\(\mathcal{M} = \{m_1, m_2, \ldots, m_n\}\)</span> with <span class="math inline">\(m_1 &lt; m_2 &lt; \cdots &lt; m_n = M\)</span>. The encoder and decoder share a single set of weights; each sub-SAE at scale <span class="math inline">\(m_k\)</span> uses only the first <span class="math inline">\(m_k\)</span> latents.</p>
+<p><strong>Encoder.</strong> The <em>full</em> latent vector is computed once:</p>
+<p><span class="math display">\[
+\mathbf{z} = \sigma \!\big(W_e\,(\mathbf{a} - \mathbf{b}_d) + \mathbf{b}_e\big) \in \mathbb{R}^M
+\]</span></p>
+<p>where <span class="math inline">\(\sigma\)</span> is an activation function (ReLU, BatchTopK, etc.). For each scale <span class="math inline">\(m_k \in \mathcal{M}\)</span>, define the <strong>prefix latent</strong>:</p>
+<p><span class="math display">\[
+\mathbf{z}^{(m_k)} = \mathbf{z}_{1:m_k} \in \mathbb{R}^{m_k}
+\]</span></p>
+<p>i.e.&nbsp;the first <span class="math inline">\(m_k\)</span> components of <span class="math inline">\(\mathbf{z}\)</span>.</p>
+<p><strong>Decoder.</strong> Each prefix reconstructs independently using the corresponding prefix of the decoder matrix:</p>
+<p><span class="math display">\[
+\hat{\mathbf{a}}^{(m_k)} = W_{d}^{(\cdot,\,1:m_k)}\,\mathbf{z}^{(m_k)} + \mathbf{b}_d
+\]</span></p>
+<p>where <span class="math inline">\(W_{d}^{(\cdot,\,1:m_k)} \in \mathbb{R}^{d \times m_k}\)</span> denotes the first <span class="math inline">\(m_k\)</span> columns of <span class="math inline">\(W_d\)</span>.</p>
+</section>
+<section id="input-output-4" class="level3">
+<h3 class="anchored" data-anchor-id="input-output-4">Input / Output</h3>
+<ul>
+<li><strong>Input:</strong> <span class="math inline">\(\mathbf{a} \in \mathbb{R}^d\)</span></li>
+<li><strong>Output:</strong> <span class="math inline">\(n\)</span> reconstructions <span class="math inline">\(\{\hat{\mathbf{a}}^{(m_k)}\}_{k=1}^{n}\)</span>, one per nesting scale; a single sparse latent <span class="math inline">\(\mathbf{z} \in \mathbb{R}^M\)</span> whose prefixes of length <span class="math inline">\(m_1 &lt; m_2 &lt; \cdots &lt; m_n\)</span> each form a self-contained feature set</li>
+</ul>
+</section>
+<section id="loss-4" class="level3">
+<h3 class="anchored" data-anchor-id="loss-4">Loss</h3>
+<p>The training objective sums reconstruction losses over all nesting scales:</p>
+<p><span class="math display">\[
+\mathcal{L} = \sum_{m_k \in \mathcal{M}} \big\|\mathbf{a} - \hat{\mathbf{a}}^{(m_k)}\big\|_2^2 \;+\; \alpha\,\mathcal{L}_{\text{aux}}
+\]</span></p>
+<p>where <span class="math inline">\(\mathcal{L}_{\text{aux}}\)</span> is a standard auxiliary loss (e.g.&nbsp;for dead-latent recovery). No explicit sparsity penalty <span class="math inline">\(\lambda\|\mathbf{z}\|_1\)</span> is needed when using BatchTopK as the activation function $$; sparsity is enforced structurally.</p>
+<p>The key effect: because the first <span class="math inline">\(m_1\)</span> latents must minimise <em>their own</em> reconstruction term, they cannot rely on later latents and are therefore pressured to learn the most broadly useful features. Latents indexed <span class="math inline">\(m_1{+}1\)</span> through <span class="math inline">\(m_2\)</span> refine the reconstruction at the next scale, and so on. This produces a hierarchy from general to specific <em>within a single weight matrix</em>.</p>
+<section id="trade-offs" class="level4">
+<h4 class="anchored" data-anchor-id="trade-offs">Trade-offs</h4>
+<ul>
+<li><strong>Reconstruction:</strong> the multi-scale constraint prevents the SAE from concentrating capacity, so full-dictionary reconstruction is mildly worse than an unconstrained BatchTopK SAE of the same size.</li>
+<li><strong>Downstream quality:</strong> despite worse raw reconstruction, Matryoshka SAEs match or exceed baselines on downstream cross-entropy loss, sparse probing, and concept erasure—tasks that depend on feature <em>quality</em> rather than reconstruction fidelity.</li>
+<li><strong>Training cost:</strong> computing <span class="math inline">\(|\mathcal{M}|\)</span> reconstruction losses per step increases wall-clock time roughly proportional to <span class="math inline">\(|\mathcal{M}|\)</span> (e.g.&nbsp;<span class="math inline">\({\sim}50\%\)</span> overhead with 5 nesting scales).</li>
+</ul>
+<p>This was introduced in <a href="https://arxiv.org/abs/2503.17547">Bussmann et al.</a></p>
+<hr>
+</section>
+</section>
+</section>
+<section id="transcoders" class="level2">
+<h2 class="anchored" data-anchor-id="transcoders">6. Transcoders</h2>
+<p>All SAE variants above share the same goal: <strong>decompose a single activation vector</strong> <span class="math inline">\(\mathbf{a}_l\)</span> into sparse features and reconstruct it. They describe <em>what</em> is represented at a point in the network, but not <em>how</em> the network computes the transformation from one representation to the next.</p>
+<p>Transcoders address this gap. A transcoder is trained to approximate the <strong>input → output mapping of a specific MLP sublayer</strong>, replacing the dense, nonlinear <span class="math inline">\(\text{MLP}_l(\cdot)\)</span> with a wider, sparsely-activating surrogate. This enables weights-based circuit analysis <em>through</em> MLP layers, which is otherwise intractable because each interpretable feature is a linear combination of many neurons, each gated by its own nonlinearity.</p>
+<section id="where-transcoders-are-used" class="level4">
+<h4 class="anchored" data-anchor-id="where-transcoders-are-used">Where transcoders are used</h4>
+<p>Transcoders are applied <strong>per-MLP-sublayer</strong> in a transformer. In a standard pre-norm transformer, each layer <span class="math inline">\(l\)</span> has two residual sub-steps, with the normalisation written explicitly because it matters here:</p>
+<p><span class="math display">\[
+\mathbf{r}_l = \mathbf{a}_l + \text{Attn}_l\!\big(\text{LN}_1(\mathbf{a}_l)\big)
+\]</span> <span class="math display">\[
+\mathbf{a}_{l+1} = \mathbf{r}_l + \text{MLP}_l\!\big(\text{LN}_2(\mathbf{r}_l)\big)
+\]</span></p>
+<p>Here <span class="math inline">\(\mathbf{r}_l\)</span> is the residual stream after the attention update at layer <span class="math inline">\(l\)</span>. Define</p>
+<p><span class="math display">\[
+\mathbf{x}_l = \text{LN}_2(\mathbf{r}_l)
+\]</span></p>
+<p>as the <strong>normalised</strong> MLP input — the vector the MLP sublayer actually consumes. This, not the raw residual <span class="math inline">\(\mathbf{r}_l\)</span>, is what the transcoder encoder reads, and <span class="math inline">\(\mathbf{x}_l\)</span> denotes it consistently for the rest of this section. The distinction is not cosmetic: a transcoder trained on <span class="math inline">\(\mathbf{r}_l\)</span> would have to absorb the normalisation into its own weights, and its features would no longer align with the basis the MLP itself operates in.</p>
+<p>The MLP computes an additive update <span class="math inline">\(\text{MLP}_l(\mathbf{x}_l)\)</span> that is written back into the residual stream. A transcoder replaces this specific component:</p>
+<p><span class="math display">\[
+\text{MLP}_l(\mathbf{x}_l) \;\approx\; \text{TC}_l(\mathbf{x}_l)
+\]</span></p>
+<p>Transcoders <strong>typically</strong> target MLP sublayers rather than attention sublayers or the full residual stream, because MLPs are where dense nonlinear computation makes fine-grained circuit analysis most difficult. The construction is not restricted to MLPs in principle, and variants that decompose attention outputs do exist.</p>
+</section>
+<section id="model-5" class="level3">
+<h3 class="anchored" data-anchor-id="model-5">Model</h3>
+<p><strong>Encoder.</strong> The MLP input <span class="math inline">\(\mathbf{x}_l \in \mathbb{R}^d\)</span> is projected into a sparse overcomplete space:</p>
+<p><span class="math display">\[
+\mathbf{z} = \text{ReLU}\!\big(W_e\,\mathbf{x}_l + \mathbf{b}_e\big)
+\]</span></p>
+<p><strong>Decoder.</strong> The sparse features are projected to approximate the MLP’s <em>output</em> (not its input):</p>
+<p><span class="math display">\[
+\widehat{\text{MLP}}_l(\mathbf{x}_l) = W_d\,\mathbf{z} + \mathbf{b}_{\text{dec}}
+\]</span></p>
+<p>Note the asymmetry with SAEs: the encoder reads <span class="math inline">\(\mathbf{x}_l\)</span> (MLP input) but the decoder targets <span class="math inline">\(\text{MLP}_l(\mathbf{x}_l)\)</span> (MLP output). There is no centering by a shared bias because input and output live in different functional roles.</p>
+</section>
+<section id="input-output-5" class="level3">
+<h3 class="anchored" data-anchor-id="input-output-5">Input / Output</h3>
+<ul>
+<li><strong>Input:</strong> <span class="math inline">\(\mathbf{x}_l \in \mathbb{R}^d\)</span> — the MLP sublayer input at layer <span class="math inline">\(l\)</span> (residual stream post-attention, post-LayerNorm)</li>
+<li><strong>Output:</strong> <span class="math inline">\(\widehat{\text{MLP}}_l(\mathbf{x}_l) \in \mathbb{R}^d\)</span> — a sparse approximation of the MLP’s additive contribution to the residual stream; sparse latent <span class="math inline">\(\mathbf{z} \in \mathbb{R}^M\)</span></li>
+</ul>
+</section>
+<section id="loss-5" class="level3">
+<h3 class="anchored" data-anchor-id="loss-5">Loss</h3>
+<p><span class="math display">\[
+\mathcal{L} = \big\|\text{MLP}_l(\mathbf{x}_l) - \widehat{\text{MLP}}_l(\mathbf{x}_l)\big\|_2^2 + \lambda\,\|\mathbf{z}\|_1
+\]</span></p>
+<p>The reconstruction target is the <em>true MLP output</em>, not the input. The <span class="math inline">\(L_1\)</span> penalty encourages sparsity in the latent features, just as in a vanilla SAE.</p>
+<p><strong>A behaviour term in the loss.</strong> The reconstruction term above is <em>local</em>: it measures only how closely the transcoder matches the MLP output at layer <span class="math inline">\(l\)</span>. It says nothing about whether the network still behaves the same once the transcoder is spliced in, since a small residual-stream error at layer <span class="math inline">\(l\)</span> can be amplified by later layers. To constrain that directly, an additional KL term is sometimes added, taken over the <strong>model’s output distribution over the vocabulary</strong>.</p>
+<p>Write <span class="math inline">\(\mathcal{M}(\mathbf{t}) \in \mathbb{R}^{|V|}\)</span> for the next-token logits the unmodified model assigns to a token sequence <span class="math inline">\(\mathbf{t}\)</span>, and <span class="math inline">\(\mathcal{M}[\text{MLP}_l \to \text{TC}_l](\mathbf{t})\)</span> for the logits of the same model with the layer-<span class="math inline">\(l\)</span> MLP sublayer replaced by the transcoder. Then</p>
+<p><span class="math display">\[
+\mathcal{L}_{\text{KL}} = \text{KL}\Big(\text{softmax}\big(\mathcal{M}(\mathbf{t})\big) \;\Big\|\; \text{softmax}\big(\mathcal{M}[\text{MLP}_l \to \text{TC}_l](\mathbf{t})\big)\Big)
+\]</span></p>
+<p>and the full objective becomes</p>
+<p><span class="math display">\[
+\mathcal{L} = \big\|\text{MLP}_l(\mathbf{x}_l) - \widehat{\text{MLP}}_l(\mathbf{x}_l)\big\|_2^2 + \lambda\,\|\mathbf{z}\|_1 + \beta\,\mathcal{L}_{\text{KL}}
+\]</span></p>
+<p>Both softmaxes are taken over the vocabulary dimension <span class="math inline">\(|V|\)</span>, so each argument is a distribution over next tokens rather than over residual-stream coordinates. This is what makes the term a <em>behavioural</em> constraint: it penalises the transcoder for changing what the model predicts, which is the property circuit analysis depends on. The cost is that evaluating <span class="math inline">\(\mathcal{L}_{\text{KL}}\)</span> requires a second full forward pass through the patched model at every step, making it considerably more expensive than the local MSE term.</p>
+<section id="why-this-enables-circuit-analysis" class="level4">
+<h4 class="anchored" data-anchor-id="why-this-enables-circuit-analysis">Why this enables circuit analysis</h4>
+<p>Because both attention and MLP outputs add linearly into the residual stream, the transcoder’s decoder decomposes the MLP contribution as:</p>
+<p><span class="math display">\[
+\widehat{\text{MLP}}_l(\mathbf{x}_l) = \sum_{j=1}^{M} z_j \cdot \mathbf{w}_{d,j} + \mathbf{b}_{\text{dec}}
+\]</span></p>
+<p>where <span class="math inline">\(\mathbf{w}_{d,j}\)</span> is the <span class="math inline">\(j\)</span>-th column of <span class="math inline">\(W_d\)</span>. Each term <span class="math inline">\(z_j \cdot \mathbf{w}_{d,j}\)</span> is a rank-1 contribution that can be attributed to a single interpretable feature. This factorises the MLP computation into <strong>input-dependent</strong> activations <span class="math inline">\(z_j\)</span> (which features fire) and <strong>input-invariant</strong> directions <span class="math inline">\(\mathbf{w}_{d,j}\)</span> (what each feature writes to the residual stream), enabling weights-based circuit tracing across layers.</p>
+<p>This was introduced in <a href="https://arxiv.org/abs/2406.11944">Dunefsky et al.</a></p>
+</section>
+</section>
+<section id="skip-transcoder" class="level3">
+<h3 class="anchored" data-anchor-id="skip-transcoder">Skip Transcoder</h3>
+<p>The skip transcoder adds a learned affine skip connection that captures the linear component of the MLP mapping, freeing the sparse bottleneck to focus on the nonlinear part:</p>
+<p><span class="math display">\[
+\widehat{\text{MLP}}_l(\mathbf{x}_l) = W_d\,\mathbf{z} + W_{\text{skip}}\,\mathbf{x}_l + \mathbf{b}_{\text{dec}}
+\]</span></p>
+<p>The loss is unchanged:</p>
+<p><span class="math display">\[
+\mathcal{L} = \big\|\text{MLP}_l(\mathbf{x}_l) - \widehat{\text{MLP}}_l(\mathbf{x}_l)\big\|_2^2 + \lambda\,\|\mathbf{z}\|_1
+\]</span></p>
+<p>The skip connection <span class="math inline">\(W_{\text{skip}} \in \mathbb{R}^{d \times d}\)</span> acts as a linear baseline: any part of <span class="math inline">\(\text{MLP}_l\)</span> that is well-approximated by a linear map is offloaded to <span class="math inline">\(W_{\text{skip}}\)</span>, so the sparse latents <span class="math inline">\(\mathbf{z}\)</span> need only represent the genuinely nonlinear transformations. This yields a Pareto improvement—lower reconstruction error at the same sparsity level—and makes the learned features more interpretable because they are not burdened with representing linear pass-through behaviour.</p>
+<p>This was introduced in <a href="https://arxiv.org/abs/2501.18823">Paulo et al.</a></p>
+</section>
+<section id="cross-layer-transcoder-clt" class="level3">
+<h3 class="anchored" data-anchor-id="cross-layer-transcoder-clt">Cross-Layer Transcoder (CLT)</h3>
+<p>A standard transcoder replaces one MLP layer at a time, requiring a separate transcoder per layer. The cross-layer transcoder replaces <strong>all MLP sublayers jointly</strong> with a shared sparse feature set.</p>
+<section id="model-6" class="level4">
+<h4 class="anchored" data-anchor-id="model-6">Model</h4>
+<p><strong>Encoder.</strong> For each layer <span class="math inline">\(l\)</span>, the encoder reads the normalised MLP input <span class="math inline">\(\mathbf{x}_l = \text{LN}_2(\mathbf{r}_l)\)</span> and computes sparse features:</p>
+<p><span class="math display">\[
+\mathbf{z}_l = \sigma \!\big(W_e^{(l)}\,\mathbf{x}_l + \mathbf{b}_e^{(l)}\big) \in \mathbb{R}^M
+\]</span></p>
+<p>There is a full set of <span class="math inline">\(M\)</span> features <em>per layer</em>: the pair <span class="math inline">\((\ell, j)\)</span> indexes feature <span class="math inline">\(j\)</span> encoded at layer <span class="math inline">\(\ell\)</span>, so a CLT spanning <span class="math inline">\(L\)</span> layers has <span class="math inline">\(L \cdot M\)</span> features in total. Each feature has exactly one encoder layer — the layer whose residual stream it reads — and writes to every layer at or after it.</p>
+<p><strong>Decoder.</strong> Feature <span class="math inline">\((\ell, j)\)</span> has a decoder column at layer <span class="math inline">\(\ell\)</span> and at <strong>every later layer</strong>. The MLP output at layer <span class="math inline">\(l\)</span> is therefore reconstructed from all features encoded at or before <span class="math inline">\(l\)</span>:</p>
+<p><span class="math display">\[
+\widehat{\text{MLP}}_l(\mathbf{x}_l) = \sum_{\ell \leq l} \sum_{j=1}^{M} z_{\ell,j} \cdot \mathbf{w}_{d,j}^{(\ell \to l)} + \mathbf{b}_{\text{dec}}^{(l)}
+\]</span></p>
+<p>where <span class="math inline">\(\mathbf{w}_{d,j}^{(\ell \to l)} \in \mathbb{R}^d\)</span> is the column through which feature <span class="math inline">\((\ell, j)\)</span> writes into layer <span class="math inline">\(l\)</span>. The superscript must name both layers: the same index <span class="math inline">\(j\)</span> at two different encoder layers refers to two different features, each with its own set of output columns.</p>
+<p>Feature <span class="math inline">\((\ell, j)\)</span> therefore owns <span class="math inline">\(L - \ell + 1\)</span> decoder columns, and the decoder holds <span class="math inline">\(\tfrac{1}{2}L(L+1)Md\)</span> parameters in total — quadratic in depth, which is the dominant cost of the architecture.</p>
+</section>
+<section id="input-output-6" class="level4">
+<h4 class="anchored" data-anchor-id="input-output-6">Input / Output</h4>
+<ul>
+<li><strong>Input:</strong> normalised MLP inputs <span class="math inline">\(\{\mathbf{x}_l\}\)</span> across all layers of one model</li>
+<li><strong>Output:</strong> sparse approximation <span class="math inline">\(\widehat{\text{MLP}}_l\)</span> for every MLP sublayer simultaneously; a shared sparse feature set where each feature reads from one layer but writes to one or more downstream layers</li>
+</ul>
+</section>
+<section id="loss-6" class="level4">
+<h4 class="anchored" data-anchor-id="loss-6">Loss</h4>
+<p><span class="math display">\[
+\mathcal{L} = \sum_{l=1}^{L} \big\|\text{MLP}_l(\mathbf{x}_l) - \widehat{\text{MLP}}_l(\mathbf{x}_l)\big\|_2^2 + \lambda \sum_{l=1}^{L} \|\mathbf{z}_l\|_1
+\]</span></p>
+<p>The key advantage: because each feature has one encoder layer and multi-layer decoder columns, the <strong>attribution graph</strong> can be read off from the weights. Nodes are features <span class="math inline">\((\ell, j)\)</span>; the edge from <span class="math inline">\((\ell, j)\)</span> to <span class="math inline">\((\ell', k)\)</span> with <span class="math inline">\(\ell' &gt; \ell\)</span> is the linear effect of the former’s output column at layer <span class="math inline">\(\ell'\)</span> on the latter’s encoder input:</p>
+<p><span class="math display">\[
+z_{\ell,j} \cdot \big\langle\, \mathbf{w}_{e,k}^{(\ell')},\; \mathbf{w}_{d,j}^{(\ell \to \ell')} \,\big\rangle
+\]</span></p>
+<p>where <span class="math inline">\(\mathbf{w}_{e,k}^{(\ell')}\)</span> is the <span class="math inline">\(k\)</span>-th row of <span class="math inline">\(W_e^{(\ell')}\)</span>. The inner product is input-invariant and available from the weights alone; only the scalar <span class="math inline">\(z_{\ell,j}\)</span> depends on the input. Note that this is the <em>direct</em> residual-stream path only — contributions routed through intervening attention sublayers are not captured by it.</p>
+<p>This was introduced in <a href="https://transformer-circuits.pub/2025/attribution-graphs/methods.html">Ameisen et al.</a></p>
+<hr>
+</section>
+</section>
+</section>
+<section id="crosscoders" class="level2">
+<h2 class="anchored" data-anchor-id="crosscoders">7. Crosscoders</h2>
+<p>All architectures above operate on activations from a <strong>single model</strong>. Crosscoders generalise the SAE framework so that the encoder and decoder span <strong>multiple activation sources</strong> — either different layers of one model, or the same layer of different models, or both.</p>
+<p>The core idea: instead of training separate SAEs, a single SAE is trained where the encoder reads from multiple sources simultaneously. In practice, this is implemented by giving each source its own slice of the encoder weights, computing their independent projections, and summing them before the activation function. Features that learn to read/write from multiple sources are “shared”; features that load on only one are “exclusive” to that source.</p>
+<section id="cross-layer-crosscoder" class="level3">
+<h3 class="anchored" data-anchor-id="cross-layer-crosscoder">7.1 Cross-Layer Crosscoder</h3>
+<p>Applied to <strong>one model, multiple layers</strong>. Instead of training a separate SAE per layer, a cross-layer crosscoder trains one encoder/decoder pair on the stacked residual stream activations across layers.</p>
+<section id="model-7" class="level4">
+<h4 class="anchored" data-anchor-id="model-7">Model</h4>
+<p>Given a set of layers <span class="math inline">\(\mathcal{S} = \{l_1, l_2, \ldots, l_S\}\)</span>, each layer receives its own slice of the encoder weights <span class="math inline">\(W_e^{(l_s)} \in \mathbb{R}^{M \times d}\)</span>.</p>
+<p><strong>Encoder:</strong> The encoder sums the projections from each layer:</p>
+<p><span class="math display">\[
+\mathbf{z} = \sigma \!\Big(\sum_{s=1}^{S} W_e^{(l_s)}\,\mathbf{a}_{l_s} + \mathbf{b}_e\Big) \in \mathbb{R}^M
+\]</span></p>
+<p><strong>Decoder:</strong> The decoder reconstructs each layer’s activation using a layer-specific decoder matrix <span class="math inline">\(W_d^{(l_s)} \in \mathbb{R}^{d \times M}\)</span>:</p>
+<p><span class="math display">\[
+\hat{\mathbf{a}}_{l_s} = W_d^{(l_s)}\,\mathbf{z} + \mathbf{b}_d^{(l_s)}
+\]</span></p>
+</section>
+<section id="input-output-7" class="level4">
+<h4 class="anchored" data-anchor-id="input-output-7">Input / Output</h4>
+<ul>
+<li><strong>Input:</strong> activations <span class="math inline">\(\{\mathbf{a}_{l_s}\}_{s=1}^{S}\)</span> from <span class="math inline">\(S\)</span> layers of one model</li>
+<li><strong>Output:</strong> reconstructions <span class="math inline">\(\{\hat{\mathbf{a}}_{l_s}\}_{s=1}^{S}\)</span>; a shared sparse latent <span class="math inline">\(\mathbf{z} \in \mathbb{R}^M\)</span></li>
+</ul>
+</section>
+<section id="loss-7" class="level4">
+<h4 class="anchored" data-anchor-id="loss-7">Loss</h4>
+<p><span class="math display">\[
+\mathcal{L} = \sum_{s=1}^{S} \big\|\mathbf{a}_{l_s} - \hat{\mathbf{a}}_{l_s}\big\|_2^2 \;+\; \lambda \sum_{j=1}^{M} \Big( \sum_{s=1}^{S} \big\|\mathbf{w}_{d,j}^{(l_s)}\big\|_2 \Big) z_j
+\]</span></p>
+<p>Note the sparsity term: each latent is weighted by the <strong>sum of its decoder norms across sources</strong>, not penalised uniformly. This is the norm-weighted <span class="math inline">\(L_1\)</span> from Section 1, extended over sources, and it is what makes the per-source decoder norms comparable to one another — without it the scale degeneracy would let the model shuffle norm between sources for free, and the analysis below would be meaningless.</p>
+</section>
+<section id="what-the-decoder-norms-reveal" class="level4">
+<h4 class="anchored" data-anchor-id="what-the-decoder-norms-reveal">What the decoder norms reveal</h4>
+<p>For each feature <span class="math inline">\(j\)</span>, compute <span class="math inline">\(\|\mathbf{w}_{d,j}^{(l_s)}\|\)</span> — the decoder norm at each layer. Features that peak at a single layer are <strong>layer-local</strong>. Features with substantial norm across many layers are <strong>cross-layer features</strong> that persist through depth. Feature directions often <strong>drift</strong> across layers even when the feature persists, which a single shared-dictionary approach would miss.</p>
+<p>Crosscoders, in both the cross-layer and model-diffing forms, were introduced in <a href="https://transformer-circuits.pub/2024/crosscoders/index.html">Lindsey et al.</a></p>
+</section>
+</section>
+<section id="model-diffing-crosscoder" class="level3">
+<h3 class="anchored" data-anchor-id="model-diffing-crosscoder">7.2 Model-Diffing Crosscoder</h3>
+<p>Applied to the <strong>same layer of two (or more) different models</strong> — typically a base model <span class="math inline">\(\mathcal{M}_1\)</span> and its fine-tuned variant <span class="math inline">\(\mathcal{M}_2\)</span>, but equally two entirely different models. The crosscoder learns a shared latent space that captures both models’ activations, enabling direct comparison of their learned features.</p>
+<section id="model-8" class="level4">
+<h4 class="anchored" data-anchor-id="model-8">Model</h4>
+<p>At layer <span class="math inline">\(l\)</span>, each model <span class="math inline">\(\mathcal{M}_n\)</span> has its own slice of the encoder weights <span class="math inline">\(W_e^{(n)} \in \mathbb{R}^{M \times d}\)</span>.</p>
+<p><strong>Encoder:</strong> The latent vector is computed from the sum of both models’ projections:</p>
+<p><span class="math display">\[
+\mathbf{z} = \sigma \!\Big(W_e^{(1)}\,\mathbf{a}_l^{(1)} + W_e^{(2)}\,\mathbf{a}_l^{(2)} + \mathbf{b}_e\Big) \in \mathbb{R}^M
+\]</span></p>
+<p><strong>Decoder:</strong> Each model’s activation is reconstructed via its own decoder block, <span class="math inline">\(W_d^{(1)}\)</span> and <span class="math inline">\(W_d^{(2)} \in \mathbb{R}^{d \times M}\)</span>:</p>
+<p><span class="math display">\[
+\hat{\mathbf{a}}_l^{(1)} = W_d^{(1)}\,\mathbf{z} + \mathbf{b}_d^{(1)}
+\]</span> <span class="math display">\[
+\hat{\mathbf{a}}_l^{(2)} = W_d^{(2)}\,\mathbf{z} + \mathbf{b}_d^{(2)}
+\]</span></p>
+<p>This can be generalized to <span class="math inline">\(N\)</span> models using summation notation:</p>
+<p><span class="math display">\[
+\mathbf{z} = \sigma \!\Big(\sum_{n=1}^{N} W_e^{(n)}\,\mathbf{a}_l^{(n)} + \mathbf{b}_e\Big) \in \mathbb{R}^M
+\]</span> <span class="math display">\[
+\hat{\mathbf{a}}_l^{(n)} = W_d^{(n)}\,\mathbf{z} + \mathbf{b}_d^{(n)} \quad \text{for } n = 1, \dots, N
+\]</span></p>
+</section>
+<section id="input-output-8" class="level4">
+<h4 class="anchored" data-anchor-id="input-output-8">Input / Output</h4>
+<ul>
+<li><strong>Input:</strong> activations <span class="math inline">\(\mathbf{a}_l^{(1)}, \mathbf{a}_l^{(2)} \in \mathbb{R}^d\)</span> from models <span class="math inline">\(\mathcal{M}_1, \mathcal{M}_2\)</span> at layer <span class="math inline">\(l\)</span>, run on the same input tokens</li>
+<li><strong>Output:</strong> per-model reconstructions <span class="math inline">\(\hat{\mathbf{a}}_l^{(1)}, \hat{\mathbf{a}}_l^{(2)}\)</span>; shared sparse latent <span class="math inline">\(\mathbf{z} \in \mathbb{R}^M\)</span></li>
+</ul>
+</section>
+<section id="loss-8" class="level4">
+<h4 class="anchored" data-anchor-id="loss-8">Loss</h4>
+<p><span class="math display">\[
+\mathcal{L} = \sum_{n=1}^{N} \big\|\mathbf{a}_l^{(n)} - \hat{\mathbf{a}}_l^{(n)}\big\|_2^2 \;+\; \lambda \sum_{j=1}^{M} \Big( \sum_{n=1}^{N} \big\|\mathbf{w}_{d,j}^{(n)}\big\|_2 \Big) z_j
+\]</span></p>
+<p>As in the cross-layer case, the sparsity term weights each latent by the sum of its per-model decoder norms. This is essential here rather than merely tidy: the entire model-diffing analysis is a comparison of those norms, and a plain <span class="math inline">\(\lambda\|\mathbf{z}\|_1\)</span> would leave their relative scale unidentified.</p>
+</section>
+<section id="what-the-decoder-norms-reveal-1" class="level4">
+<h4 class="anchored" data-anchor-id="what-the-decoder-norms-reveal-1">What the decoder norms reveal</h4>
+<p>For each feature <span class="math inline">\(j\)</span>, compare <span class="math inline">\(\|\mathbf{w}_{d,j}^{(1)}\|_2\)</span> against <span class="math inline">\(\|\mathbf{w}_{d,j}^{(2)}\|_2\)</span>. The usual summary statistic is the <strong>relative decoder norm strength</strong></p>
+<p><span class="math display">\[
+\Delta_j = \frac{1}{2} + \frac{1}{2}\cdot\frac{\big\|\mathbf{w}_{d,j}^{(1)}\big\|_2 - \big\|\mathbf{w}_{d,j}^{(2)}\big\|_2}{\max\!\big(\big\|\mathbf{w}_{d,j}^{(1)}\big\|_2,\; \big\|\mathbf{w}_{d,j}^{(2)}\big\|_2\big)} \;\in\; [0, 1]
+\]</span></p>
+<p>Features then fall into three groups:</p>
+<ul>
+<li><strong>Shared features:</strong> <span class="math inline">\(\Delta_j \approx 0.5\)</span> — comparable norm in both models, i.e.&nbsp;the same concept in each.</li>
+<li><strong><span class="math inline">\(\mathcal{M}_1\)</span>-exclusive:</strong> <span class="math inline">\(\Delta_j \approx 1\)</span> — present in base, absent in fine-tuned.</li>
+<li><strong><span class="math inline">\(\mathcal{M}_2\)</span>-exclusive:</strong> <span class="math inline">\(\Delta_j \approx 0\)</span> — introduced by fine-tuning.</li>
+</ul>
+<p>The histogram of <span class="math inline">\(\Delta_j\)</span> over all features typically shows a large central mass near <span class="math inline">\(0.5\)</span> with two smaller peaks at the extremes. The <span class="math inline">\(\mathcal{M}_2\)</span>-exclusive peak is the “diff” — nominally what fine-tuning added (e.g.&nbsp;refusal behaviour, instruction-following patterns, formatting conventions).</p>
+</section>
+<section id="exclusive-features-should-not-be-taken-at-face-value" class="level4">
+<h4 class="anchored" data-anchor-id="exclusive-features-should-not-be-taken-at-face-value">Exclusive features should not be taken at face value</h4>
+<p>The reading above assumes an apparently exclusive latent reflects a genuine representational difference between the two models. Frequently it does not, and the extreme bins of the <span class="math inline">\(\Delta_j\)</span> histogram contain a substantial fraction of artifacts. Two mechanisms produce them:</p>
+<ul>
+<li><strong><span class="math inline">\(L_1\)</span> shrinkage.</strong> The sparsity penalty biases activations downward (Section 1). The crosscoder can compensate by inflating a decoder norm on one side while suppressing the other, so a latent genuinely present in both models is pushed toward an extreme <span class="math inline">\(\Delta_j\)</span>.</li>
+<li><strong>Reconstruction asymmetry.</strong> If one model’s activations are harder to reconstruct at the chosen sparsity level, the crosscoder allocates its capacity unevenly. The resulting exclusivity reflects the training budget, not the models being compared.</li>
+</ul>
+<p>Two mitigations are standard. First, train the crosscoder with a BatchTopK activation instead of an <span class="math inline">\(L_1\)</span> penalty, which removes the shrinkage mechanism outright. Second, validate candidate exclusive latents by <strong>latent scaling</strong>: re-fit per-model scalar coefficients on the latent’s contribution to each model’s activation and check whether the apparent one-sidedness survives. Latents that fail this check should be discarded before any interpretation is attached to them.</p>
+<p>These sparsity artifacts, and Latent Scaling as a diagnostic for them, were introduced in <a href="https://arxiv.org/abs/2504.02922">Minder et al.</a></p>
+<hr>
+</section>
+</section>
+</section>
+<section id="subspace-level-saes" class="level2">
+<h2 class="anchored" data-anchor-id="subspace-level-saes">8. Subspace Level SAEs</h2>
+<p>All SAE variants discussed so far assign each latent a single decoder direction, implicitly assuming every semantic feature is <strong>one-dimensional</strong>. There also exists a <strong>Multi-dimensional Linear Representation Hypothesis</strong>: many learned features occupy low-dimensional <em>subspaces</em> rather than single directions.</p>
+<p>The hypothesis, the existence of circular days of the week and months of the year features along with a definition of what makes a multi-dimensional feature <em>irreducible</em> and a method for finding such features automatically, was introduced in <a href="https://arxiv.org/abs/2405.14860">Engels et al.</a></p>
+<p>This creates a fundamental tension: if a feature has intrinsic dimension <span class="math inline">\(d_i \geq 2\)</span>, a standard SAE must tile the corresponding subspace with many near-collinear decoder directions to achieve low reconstruction error. The result is feature splitting as defined in Section 5.</p>
+<p>Two lines of work converge on the same fix — make a <strong>subspace</strong>, rather than a direction, the atomic unit of the dictionary — and differ in what they add on top. <strong>Subspace-Aware SAEs (SASA)</strong> adapt each block’s effective rank with a spectral penalty; <strong>Block-Sparse Featurizers (BSFs)</strong> tie the encoder to the decoder and constrain blocks to be orthonormal. Both start from the same construction, which is worth stating once on its own.</p>
+<section id="basic-subspace-sae" class="level3">
+<h3 class="anchored" data-anchor-id="basic-subspace-sae">8.1 Basic Subspace SAE</h3>
+<p>Replace single-vector decoder columns with <strong>block decoders</strong>. Let <span class="math inline">\(M = G r\)</span> be the total latent dimension, partitioned into <span class="math inline">\(G\)</span> groups of size <span class="math inline">\(r\)</span>, of which <span class="math inline">\(s\)</span> are active for any given input. Note that <span class="math inline">\(G\)</span> and <span class="math inline">\(s\)</span> play the structural roles that <span class="math inline">\(M\)</span> and <span class="math inline">\(K\)</span> play elsewhere in this post: <span class="math inline">\(G\)</span> counts groups rather than individual latents, and <span class="math inline">\(s\)</span> counts <em>active groups</em> rather than active latents, so <span class="math inline">\(s\)</span> active blocks means <span class="math inline">\(s\,r\)</span> nonzero latent components.</p>
+<p>Define the block-structured encoder</p>
+<p><span class="math display">\[W_e =
+\begin{bmatrix}
+W_{e,1} \\
+W_{e,2} \\
+\vdots \\
+W_{e,G}
+\end{bmatrix}
+\in \mathbb{R}^{M \times d}.\]</span></p>
+<p>and the decoder</p>
+<p><span class="math display">\[W_d = [W_{d,1} \cdots W_{d,G}] \in \mathbb{R}^{d \times M},\]</span></p>
+<p>with <span class="math inline">\(W_{e,k} \in \mathbb{R}^{r \times d}\)</span> and <span class="math inline">\(W_{d,k} \in \mathbb{R}^{d \times r}\)</span> for <span class="math inline">\(k = 1, \dots, G\)</span>.</p>
+<p><strong>Encoder.</strong> Compute block pre-activations and select the <span class="math inline">\(s\)</span> blocks of largest norm (a block-wise Top-<span class="math inline">\(K\)</span>, with blocks in place of scalars):</p>
+<p><span class="math display">\[
+\mathbf{z}_k = W_{e,k}\,\mathbf{a} \in \mathbb{R}^r
+\]</span></p>
+<p><span class="math display">\[
+\mathcal{T}_s(\mathbf{a}) \in \operatorname*{arg\,max}_{\mathcal{T} \subset [G],\, |\mathcal{T}|=s}
+\sum_{k \in \mathcal{T}} \|\mathbf{z}_k\|_2, \qquad
+\mathbf{z}_k \leftarrow \begin{cases} \mathbf{z}_k &amp; k \in \mathcal{T}_s(\mathbf{a}) \\ \mathbf{0} &amp; \text{otherwise} \end{cases}
+\]</span></p>
+<p><strong>Decoder.</strong> Reconstruct by summing over active blocks:</p>
+<p><span class="math display">\[
+\hat{\mathbf{a}} = W_d\,\mathbf{z} = \sum_{k=1}^{G} W_{d,k}\,\mathbf{z}_k
+\]</span></p>
+<section id="input-output-9" class="level4">
+<h4 class="anchored" data-anchor-id="input-output-9">Input / Output</h4>
+<ul>
+<li><strong>Input:</strong> <span class="math inline">\(\mathbf{a} \in \mathbb{R}^d\)</span></li>
+<li><strong>Output:</strong> reconstruction <span class="math inline">\(\hat{\mathbf{a}} \in \mathbb{R}^d\)</span>, block-sparse latent <span class="math inline">\(\mathbf{z} \in \mathbb{R}^M\)</span> with exactly <span class="math inline">\(s\)</span> non-zero blocks (hence <span class="math inline">\(\|\mathbf{z}\|_0 \leq s\,r\)</span>)</li>
+</ul>
+</section>
+<section id="loss-9" class="level4">
+<h4 class="anchored" data-anchor-id="loss-9">Loss</h4>
+<p><span class="math display">\[
+\mathcal{L} = \|\mathbf{a} - \hat{\mathbf{a}}\|_2^2
+\]</span></p>
+<p>As with Top-<span class="math inline">\(K\)</span>, the hard selection makes an explicit sparsity penalty unnecessary — <span class="math inline">\(s\)</span> is fixed by construction.</p>
+</section>
+<section id="what-a-block-buys-you" class="level4">
+<h4 class="anchored" data-anchor-id="what-a-block-buys-you">What a block buys you</h4>
+<p>A <span class="math inline">\(d_i\)</span>-dimensional feature now costs <em>one</em> active block rather than a fan of near-collinear latents, and the internal structure that a direction-based dictionary had to shatter — the circle of weekdays, the ordering of months — is retained inside the block.</p>
+<p>The object carrying that structure is not the latent code but the block’s <strong>contribution to the reconstruction</strong>:</p>
+<p><span class="math display">\[
+\mathbf{m}_k = W_{d,k}\,\mathbf{z}_k \;\in\; \mathbb{R}^d
+\]</span></p>
+<p>a point in activation space constrained to lie in the <span class="math inline">\(r\)</span>-dimensional subspace <span class="math inline">\(\operatorname{span}(W_{d,k})\)</span>. Sweeping over the inputs that activate block <span class="math inline">\(k\)</span>, the set of contributions <span class="math inline">\(\{\mathbf{m}_k\}\)</span> traces out the <strong>concept manifold</strong>. This is what “recovering a manifold rather than a direction” means: a direction-based dictionary can only ever produce a ray <span class="math inline">\(z_j\,\mathbf{w}_{d,j}\)</span>, whereas a block can produce any shape inside its subspace.</p>
+<p>Two quantities, read at different resolutions:</p>
+<ul>
+<li><span class="math inline">\(\|\mathbf{z}_k\|_2\)</span> — the block’s <strong>presence</strong>: how strongly the concept fires on this input. This is the scalar used for top-<span class="math inline">\(s\)</span> selection.</li>
+<li><span class="math inline">\(\mathbf{m}_k\)</span> — the block’s <strong>position on the concept manifold</strong>: which instance of the concept this is.</li>
+</ul>
+<p>Both papers below build on this construction.</p>
+</section>
+</section>
+<section id="subspace-aware-sae-sasa" class="level3">
+<h3 class="anchored" data-anchor-id="subspace-aware-sae-sasa">8.2 Subspace-Aware SAE (SASA)</h3>
+<p>SASA leaves the encoder and decoder untied and adds a spectral penalty that lets each block discover its own dimensionality.</p>
+<section id="loss-10" class="level4">
+<h4 class="anchored" data-anchor-id="loss-10">Loss</h4>
+<p><span class="math display">\[
+\mathcal{L} = \|\mathbf{a} - \hat{\mathbf{a}}\|_2^2
++ \lambda_{\text{dim}} \sum_{k=1}^{G} \|W_{d,k}\, W_{e,k}\|_*
+\]</span></p>
+<p>The nuclear norm <span class="math inline">\(\|W_{d,k} W_{e,k}\|_*\)</span> penalises the spectrum of the per-block reconstruction map <span class="math inline">\(W_k = W_{d,k} W_{e,k} \in \mathbb{R}^{d \times d}\)</span>, adaptively shrinking the effective rank of each active block toward the intrinsic dimension of the feature it represents. A one-dimensional feature is pushed toward a rank-1 block; a three-dimensional one is free to use rank 3. The block size <span class="math inline">\(r\)</span> is thus an upper bound on feature dimension, not a fixed cost.</p>
+</section>
+<section id="practical-notes" class="level4">
+<h4 class="anchored" data-anchor-id="practical-notes">Practical notes</h4>
+<ul>
+<li>The nuclear norm is evaluated efficiently via the Gram trace identity <span class="math inline">\(\sum_j \sigma_j(W_k) = \operatorname{tr}\!\left((W_k^\top W_k)^{1/2}\right)\)</span>, avoiding explicit SVDs at every step.</li>
+<li>Dead groups (those with activation frequency below a threshold <span class="math inline">\(\nu\)</span>) are kept alive via an auxiliary loss targeting the current reconstruction residual with the dead groups’ pre-activations.</li>
+<li>SASA matches or exceeds standard SAE performance while training on roughly half the token budget, and substantially reduces both feature absorption and feature splitting.</li>
+</ul>
+<p>This was introduced in <a href="https://arxiv.org/abs/2606.06333">Dalili and Mahdavi</a></p>
+</section>
+</section>
+<section id="grassmannian-block-sparse-featurizer" class="level3">
+<h3 class="anchored" data-anchor-id="grassmannian-block-sparse-featurizer">8.3 Grassmannian Block-Sparse Featurizer</h3>
+<p>The Grassmannian BSF makes two changes to the basic construction: the encoder is <strong>tied</strong> to the decoder transpose, and each block is constrained to be <strong>orthonormal</strong>.</p>
+<section id="model-9" class="level4">
+<h4 class="anchored" data-anchor-id="model-9">Model</h4>
+<p>Each block decoder is required to lie on the Stiefel manifold of orthonormal <span class="math inline">\(r\)</span>-frames in <span class="math inline">\(\mathbb{R}^d\)</span>,</p>
+<p><span class="math display">\[
+W_{d,k} \in \text{St}(r, d) = \big\{\, U \in \mathbb{R}^{d \times r} \;:\; U^\top U = I_r \,\big\}
+\]</span></p>
+<p>and the encoder is discarded as a free parameter, replaced by <span class="math inline">\(\gamma\,W_d^\top\)</span>:</p>
+<p><span class="math display">\[
+\mathbf{z}_k = \gamma\, W_{d,k}^\top\, \mathbf{a} \in \mathbb{R}^r
+\]</span></p>
+<p>where <span class="math inline">\(\gamma\)</span> is a single <strong>learned scalar gain</strong> compensating the energy lost by tying the two maps. Block selection and reconstruction are unchanged from Section 8.1, and the loss is plain reconstruction error subject to the manifold constraint:</p>
+<p><span class="math display">\[
+\mathcal{L} = \|\mathbf{a} - \hat{\mathbf{a}}\|_2^2
+\qquad \text{s.t.} \quad W_{d,k} \in \text{St}(r, d) \;\; \forall k
+\]</span></p>
+<p>Sparsity comes entirely from the top-<span class="math inline">\(s\)</span> block selection; there is no sparsity penalty and no spectral penalty. The constraint is imposed by optimising on the manifold directly rather than by adding a soft orthogonality term to the loss.</p>
+</section>
+<section id="why-orthonormal-and-tied" class="level4">
+<h4 class="anchored" data-anchor-id="why-orthonormal-and-tied">Why orthonormal and tied</h4>
+<p>Orthonormality turns block selection into a clean geometric statement. Since <span class="math inline">\(W_{d,k}^\top W_{d,k} = I_r\)</span>, the matrix <span class="math inline">\(P_k = W_{d,k} W_{d,k}^\top\)</span> is the orthogonal projector onto the block’s subspace, and</p>
+<p><span class="math display">\[
+\|\mathbf{z}_k\|_2 = \gamma \big\|W_{d,k}^\top \mathbf{a}\big\|_2 = \gamma \big\|P_k\,\mathbf{a}\big\|_2
+\]</span></p>
+<p>So ranking blocks by <span class="math inline">\(\|\mathbf{z}_k\|_2\)</span> is exactly ranking subspaces by how much of the activation’s energy they capture. Selection is no longer mediated by a separately-learned encoder that may disagree with the decoder about which block is relevant.</p>
+</section>
+<section id="practical-notes-1" class="level4">
+<h4 class="anchored" data-anchor-id="practical-notes-1">Practical notes</h4>
+<ul>
+<li>The source paper writes activations as row vectors (<span class="math inline">\(\mathbf{x}W\)</span>, <span class="math inline">\(\mathbf{z}D\)</span>); the equations above are transposed to match the column-vector convention used throughout this post.</li>
+<li>The same paper introduces a third variant, a group-lasso BSF that replaces hard block selection with a soft-thresholding activation and an <span class="math inline">\(\ell_{2,1}\)</span> penalty. It is not covered here.</li>
+<li>Recovered blocks are reported to be typically two- to four-dimensional in DINOv3, which is a useful prior when choosing <span class="math inline">\(r\)</span>.</li>
+</ul>
+<p>This was introduced in <a href="https://arxiv.org/abs/2606.25234">Fel et al.</a></p>
+</section>
+</section>
+<section id="practical-notes-on-subspace-methods" class="level3">
+<h3 class="anchored" data-anchor-id="practical-notes-on-subspace-methods">Practical notes on subspace methods</h3>
+<ul>
+<li>This subspace nature could potentially be used for transcoders, CLTs and crosscoders.</li>
+<li><span class="math inline">\(r\)</span> is an architectural choice with a real cost: too small and multi-dimensional features still split, too large and blocks waste capacity (SASA mitigates this with the nuclear norm, the Grassmannian BSF does not).</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="notation" class="level2">
+<h2 class="anchored" data-anchor-id="notation">Notation</h2>
+<p>Let <span class="math inline">\(\mathbf{a}_l \in \mathbb{R}^d\)</span> denote an activation vector at layer <span class="math inline">\(l\)</span> of a neural network. When we need to specify a particular token position, we write <span class="math inline">\(\mathbf{a}_{l,t}\)</span> for the activation at layer <span class="math inline">\(l\)</span> and token position <span class="math inline">\(t\)</span>. For batched inputs, <span class="math inline">\(\mathbf{a}_{l,t}^{(i)}\)</span> denotes the activation for the <span class="math inline">\(i\)</span>-th example in a batch of size <span class="math inline">\(B\)</span>.</p>
+<p>Throughout, we use the following:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 61%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Symbol</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\mathbf{a}_{l,t}^{(i)}\)</span></td>
+<td>Activation at layer <span class="math inline">\(l\)</span>, token <span class="math inline">\(t\)</span>, batch index <span class="math inline">\(i\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(W_e \in \mathbb{R}^{M \times d}\)</span></td>
+<td>Encoder weight matrix</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(W_d \in \mathbb{R}^{d \times M}\)</span></td>
+<td>Decoder weight matrix</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mathbf{b}_e \in \mathbb{R}^M\)</span></td>
+<td>Encoder bias</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\mathbf{b}_d \in \mathbb{R}^d\)</span></td>
+<td>Decoder bias (pre-encoder centering)</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mathbf{z} \in \mathbb{R}^M\)</span></td>
+<td>Latent (feature) vector</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(M\)</span></td>
+<td>Dictionary size, typically <span class="math inline">\(M \gg d\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(K\)</span></td>
+<td>Target number of active latents</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\lambda\)</span></td>
+<td>Sparsity penalty coefficient</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mathbf{w}_{d,j}\)</span></td>
+<td><span class="math inline">\(j\)</span>-th decoder column, i.e.&nbsp;feature <span class="math inline">\(j\)</span>’s output direction</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(H(\cdot)\)</span></td>
+<td>Heaviside step function</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\boldsymbol{\theta} \in \mathbb{R}^M_{&gt;0}\)</span></td>
+<td>Learned per-latent thresholds (JumpReLU)</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\theta^\star\)</span></td>
+<td>Single frozen inference-time threshold (BatchTopK)</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\varepsilon,\; \mathcal{K}\)</span></td>
+<td>Bandwidth and kernel of the straight-through estimator</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\text{MLP}_l(\cdot)\)</span></td>
+<td>MLP sublayer at layer <span class="math inline">\(l\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mathbf{r}_l\)</span></td>
+<td>Residual stream after the attention update at layer <span class="math inline">\(l\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\mathbf{x}_l = \text{LN}_2(\mathbf{r}_l)\)</span></td>
+<td>Normalised MLP input at layer <span class="math inline">\(l\)</span> (what a transcoder reads)</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\lvert V \rvert\)</span></td>
+<td>Vocabulary size</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\beta\)</span></td>
+<td>Weight on the behavioural (KL) loss term</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(W_{\text{skip}}\)</span></td>
+<td>Skip connection weight matrix (skip transcoders)</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\mathbf{w}_{d,j}^{(\ell \to l)}\)</span></td>
+<td>Decoder column through which feature <span class="math inline">\((\ell, j)\)</span> writes into layer <span class="math inline">\(l\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mathcal{M}_n\)</span></td>
+<td>Model <span class="math inline">\(n\)</span> in a multi-model setting (<span class="math inline">\(n = 1, 2, \ldots\)</span>)</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\mathbf{a}^{(n)}_l\)</span></td>
+<td>Activation at layer <span class="math inline">\(l\)</span> from model <span class="math inline">\(\mathcal{M}_n\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(W_e^{(n)},\, W_d^{(n)}\)</span></td>
+<td>Encoder / decoder weights for model <span class="math inline">\(\mathcal{M}_n\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\Delta_j\)</span></td>
+<td>Relative decoder norm strength of feature <span class="math inline">\(j\)</span> (model diffing)</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(G,\, r,\, s\)</span></td>
+<td>Number of latent groups, group size, active groups (subspace level SAEs)</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\mathbf{m}_k = W_{d,k}\mathbf{z}_k\)</span></td>
+<td>Contribution of block <span class="math inline">\(k\)</span> to the reconstruction; a point on the concept manifold</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>Where the context is clear, we drop the subscripts and superscripts and simply write <span class="math inline">\(\mathbf{a}\)</span> for the input activation.</p>
+</section>
+<section id="citation" class="level2">
+<h2 class="anchored" data-anchor-id="citation">Citation</h2>
+<p>If you find this useful, please cite it as:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bibtex code-with-copy"><code class="sourceCode bibtex"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">@misc</span>{<span class="ot">mali2026sparsity</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">author</span>       = {Mali, Yash},</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">title</span>        = {Going Mad with Sparsity: A Reference for Interpretability Researchers},</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">year</span>         = {2026},</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">howpublished</span> = {<span class="ch">\url</span>{https://yashm8.github.io/blog/sparse.html}}</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
