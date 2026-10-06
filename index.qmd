@@ -195,9 +195,9 @@ LLM fine-tuning for survival prediction. (Co-op, May 25 - Aug 25). [Paper](https
 ::: {.column width="75%"}
 **A particle cohort study (ParCS) of the impact of glucose and sucrose solutions on the kinetics of starch gelatinization**: *Food Hydrocolloids, 2026*
 
-Lily Santos O' Keefe, **Yash Mali**, John Frostad
+Lily Santos O'Keefe, **Yash Mali**, John Frostad
 
-Contributed particle tracking software for tracking starch particles to study the kinetics of starch gelatinization (Co-op, May 24 - Aug 24). [Frostad Lab](https://food.chbe.ubc.ca/people2/) / [Paper](https://www.google.com/search?q=A+particle+cohort+study+(ParCS)+of+the+impact+of+glucose+and+sucrose+solutions+on+the+kinetics+of+starch+gelatinization&rlz=1C5OZZY_enCA1156CA1156&oq=A+particle+cohort+study+(ParCS)+of+the+impact+of+glucose+and+sucrose+solutions+on+the+kinetics+of+starch+gelatinization) / [Code](https://github.com/YashM8/Track)
+Contributed particle tracking software for tracking starch particles to study the kinetics of starch gelatinization (Co-op, May 24 - Aug 24). [Frostad Lab](https://food.chbe.ubc.ca/people2/) / [Paper](https://www.sciencedirect.com/science/article/pii/S0268005X2600041X) / [Code](https://github.com/YashM8/Track)
 :::
 :::
 
@@ -227,4 +227,4 @@ Investigated how noise and diversity in the training data affect the internal re
 - President of the [UBC AI Club](https://ubcaiclub.github.io/) (2025-2026)
 - ML Lead at [UBC Uncrewed Aircraft Systems](https://ubcuas.com/) 
 - AI and Automation Developer at [Lux Bio](https://www.luxbio.ca/technology) (co-op, Sep 24 – May 25): Applied AI drug discovery and automation for bioprocess engineering.
-- Instrumentation member at [UBC Biological Internet of Things](https://ubcbiot.com/) (May 25 - )
+- Instrumentation member at [UBC Biological Internet of Things](https://ubcbiot.com/) (May 25 - Present)
